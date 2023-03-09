@@ -12,8 +12,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // 子组件
 import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
+import { NoLoginComponent } from './components/no-login/no-login.component';
 //引入组件
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+
 
 
 
@@ -26,6 +29,7 @@ registerLocaleData(zh);
     AppComponent,
     LoginComponent,
     ErrorComponent,
+    NoLoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +37,8 @@ registerLocaleData(zh);
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NzButtonModule
+    NzButtonModule,
+    NzIconModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN }
