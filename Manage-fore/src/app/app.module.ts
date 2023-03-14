@@ -16,7 +16,7 @@ import { NoLoginComponent } from './components/no-login/no-login.component';
 //引入组件
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 
 
@@ -38,7 +38,8 @@ registerLocaleData(zh);
     HttpClientModule,
     BrowserAnimationsModule,
     NzButtonModule,
-    NzIconModule
+    NzIconModule,
+    NzInputModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN }
