@@ -1,7 +1,82 @@
 <div>
-  <img class="login-bg" src="../../../assets/image/login.jpg">
-  <p class="login-title">居民生活帮系统</p>
-  <div class="login-box">
-    <input nz-input placeholder="Basic usage" *ngIf="num" />
-  </div>
+ <img class="login-bg" src="../../../assets/image/login.jpg">
+ <p class="login-title">居民生活帮系统</p>
+ <div class="login-box">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" >
+      <nz-form-item style="margin-left: 21px;">
+          <nz-form-control  [nzSpan]="30" [nzErrorTip]="userErrorTpl" >
+            <nz-input-group class="name-box" nzSize="large" [nzPrefix]="prefixTemplateUser">
+                <input 
+                    nz-input
+                    formControlName="name"  
+                    placeholder="请输入用户名" 
+                    />
+            </nz-input-group>
+          </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="margin-left: 21px;">
+         <nz-form-control  [nzSpan]="12" [nzErrorTip]="pwdErrorTpl">
+            <nz-input-group class="password-box" nzSize="large" [nzPrefix]="prefixTemplatePwd" [nzSuffix]="suffixTemplate">
+              <input
+                [type]="passwordVisible ? 'text' : 'password'"
+                nz-input
+                formControlName="password"
+                placeholder="请输入密码"
+            />
+         </nz-input-group>
+         </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="login_flag">
+        <nz-form-control>
+          <button class="login-btn" nz-button nzSize="large" nzType="primary">登录</button>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="register_flag">
+        <nz-form-control>
+          <button class="register-btn" nz-button nzSize="large" nzType="primary">注册</button>
+        </nz-form-control>
+      </nz-form-item>
+  </form>
+   <a class="retrieve-pwd" nz-button nzType="link">忘记密码？</a>
+   <nz-divider class="divide" nzText="{{divide_title}}"></nz-divider>
+   <button class="go-register-icon" nz-button nzType="primary" nzShape="circle" *ngIf="login_flag">
+      <span nz-icon nzType="plus" nzTheme="outline"></span>
+   </button>
+   <a class="go-register-btn" nz-button nzType="link" *ngIf="login_flag" (click)="goRegister()">点击注册账号</a>
+    <button class="go-login-icon" nz-button nzType="primary" nzShape="circle" *ngIf="register_flag">
+        <span nz-icon nzType="send" nzTheme="outline"></span>
+    </button>
+    <a class="go-login-btn" nz-button nzType="link" *ngIf="register_flag" (click)="goLogin()">点击回到登录页</a>
+ </div>
 </div>
+<!-- 用户名输入框前缀 -->
+<ng-template #prefixTemplateUser>
+  <span class="icon-set" nz-icon nzType="user"></span>
+</ng-template>
+<!-- 密码输入框前缀 -->
+<ng-template #prefixTemplatePwd>
+  <span class="icon-set" nz-icon nzType="unlock" nzTheme="outline"></span>
+</ng-template>
+<!-- 密码框密码是否显示后缀 -->
+<ng-template #suffixTemplate>
+  <span
+    nz-icon
+    [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+    (click)="passwordVisible = !passwordVisible"
+  ></span>
+</ng-template>
+<!-- 用户名校验失败提示 -->
+<ng-template #userErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">用户名不为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">用户名不超过30个字符</ng-container>
+</ng-template>
+<!-- 密码校验失败提示 -->
+<ng-template #pwdErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">密码不为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">密码不少于6个字符</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">密码不超过15个字符</ng-container>
+</ng-template>
+
+
+
+

@@ -1,29 +1,30 @@
 div {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background-color: #f4f5ff;
-}
-.user-img {
-  position: absolute;
-  top: 25%;
-  left: 45%;
-  color: #35378d;
-  font-size: 130px;
-}
-.tip {
-  position: absolute;
-  top: 41%;
-  left: 45%;
-  font-size: 16px;
-  color: #35378d;
-  font-weight: 700;
-}
-.jump {
-  position: absolute;
-  top: 44%;
-  left: 46%;
-  font-size: 16px;
-  color: #eca83f;
-  font-weight: 700;
-}
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f5ff;
+  }
+  .user-img {
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    color: #35378d;
+    font-size: 130px;
+  }
+  .tip {
+    position: absolute;
+    top: 41%;
+    left: 45%;
+    font-size: 16px;
+    color: #35378d;
+    font-weight: 700;
+  }
+  .jump {
+    position: absolute;
+    top: 44%;
+    left: 46%;
+    font-size: 16px;
+    color: #eca83f;
+    font-weight: 700;
+  }
+  
