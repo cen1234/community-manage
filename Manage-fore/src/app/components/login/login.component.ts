@@ -34,6 +34,7 @@ export class LoginComponent implements OnInit {
     this.login_flag = false;
     this.register_flag = true;
     this.divide_title = "已经有账号？";
+    this.resetForm();//点击去注册时清空输入框内容，回到登录页不需要清空内容，方便登录
   }
 
   //去登录
@@ -44,17 +45,13 @@ export class LoginComponent implements OnInit {
   }
 
   //登录
-  submitForm(): void {
-    if (this.validateForm.valid) {
-      console.log('submit', this.validateForm.value);
-    } else {
-      Object.values(this.validateForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
-    }
+  login(): void {
+     this.inputValidator();//校验输入框是否有效
+  }
+
+  //注册
+  register(): void {
+    this.inputValidator();//校验输入框是否有效
   }
 
   //设置校验规则
@@ -86,6 +83,31 @@ export class LoginComponent implements OnInit {
           observer.complete();
         }, 500);
     });
+
+    //校验输入框是否都按规则输入
+    inputValidator(): void {
+      if (this.validateForm.valid) {
+        console.log('submit', this.validateForm.value);
+      } else {
+        Object.values(this.validateForm.controls).forEach(control => {
+          if (control.invalid) {
+            control.markAsDirty();
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        });
+      }
+    }
+
+    //清空表格
+    resetForm(): void {
+      this.validateForm.reset();
+      for (const key in this.validateForm.controls) {
+        if (this.validateForm.controls.hasOwnProperty(key)) {
+          this.validateForm.controls[key].markAsPristine();
+          this.validateForm.controls[key].updateValueAndValidity();
+        }
+      }
+    }
 
 
 }

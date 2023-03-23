@@ -55,6 +55,8 @@ div {
     border: none;
   }
   .divide {
+    position: absolute;
+    top: 280px;
     color: #e8eaed;
     font-size: 15px;
   }
