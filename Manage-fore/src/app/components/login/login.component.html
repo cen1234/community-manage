@@ -2,7 +2,7 @@
  <img class="login-bg" src="../../../assets/image/login.jpg">
  <p class="login-title">居民生活帮系统</p>
  <div class="login-box">
-  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" >
+  <form nz-form [formGroup]="validateForm">
       <nz-form-item style="margin-left: 21px;">
           <nz-form-control  [nzSpan]="30" [nzErrorTip]="userErrorTpl" >
             <nz-input-group class="name-box" nzSize="large" [nzPrefix]="prefixTemplateUser">
@@ -28,25 +28,33 @@
       </nz-form-item>
       <nz-form-item *ngIf="login_flag">
         <nz-form-control>
-          <button class="login-btn" nz-button nzSize="large" nzType="primary">登录</button>
+          <button class="login-btn" nz-button nzSize="large" nzType="primary" (click)="login()">登录</button>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item *ngIf="register_flag">
         <nz-form-control>
-          <button class="register-btn" nz-button nzSize="large" nzType="primary">注册</button>
+          <button class="register-btn" nz-button nzSize="large" nzType="primary" (click)="register()">注册</button>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="login_flag">
+        <nz-form-control style="margin-top: 20px;">
+            <button class="go-register-icon" nz-button nzType="primary" nzShape="circle">
+              <span nz-icon nzType="plus" nzTheme="outline"></span>
+            </button>
+            <a class="go-register-btn" nz-button nzType="link" (click)="goRegister()">点击注册账号</a>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="register_flag">
+        <nz-form-control style="margin-top: 20px;">
+            <button class="go-login-icon" nz-button nzType="primary" nzShape="circle" *ngIf="register_flag">
+              <span nz-icon nzType="send" nzTheme="outline"></span>
+            </button>
+            <a class="go-login-btn" nz-button nzType="link" *ngIf="register_flag" (click)="goLogin()">点击回到登录页</a>
         </nz-form-control>
       </nz-form-item>
   </form>
    <a class="retrieve-pwd" nz-button nzType="link">忘记密码？</a>
    <nz-divider class="divide" nzText="{{divide_title}}"></nz-divider>
-   <button class="go-register-icon" nz-button nzType="primary" nzShape="circle" *ngIf="login_flag">
-      <span nz-icon nzType="plus" nzTheme="outline"></span>
-   </button>
-   <a class="go-register-btn" nz-button nzType="link" *ngIf="login_flag" (click)="goRegister()">点击注册账号</a>
-    <button class="go-login-icon" nz-button nzType="primary" nzShape="circle" *ngIf="register_flag">
-        <span nz-icon nzType="send" nzTheme="outline"></span>
-    </button>
-    <a class="go-login-btn" nz-button nzType="link" *ngIf="register_flag" (click)="goLogin()">点击回到登录页</a>
  </div>
 </div>
 <!-- 用户名输入框前缀 -->
