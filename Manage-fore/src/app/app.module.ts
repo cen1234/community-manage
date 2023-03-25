@@ -16,10 +16,14 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 //子组件
 import { ErrorComponent } from './components/error/error.component';
 import { NoLoginComponent } from './components/no-login/no-login.component';
 import { LoginComponent } from './components/login/login.component';
+import { PasswordComponent } from './components/password/password.component';
 
 
 registerLocaleData(zh);
@@ -29,7 +33,8 @@ registerLocaleData(zh);
     AppComponent,
     ErrorComponent,
     NoLoginComponent,
-    LoginComponent
+    LoginComponent,
+    PasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +48,10 @@ registerLocaleData(zh);
     NzIconModule,
     NzDividerModule,
     NzFormModule,
-    NzToolTipModule
+    NzToolTipModule,
+    NzDropDownModule,
+    NzSelectModule,
+    NzPageHeaderModule
     
   ],
   providers: [
