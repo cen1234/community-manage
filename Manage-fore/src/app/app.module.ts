@@ -31,6 +31,7 @@ import { NoLoginComponent } from './components/no-login/no-login.component';
 import { LoginComponent } from './components/login/login.component';
 import { PasswordComponent } from './components/password/password.component';
 import { IndividualComponent } from './components/individual/individual.component';
+import { UserComponent } from './components/user/user.component';
 
 
 registerLocaleData(zh);
@@ -42,7 +43,8 @@ registerLocaleData(zh);
     NoLoginComponent,
     LoginComponent,
     PasswordComponent,
-    IndividualComponent
+    IndividualComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

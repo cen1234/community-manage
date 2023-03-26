@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   //绑定的属性
- public validateForm: UntypedFormGroup; 
+ public validateLoginForm: UntypedFormGroup; 
  public name:string | null = null;//用户名(要求用户名必填且不超过30个字符)
  public password:string | null = null;//密码(要求密码必填且长度为6-15个字符)
 
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
  public passwordVisible = false;
   
   constructor(private fb: UntypedFormBuilder,private router: Router) { 
-    this.validateForm = this.fb.group({
+    this.validateLoginForm = this.fb.group({
       name: ['', [Validators.required], [this.nameValidator]],
       password: ['', [Validators.required],[this.pwdValidator]],
     });
@@ -47,8 +47,9 @@ export class LoginComponent implements OnInit {
 
   //登录
   login(): void {
-     this.inputValidator();//校验输入框是否有效
-     this.router.navigate(['/individual']);
+     if (this.inputValidator() === false) {
+        this.router.navigate(['/user']);
+     }
   }
 
   //注册
@@ -87,26 +88,28 @@ export class LoginComponent implements OnInit {
     });
 
     //校验输入框是否都按规则输入
-    inputValidator(): void {
-      if (this.validateForm.valid) {
-        console.log('submit', this.validateForm.value);
+    inputValidator(): boolean {
+      if (this.validateLoginForm.valid) {
+        console.log('submit', this.validateLoginForm.value);
+        return true;
       } else {
-        Object.values(this.validateForm.controls).forEach(control => {
+        Object.values(this.validateLoginForm.controls).forEach(control => {
           if (control.invalid) {
             control.markAsDirty();
             control.updateValueAndValidity({ onlySelf: true });
           }
         });
+        return false;
       }
     }
 
     //清空表格
     resetForm(): void {
-      this.validateForm.reset();
-      for (const key in this.validateForm.controls) {
-        if (this.validateForm.controls.hasOwnProperty(key)) {
-          this.validateForm.controls[key].markAsPristine();
-          this.validateForm.controls[key].updateValueAndValidity();
+      this.validateLoginForm.reset();
+      for (const key in this.validateLoginForm.controls) {
+        if (this.validateLoginForm.controls.hasOwnProperty(key)) {
+          this.validateLoginForm.controls[key].markAsPristine();
+          this.validateLoginForm.controls[key].updateValueAndValidity();
         }
       }
     }
