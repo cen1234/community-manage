@@ -1,0 +1,178 @@
+<div class="layout">
+     <div class="above-box">
+        <nz-page-header
+        class="site-page-header"
+        (nzBack)="onBack()"
+        nzBackIcon
+      
+        nzSubtitle="欢迎访问个人中心"
+      ></nz-page-header>
+        <div class="user-img-bg">
+            <nz-avatar  nzIcon="user" [nzSize]="80" style="background-color:#fff;color: #845aff;" *ngIf="false"></nz-avatar>
+            <nz-avatar  nzIcon="user" [nzSize]="80" nzSrc="../../../assets/image/user.jpg" *ngIf="true"></nz-avatar>
+        </div>
+        <p class="user-name">{{user_name}}</p>
+        <p class="user-role" >{{user_role}}</p>
+        <div class="user-contact">
+            <button class="user-contact-btn" nz-button nzType="default" nzShape="circle">
+                <span nz-icon nzType="wechat" nzTheme="outline" ></span>
+            </button>
+            <button class="user-contact-btn" nz-button nzType="default" nzShape="circle">
+                <span  nz-icon nzType="qq" nzTheme="outline"></span>
+            </button>
+            <button class="user-contact-btn" nz-button nzType="default" nzShape="circle">
+                <span  nz-icon nzType="twitter" nzTheme="outline"></span>
+            </button>
+            <button class="user-contact-btn" nz-button nzType="default" nzShape="circle">
+                <span  nz-icon nzType="weibo" nzTheme="outline"></span>
+            </button>  
+        </div>
+        <button class="modify-ifo" nz-button nzType="default" (click)="showInformatioinModal()">修改信息</button>
+        <button class="bind-phone" nz-button nzType="default" (click)="showPhoneModal()">绑定手机</button>
+     </div>
+     <div class="bottom-box">
+        <nz-descriptions nzTitle="个人信息"  class="user-ifo">
+            <nz-descriptions-item nzTitle="真实姓名">{{user_realname}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="用户名">{{user_name}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="年龄">{{user_age}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="性别">{{user_sex}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="电话">{{user_phone}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="身份">{{user_role}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="地址">{{user_address}}</nz-descriptions-item>
+          </nz-descriptions>
+     </div>
+     <!-- 修改信息弹出框 -->
+     <nz-modal
+      nzCentered="true"
+      nzWidth="800px"
+      [(nzVisible)]="isInformationVisible"
+      nzTitle="修改个人信息"
+      (nzOnCancel)="informationHandleCancel()"
+      (nzOnOk)="informationHandleOk()"
+      [nzOkLoading]="isOkInformationLoading"
+    >
+    <form nz-form [formGroup]="validateForm" *nzModalContent>
+        <nz-descriptions  nzBordered [nzColumn]="2">
+            <nz-descriptions-item nzTitle="真实姓名">
+                <nz-form-item >
+                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userRealnameErrorTpl">
+                        <input class="input-box" nz-input formControlName="user_realname" id="user_realname" />
+                        </nz-form-control>
+                </nz-form-item>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="用户名">
+                <nz-form-item >
+                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userNameErrorTpl">
+                        <input class="input-box" nz-input formControlName="user_name" id="user_name" />
+                        </nz-form-control>
+                </nz-form-item>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="年龄">
+                <nz-form-item>
+                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="ageErrorTpl">
+                        <nz-input-number  
+                            class="input-box" 
+                            nz-input 
+                            [nzMin]="1"
+                             [nzMax]="120" 
+                             [nzStep]="1"
+                            formControlName="user_age" 
+                            id="user_age" 
+                            ></nz-input-number>
+                        </nz-form-control>
+                </nz-form-item>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="性别">
+                <nz-form-item >
+                    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
+                        <nz-radio-group formControlName="user_sex">
+                            <label nz-radio nzValue="0">女</label>
+                            <label nz-radio nzValue="1">男</label>
+                          </nz-radio-group>
+                        </nz-form-control>
+                </nz-form-item>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="密码">
+                <nz-form-item >
+                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="pwdErrorTpl">
+                        <nz-input-group  class="input-box"  [nzSuffix]="suffixTemplate">
+                            <input 
+                               nz-input 
+                               [type]="passwordVisible ? 'text' : 'password'" 
+                               formControlName="user_password" 
+                               id="user_password" />
+                        </nz-input-group>
+                        </nz-form-control>
+                </nz-form-item>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="地址">
+                <nz-form-item class="input-box">
+                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
+                        <input class="input-box" nz-input formControlName="user_address" id="user_address" />
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-descriptions-item>
+        </nz-descriptions>
+    </form>
+    </nz-modal>
+    <!-- 绑定手机弹出框 -->
+    <nz-modal
+    nzCentered="true"
+    nzWidth="400px"
+    [(nzVisible)]="isPhoneVisible"
+    nzTitle="绑定手机"
+    (nzOnCancel)="phoneHandleCancel()"
+    (nzOnOk)="phoneHandleOk()"
+    [nzOkLoading]="isOkPhoneLoading"
+  >
+  <form nz-form [formGroup]="phonevalidateForm" *nzModalContent>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
+        <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
+          <input nz-input formControlName="user_phone" placeholder="请输入电话号码" />
+        </nz-form-control>
+      </nz-form-item>
+  </form>
+</nz-modal>
+</div>
+<!-- 密码输入框可视 -->
+<ng-template #suffixTemplate>
+    <span
+      nz-icon
+      [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+      (click)="passwordVisible = !passwordVisible"
+    ></span>
+  </ng-template>
+ <!-- 用户真实姓名错误提示  -->
+ <ng-template #userRealnameErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">真实姓名不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">真实姓名不超过30个字符</ng-container>
+  </ng-template>
+  <!-- 用户名错误提示 -->
+  <ng-template #userNameErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">用户名不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">用户名不超过30个字符</ng-container>
+  </ng-template>
+  <!-- 年龄错误提示 -->
+  <ng-template #ageErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">年龄不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">年龄不小于1</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">用户名不超过120</ng-container>
+  </ng-template>
+  <!-- 密码错误提示 -->
+  <ng-template #pwdErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">密码不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">密码不少于6个字符</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">密码不超过15个字符</ng-container>
+  </ng-template>
+  <!-- 地址错误提示 -->
+  <ng-template #addressErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">地址不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">地址不超过60个字符</ng-container>
+  </ng-template>
+<!-- 电话号码错误提示 -->
+<ng-template #phoneErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">电话号码不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('errorPhone')">请填写正确的电话号码</ng-container>
+  </ng-template>
+

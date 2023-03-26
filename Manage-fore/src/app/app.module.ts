@@ -19,11 +19,18 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 //子组件
 import { ErrorComponent } from './components/error/error.component';
 import { NoLoginComponent } from './components/no-login/no-login.component';
 import { LoginComponent } from './components/login/login.component';
 import { PasswordComponent } from './components/password/password.component';
+import { IndividualComponent } from './components/individual/individual.component';
 
 
 registerLocaleData(zh);
@@ -34,7 +41,8 @@ registerLocaleData(zh);
     ErrorComponent,
     NoLoginComponent,
     LoginComponent,
-    PasswordComponent
+    PasswordComponent,
+    IndividualComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +59,13 @@ registerLocaleData(zh);
     NzToolTipModule,
     NzDropDownModule,
     NzSelectModule,
-    NzPageHeaderModule
+    NzPageHeaderModule,
+    NzAvatarModule,
+    NzTagModule,
+    NzDescriptionsModule,
+    NzModalModule,
+    NzInputNumberModule,
+    NzRadioModule
     
   ],
   providers: [

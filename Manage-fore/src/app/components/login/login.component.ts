@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
  public register_flag:boolean = false;
  public passwordVisible = false;
   
-  constructor(private fb: UntypedFormBuilder) { 
+  constructor(private fb: UntypedFormBuilder,private router: Router) { 
     this.validateForm = this.fb.group({
       name: ['', [Validators.required], [this.nameValidator]],
       password: ['', [Validators.required],[this.pwdValidator]],
@@ -47,6 +48,7 @@ export class LoginComponent implements OnInit {
   //登录
   login(): void {
      this.inputValidator();//校验输入框是否有效
+     this.router.navigate(['/individual']);
   }
 
   //注册

@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { NoLoginComponent } from './components/no-login/no-login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { PasswordComponent } from './components/password/password.component';
+import { IndividualComponent } from './components/individual/individual.component';
 const routes: Routes = [
   {
     path:'',redirectTo:'login',pathMatch:'full'
@@ -19,6 +20,9 @@ const routes: Routes = [
   },
    {
      path:'password',component:PasswordComponent
+   },
+   {
+     path:'individual',component:IndividualComponent
    }
 ];
 

@@ -1,0 +1,79 @@
+.layout {
+    margin: 0 auto;
+    width: 950px;
+    height: 100%;
+}
+.above-box {
+    position: relative;
+    height: 40%;
+    background: linear-gradient(to right,#4c59ff,#845aff);
+}
+.user-img-bg {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 22%;
+    left: 44%;
+    width: 84px;
+    height: 84px;
+    border-radius: 43px;
+    background-color: #fff;
+    z-index: 1;
+}
+.user-name {
+    position: absolute;
+    left: 46%;
+    top: 46%;
+    color: #dce3ea;
+    font-size: 19px;
+}
+.user-role {
+    position: absolute;
+    left: 46%;
+    top: 54%;
+    color: #dce3ea;
+    font-size: 3px;
+}
+.user-contact {
+    position: absolute;
+    left: 40%;
+    top: 63%;
+    display: flex;
+    justify-content: space-around;
+    width: 160px;
+    height: 40px;
+    font-size: 20px;
+}
+.user-contact-btn {
+   background-color: transparent;
+   color: #fff;
+}
+.modify-ifo {
+    position: absolute;
+    left: 38%;
+    top: 76%;
+    background-color: #4b4f99;
+    color: #fff;
+    border: none;
+}
+.bind-phone {
+    position: absolute;
+    left: 49%;
+    top: 76%;
+    background-color: transparent;
+    color: #fff;
+}
+.bottom-box {
+    position: relative;
+    height: 60%;
+    background-color: #ededed;
+}
+.user-ifo {
+    position: absolute;
+    left: 17%;
+    top: 7%;
+}
+.input-box {
+    width: 200px;
+}
