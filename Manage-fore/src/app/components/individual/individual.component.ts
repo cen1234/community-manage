@@ -48,7 +48,7 @@ export class IndividualComponent implements OnInit {
  
   //回到管理页面
   onBack() {
-   this.router.navigate(['/login']);
+   this.router.navigate(['/user']);
   }
 
 

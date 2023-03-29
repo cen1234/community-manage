@@ -25,6 +25,12 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+//公共组件
+import { HeaderComponent } from './layout/header/header.component';
+import { AsideComponent } from './layout/aside/aside.component';
 //子组件
 import { ErrorComponent } from './components/error/error.component';
 import { NoLoginComponent } from './components/no-login/no-login.component';
@@ -32,6 +38,8 @@ import { LoginComponent } from './components/login/login.component';
 import { PasswordComponent } from './components/password/password.component';
 import { IndividualComponent } from './components/individual/individual.component';
 import { UserComponent } from './components/user/user.component';
+
+
 
 
 registerLocaleData(zh);
@@ -44,7 +52,9 @@ registerLocaleData(zh);
     LoginComponent,
     PasswordComponent,
     IndividualComponent,
-    UserComponent
+    UserComponent,
+    HeaderComponent,
+    AsideComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +77,10 @@ registerLocaleData(zh);
     NzDescriptionsModule,
     NzModalModule,
     NzInputNumberModule,
-    NzRadioModule
+    NzRadioModule,
+    NzLayoutModule,
+    NzBreadCrumbModule,
+    NzBadgeModule
     
   ],
   providers: [

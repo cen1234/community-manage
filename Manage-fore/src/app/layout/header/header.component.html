@@ -1,0 +1,19 @@
+<nz-header nzTheme="light" nz-menu class="header-menu">
+    <div class="logo"><p class="login-title-front">居民生活帮</p><p class="login-title-after">系统</p></div>
+    <nz-badge nzDot class="message" [nzShowDot]="false"><span nz-icon nzType="bell" nzTheme="outline"></span></nz-badge>
+    <nz-avatar 
+        class="user-center" 
+        nzSize="large" 
+        nzIcon="user" 
+        nzSrc="../../../assets/image/user.jpg"
+        nz-dropdown 
+        [nzDropdownMenu]="menu"
+        [nzPlacement]="position">
+    </nz-avatar>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item [routerLink]="['/individual']">个人中心</li>
+          <li nz-menu-item [routerLink]="['/login']">退出系统</li>
+        </ul>
+      </nz-dropdown-menu>
+</nz-header>
