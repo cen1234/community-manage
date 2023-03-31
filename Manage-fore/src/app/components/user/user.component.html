@@ -9,7 +9,7 @@
         class="trigger trigger-placement"
         nz-icon
         [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="fold()"
+        (click)="isCollapsed = !isCollapsed"
       ></span>
     <!-- 导航面包屑 -->
         <nz-breadcrumb>
@@ -21,7 +21,7 @@
         <nz-content>
             <div class="statistics-box">
                 <p class="statistics-title">用户信息概览</p>
-                <div style="padding:30px;">
+                <div style="padding: 10px 30px 30px 30px;background: linear-gradient(to bottom, #896ec1, transparent);border-radius: 19px;">
                   <div nz-row class="statistic-card">
                     <div nz-col [nzSpan]="4">
                       <nz-card>
@@ -70,19 +70,104 @@
                     </div>
                   </div>
                 </div>
+                 <!-- 统计情况 -->
+                 <div class="statistical-situation">
+                  <div id="statistical-role" echarts [options]="roleOption"></div>
+                  <div id="statistical-gender" echarts [options]="genderOption"></div>
+                  <div id="statistical-age" echarts [options]="ageOption"></div>
+             </div>
             </div>
             <div class="operate">
               <p class="operate-title">用户信息管理</p>
               <div >
                 <button class="operate-btn" nz-button nzType="default">新增用户</button>
-                <button class="operate-btn" nz-button nzType="default">批量删除</button>
+                <a
+                  nz-popconfirm
+                  nzPopconfirmTitle="您确认要删除所选用户吗?"
+                  nzPopconfirmPlacement="bottom"
+                  (nzOnConfirm)="confirm()"
+                  (nzOnCancel)="cancel()"
+                >
+                <button class="operate-btn" nz-button nzType="primary" nzDanger>批量删除</button>
+                </a>
                 <button class="operate-btn" nz-button nzType="default">批量导入</button>
                 <button class="operate-btn" nz-button nzType="default">批量导出</button>
-
               </div>
+              <nz-input-group nzCompact class="select-box">
+                <nz-select [ngModel]="'真实姓名'" style="width: 120px;">
+                  <nz-option [nzLabel]="'真实姓名'" [nzValue]="'realname'"></nz-option>
+                  <nz-option [nzLabel]="'账号名'" [nzValue]="'name'"></nz-option>
+                  <nz-option [nzLabel]="'电话号码'" [nzValue]="'phone'"></nz-option>
+                </nz-select>
+                <input type="text" nz-input [ngModel]="inputValue" placeholder="请输入要搜索的信息"/>
+              </nz-input-group>
             </div>
+                <!-- 表格 -->
+            <nz-tabset class="tab">
+              <nz-tab nzTitle="系统管理员" >
+                <nz-table
+                #rowSelectionTable
+                nzShowSizeChanger
+                [nzData]="listOfData"
+                [nzPageSizeOptions]="[3,5]"
+                [nzShowQuickJumper] = "true"
+                [nzPaginationType] = "'small'"
+                [nzPageIndex] = "pageIndex"
+                [nzPageSize] = "pageSize"
+                [nzTotal] = "total"
+                (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      [(nzChecked)]="checked"
+                      [nzIndeterminate]="indeterminate"
+                      (nzCheckedChange)="onAllChecked($event)"
+                    ></th>
+                    <th>真实姓名</th>
+                    <th>用户名</th>
+                    <th>年龄</th>
+                    <th>性别</th>
+                    <th>电话</th>
+                    <th>地址</th>
+                    <th>行为</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of rowSelectionTable.data">
+                    <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+                    <td>{{ data.userRealName }}</td>
+                    <td>{{ data.userName }}</td>
+                    <td>{{ data.age }}</td>
+                    <td>{{data.sex}}</td>
+                    <td>{{data.phone}}</td>
+                    <td>{{data.address}}</td>
+                    <td>
+                      <a><button nz-button nzSize="small" nzType="default">编辑</button></a>
+                      <nz-divider nzType="vertical"></nz-divider>
+                      <a
+                          nz-popconfirm
+                          nzPopconfirmTitle="您确认要删除此用户吗?"
+                          nzPopconfirmPlacement="bottom"
+                          (nzOnConfirm)="confirm()"
+                          (nzOnCancel)="cancel()"
+                        >
+                        <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+              </nz-tab>
+              <nz-tab nzTitle="社区管理员">Content of Tab Pane 2</nz-tab>
+              <nz-tab nzTitle="社区工作人员">Content of Tab Pane 3</nz-tab>
+              <nz-tab nzTitle="志愿者">Content of Tab Pane 2</nz-tab>
+              <nz-tab nzTitle="普通用户">Content of Tab Pane 3</nz-tab>
+            </nz-tabset>
         </nz-content>
       </nz-layout>
     </nz-layout>
 </nz-layout>
+
+
   

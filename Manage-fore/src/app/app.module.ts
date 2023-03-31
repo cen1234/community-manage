@@ -9,6 +9,7 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxEchartsModule } from 'ngx-echarts';//引入部分
 //NG-ZORRO组件
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -31,6 +32,9 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzTableModule } from 'ng-zorro-antd/table';
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
 import { AsideComponent } from './layout/aside/aside.component';
@@ -86,7 +90,14 @@ registerLocaleData(zh);
     NzBadgeModule,
     NzCardModule,
     NzStatisticModule,
-    NzPopoverModule
+    NzPopoverModule,
+    NzPopconfirmModule,
+    NzTabsModule,
+    NzTableModule,
+    //引入部分
+    NgxEchartsModule.forRoot({ //引入部分
+      echarts: () => import('echarts') //引入部分
+    }), //引入部分
     
   ],
   providers: [

@@ -60,3 +60,10 @@ html {
   min-height: 0;
   background: #f3f3ff;
 }
+.ant-tabs-tab:hover {
+  color: #000046;
+}
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #000046;
+  text-shadow: 0 0 .25px currentcolor;
+}

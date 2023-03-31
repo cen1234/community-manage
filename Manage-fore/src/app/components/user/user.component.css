@@ -15,7 +15,7 @@
   .trigger-placement {
     position: absolute;
     left: 0;
-    top: 5%;
+    top: 3%;
   }
   nz-breadcrumb {
     margin: 16px 0;
@@ -27,7 +27,7 @@
     min-height: 280px;
   }
   .statistics-title,.operate-title {
-    color: #1890ff;
+    color: #919cab;
     font-weight: 700;
     font-size: 15px;
   }
@@ -35,7 +35,28 @@
     display: flex;
     justify-content: space-between;
   }
-  .operate-btn {
-
+  .statistical-situation {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0px;
   }
+  #statistical-role,#statistical-gender,#statistical-age {
+    width: 31%;
+    height: 250px;
+    box-shadow: 5px 3px 10px #ededed;
+  }
+  .operate-btn {
+    margin-right: 15px;
+  }
+  .select-box {
+    position: absolute;
+    display: flex;
+    left: 28%;
+    top: 75.8%;
+    width: 21%;
+  }
+  .tab {
+    margin-top: 40px;
+  }
+  
  
