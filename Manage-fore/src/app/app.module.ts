@@ -35,6 +35,7 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
 import { AsideComponent } from './layout/aside/aside.component';
@@ -94,6 +95,7 @@ registerLocaleData(zh);
     NzPopconfirmModule,
     NzTabsModule,
     NzTableModule,
+    NzBackTopModule,
     //引入部分
     NgxEchartsModule.forRoot({ //引入部分
       echarts: () => import('echarts') //引入部分
