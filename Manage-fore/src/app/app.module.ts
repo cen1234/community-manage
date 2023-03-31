@@ -28,6 +28,9 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
 import { AsideComponent } from './layout/aside/aside.component';
@@ -80,7 +83,10 @@ registerLocaleData(zh);
     NzRadioModule,
     NzLayoutModule,
     NzBreadCrumbModule,
-    NzBadgeModule
+    NzBadgeModule,
+    NzCardModule,
+    NzStatisticModule,
+    NzPopoverModule
     
   ],
   providers: [

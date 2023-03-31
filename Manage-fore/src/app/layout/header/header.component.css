@@ -12,19 +12,19 @@
   }
   .login-title-front {
     position: absolute;
-    left: 2%;
+    left: 1%;
     top: 4%;
     font-size: 20px;
     font-weight: 700;
-    color: #8372fe;
+    color: #000046;
   }
   .login-title-after {
     position: absolute;
-    left: 7.3%;
+    left: 6.3%;
     top: 3%;
     font-size: 20px;
     font-weight: 700;
-    color: #e6a539;
+    color: #e3b164;
   }
   .message {
     position: absolute;
@@ -37,4 +37,7 @@
     right: 2%;
     top: 18%;
     cursor: pointer;
+  }
+  .trigger {
+    
   }

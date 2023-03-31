@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { NzPlacementType } from 'ng-zorro-antd/dropdown';
 
 @Component({
@@ -7,6 +7,7 @@ import { NzPlacementType } from 'ng-zorro-antd/dropdown';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  
 
   position:NzPlacementType = 'bottomCenter';
 
@@ -15,5 +16,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  
 
 }

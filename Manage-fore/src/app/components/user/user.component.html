@@ -3,8 +3,14 @@
     <app-header></app-header>
     <nz-layout>
     <!-- 侧边 -->
-      <app-aside></app-aside>
-      <nz-layout class="inner-layout">
+      <app-aside [isCollapsed] = "isCollapsed"></app-aside>
+      <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
+      <span
+        class="trigger trigger-placement"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="fold()"
+      ></span>
     <!-- 导航面包屑 -->
         <nz-breadcrumb>
           <nz-breadcrumb-item>系统</nz-breadcrumb-item>
@@ -13,7 +19,68 @@
         </nz-breadcrumb>
     <!-- 内容     -->
         <nz-content>
-            
+            <div class="statistics-box">
+                <p class="statistics-title">用户信息概览</p>
+                <div style="padding:30px;">
+                  <div nz-row class="statistic-card">
+                    <div nz-col [nzSpan]="4">
+                      <nz-card>
+                        <nz-row [nzGutter]="16">
+                          <nz-col [nzSpan]="14">
+                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'系统管理员人数'"></nz-statistic>
+                          </nz-col>
+                        </nz-row>
+                      </nz-card>
+                    </div>
+                    <div nz-col [nzSpan]="4">
+                      <nz-card>
+                        <nz-row [nzGutter]="16">
+                          <nz-col [nzSpan]="14">
+                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'社区管理员人数'"></nz-statistic>
+                          </nz-col>
+                        </nz-row>
+                      </nz-card>
+                    </div>
+                    <div nz-col [nzSpan]="4">
+                      <nz-card>
+                        <nz-row [nzGutter]="16">
+                          <nz-col [nzSpan]="14">
+                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'社区工作人员人数'"></nz-statistic>
+                          </nz-col>
+                        </nz-row>
+                      </nz-card>
+                    </div>
+                    <div nz-col [nzSpan]="4">
+                      <nz-card>
+                        <nz-row [nzGutter]="16">
+                          <nz-col [nzSpan]="12">
+                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'志愿者人数'"></nz-statistic>
+                          </nz-col>
+                        </nz-row>
+                      </nz-card>
+                    </div>
+                    <div nz-col [nzSpan]="4">
+                      <nz-card>
+                        <nz-row [nzGutter]="16">
+                          <nz-col [nzSpan]="12">
+                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'普通用户人数'"></nz-statistic>
+                          </nz-col>
+                        </nz-row>
+                      </nz-card>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="operate">
+              <p class="operate-title">用户信息管理</p>
+              <div >
+                <button class="operate-btn" nz-button nzType="default">新增用户</button>
+                <button class="operate-btn" nz-button nzType="default">批量删除</button>
+                <button class="operate-btn" nz-button nzType="default">批量导入</button>
+                <button class="operate-btn" nz-button nzType="default">批量导出</button>
+
+              </div>
+            </div>
         </nz-content>
       </nz-layout>
     </nz-layout>

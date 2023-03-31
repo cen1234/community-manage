@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 
 @Component({
   selector: 'app-aside',
@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AsideComponent implements OnInit {
 
+  //获取从父组件中传过来的值
+  @Input() isCollapsed:any;
+
+
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.isCollapsed)
   }
+ 
 
 }
