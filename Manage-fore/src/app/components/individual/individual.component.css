@@ -67,7 +67,7 @@
 .bottom-box {
     position: relative;
     height: 60%;
-    background-color: #ededed;
+    background-color: #f6f5fa;
 }
 .user-ifo {
     position: absolute;
@@ -77,3 +77,23 @@
 .input-box {
     width: 200px;
 }
+.edit-img {
+    position: absolute;
+    left: 17%;
+    top: 43%;
+}
+.img-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #31368c;
+    cursor: pointer;
+}
+:host ::ng-deep .avatar-uploader > .ant-upload {
+    width: 128px;
+    height: 128px;
+  }
+ .img-btn {
+    position: absolute;
+    top: 76%; 
+ } 
+

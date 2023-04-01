@@ -31,7 +31,7 @@
         <button class="bind-phone" nz-button nzType="default" (click)="showPhoneModal()">绑定手机</button>
      </div>
      <div class="bottom-box">
-        <nz-descriptions nzTitle="个人信息"  class="user-ifo">
+        <nz-descriptions nzTitle="个人信息"  class="user-ifo" nzBordered nzSize="middle">
             <nz-descriptions-item nzTitle="真实姓名">{{user_realname}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="用户名">{{user_name}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="年龄">{{user_age}}</nz-descriptions-item>
@@ -40,6 +40,27 @@
             <nz-descriptions-item nzTitle="身份">{{user_role}}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="地址">{{user_address}}</nz-descriptions-item>
           </nz-descriptions>
+          <div class="edit-img">
+            <p class="img-title" (click)="startImg()">修改头像</p>
+            <div *ngIf="img_upload">
+                <nz-upload
+                    class="avatar-uploader"
+                    nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    nzName="avatar"
+                    nzListType="picture-card"
+                    [nzShowUploadList]="false"
+                  
+                    (nzChange)="handleChange($event)"
+              >
+                <ng-container *ngIf="!avatarUrl">
+                  <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
+                  <div class="ant-upload-text">Upload</div>
+                </ng-container>
+                <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+              </nz-upload>
+              <button class="img-btn" nz-button nzType="default" (click)="editImg()">确认</button>
+            </div>
+         </div>
      </div>
      <!-- 修改信息弹出框 -->
      <nz-modal

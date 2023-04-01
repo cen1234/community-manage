@@ -55,6 +55,9 @@
     top: 75.8%;
     width: 21%;
   }
+  .input-width {
+    width: 238px;
+  }
   .tab {
     margin-top: 40px;
   }

@@ -80,7 +80,7 @@
             <div class="operate">
               <p class="operate-title">用户信息管理</p>
               <div >
-                <button class="operate-btn" nz-button nzType="default">新增用户</button>
+                <button class="operate-btn" nz-button nzType="default" (click)="add()">新增用户</button>
                 <a
                   nz-popconfirm
                   nzPopconfirmTitle="您确认要删除所选用户吗?"
@@ -143,13 +143,13 @@
                     <td>{{data.phone}}</td>
                     <td>{{data.address}}</td>
                     <td>
-                      <a><button nz-button nzSize="small" nzType="default">编辑</button></a>
+                      <a><button nz-button nzSize="small" nzType="default" (click)="edit(data)">编辑</button></a>
                       <nz-divider nzType="vertical"></nz-divider>
                       <a
                           nz-popconfirm
                           nzPopconfirmTitle="您确认要删除此用户吗?"
                           nzPopconfirmPlacement="bottom"
-                          (nzOnConfirm)="confirm()"
+                          (nzOnConfirm)="Singleconfirm(data.id)"
                           (nzOnCancel)="cancel()"
                         >
                         <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
@@ -169,5 +169,118 @@
       </nz-layout>
     </nz-layout>
 </nz-layout>
+<!-- 新增|编辑用户弹窗 -->
+<nz-modal
+      [(nzVisible)]="isVisible" 
+      [nzTitle]="userMoadl"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      [nzOkLoading]="isOkLoading"
+    >
+        <form *nzModalContent nz-form [formGroup]="UservalidateForm">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>用户真实姓名</nz-form-label>
+                <nz-form-control [nzSpan]="12" [nzErrorTip]="userRealnameErrorTpl">
+                  <input nz-input formControlName="user_realname" placeholder="请输入用户真实姓名" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+                <nz-form-control [nzSpan]="12" [nzErrorTip]="userNameErrorTpl">
+                  <input nz-input formControlName="user_name" placeholder="请输入用户名" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                  <nz-form-label [nzSpan]="7" nzRequired>年龄</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="ageErrorTpl">
+                      <nz-input-number  
+                          class="input-box input-width" 
+                          nz-input 
+                          [nzMin]="1"
+                          [nzMax]="120" 
+                          [nzStep]="1"
+                          formControlName="user_age" 
+                          nzPlaceHolder="请输入用户年龄"
+                          ></nz-input-number>
+                      </nz-form-control>
+              </nz-form-item>
+              <nz-form-item >
+                <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
+                    <nz-radio-group formControlName="user_sex">
+                        <label nz-radio nzValue="0">女</label>
+                        <label nz-radio nzValue="1">男</label>
+                      </nz-radio-group>
+                    </nz-form-control>
+            </nz-form-item> 
+            <nz-form-item >
+              <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="pwdErrorTpl">
+                  <nz-input-group  class="input-box input-width"  [nzSuffix]="suffixTemplate">
+                      <input 
+                        nz-input 
+                        [type]="passwordVisible ? 'text' : 'password'" 
+                        formControlName="user_password" 
+                        id="user_password" 
+                        placeholder="请输入密码"/>
+                  </nz-input-group>
+                  </nz-form-control>
+            </nz-form-item>      
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
+                <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
+                  <input class="input-width" nz-input formControlName="user_phone" placeholder="请输入电话号码" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="input-box">
+                <nz-form-label [nzSpan]="7" nzRequired>详细地址</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
+                  <nz-textarea-count [nzMaxCharacterCount]="300">
+                    <textarea rows="2"  class="input-width" formControlName="user_address" nz-input placeholder="请输入用户详细地址(包含省市区|县)"></textarea>
+                  </nz-textarea-count>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+<!-- 密码输入框可视 -->
+<ng-template #suffixTemplate>
+  <span
+    nz-icon
+    [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+    (click)="passwordVisible = !passwordVisible"
+  ></span>
+</ng-template>
+    <!-- 用户真实姓名错误提示 -->
+    <ng-template #userRealnameErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">真实姓名不能为空</ng-container>
+      <ng-container *ngIf="control.hasError('maxlength')">真实姓名不超过30个字符</ng-container>
+    </ng-template>
+    <!-- 用户名错误提示 -->
+  <ng-template #userNameErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">用户名不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">用户名不超过30个字符</ng-container>
+  </ng-template>
+  <!-- 年龄错误提示 -->
+  <ng-template #ageErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">年龄不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">年龄不小于1</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">用户名不超过120</ng-container>
+  </ng-template>
+  <!-- 密码错误提示 -->
+  <ng-template #pwdErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">密码不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">密码不少于6个字符</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">密码不超过15个字符</ng-container>
+  </ng-template>
+  <!-- 地址错误提示 -->
+  <ng-template #addressErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">地址不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">地址不超过300个字符</ng-container>
+  </ng-template>
+<!-- 电话号码错误提示 -->
+<ng-template #phoneErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">电话号码不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('errorPhone')">请填写正确的电话号码</ng-container>
+  </ng-template>
 
   

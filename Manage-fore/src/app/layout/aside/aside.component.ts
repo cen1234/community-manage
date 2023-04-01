@@ -14,7 +14,7 @@ export class AsideComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.isCollapsed)
+    
   }
  
 

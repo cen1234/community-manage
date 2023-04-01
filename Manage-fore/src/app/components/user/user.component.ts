@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Observable, Observer } from 'rxjs';
 interface ItemData {
   id: number;
   userRealName: string;
@@ -15,10 +17,25 @@ interface ItemData {
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
- 
+
+ //用户属性
+  public user_name:string = '';//用户名
+  public user_realname:string = '';//用户真实姓名
+  public user_phone:string = '';//用户电话号码
+  public user_age:number|string = 0;//用户年龄
+  public user_sex:string = '';//用户姓名
+  public user_address:string = '';//用户地址
+  public user_img:string = '';//用户图像
+  public user_role:string = '';//用户身份
+  public user_password:string = '';//用户密码
   //属性
   public isCollapsed:boolean = false;//侧边栏是否折叠
+  public isVisible:boolean = false;//新增|编辑用户弹窗是否出现
+  public userMoadl:string = '新增用户';//新增|编辑用户弹窗标题
+  public isOkLoading:boolean = false;///新增|编辑用户弹窗提交数据是否加载
   public inputValue: string | null = null;//搜索框输入值
+  public UservalidateForm: UntypedFormGroup;//用户表格
+  public passwordVisible = false;//密码输入框可视
   checked = false;
   indeterminate = false;
   listOfCurrentPageData:readonly  ItemData[] = [];
@@ -28,6 +45,7 @@ export class UserComponent implements OnInit {
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
   
+
   //身份统计图
   roleOption = {
     color:[ '#d1b7d7', "#998cc3","#9974b2","#7c78ab","#9a86ba"],
@@ -168,7 +186,17 @@ export class UserComponent implements OnInit {
     ]
   }
  
-  constructor() { }
+  constructor(private fb: UntypedFormBuilder) {
+    this.UservalidateForm = this.fb.group({
+      user_realname: ['', [Validators.required],[this.userRealnameAsyncValidator]],
+      user_name: ['', [Validators.required],[this.userNameAsyncValidator]],
+      user_age: ['', [Validators.required],[this.ageValidator]],
+      user_sex:['',[Validators.required]],
+      user_password:['',[Validators.required],[this.pwdValidator]],
+      user_address:['',[Validators.required],[this.addressAsyncValidator]],
+      user_phone:['',[Validators.required],[this.phoneAsyncValidator]]
+    });
+   }
 
   ngOnInit(): void {
     this.listOfData = new Array(10).fill(0).map((_, index) => ({
@@ -189,7 +217,62 @@ export class UserComponent implements OnInit {
 
  //批量删除二次确认
   confirm(): void {
+    console.log(this.setOfCheckedId)
+  }
+
+  //新增用户
+  add():void {
+    this.isVisible = true;
+  }
+
+  //编辑用户
+  edit(data:any):void {
+    this.isVisible = true;
+    this.user_realname = data.userRealName;
+    this.user_name = data.userName;
+    this.user_age = data.age;
+    this.user_sex = data.sex;
+    this.user_phone = data.phone;
+    this.user_address = data.address;
     
+  }
+
+  //删除用户
+  Singleconfirm(id:number) {
+     console.log(id)
+  }
+
+  //新增|编辑用户数据确认提交
+  handleOk(): void {
+    this.isOkLoading = true;
+    if (this.UservalidateForm.valid) {
+
+      setTimeout(() => {
+        this.isVisible = false;
+        this.isOkLoading = false;
+      }, 500);
+    } else {
+        this.isVisible = true;
+        this.isOkLoading = false;
+        Object.values(this.UservalidateForm.controls).forEach(control => {
+          if (control.invalid) {
+            control.markAsDirty();
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        });
+    }
+  }
+ 
+  //新增|编辑用户取消
+  handleCancel(): void {
+    this.isVisible = false;
+    this.UservalidateForm.reset();
+    for (const key in this.UservalidateForm.controls) {
+      if (this.UservalidateForm.controls.hasOwnProperty(key)) {
+        this.UservalidateForm.controls[key].markAsPristine();
+        this.UservalidateForm.controls[key].updateValueAndValidity();
+      }
+    }
   }
 
   //更新选中集合
@@ -224,6 +307,89 @@ export class UserComponent implements OnInit {
     this.indeterminate = this.listOfCurrentPageData.some(item => this.setOfCheckedId.has(item.id)) && !this.checked;
   }
  
+   //设置校验规则
+   userRealnameAsyncValidator = (control: UntypedFormControl) =>
+   new Observable((observer: Observer<ValidationErrors | null>) => {
+     setTimeout(() => {
+       if (!control.value) {
+         observer.next({ error: true, required: true });
+       } else if (control.value.length > 30) {
+         observer.next({ error: true, maxlength: true });
+       } else {
+         observer.next(null);
+       }
+       observer.complete();
+     }, 500);
+   });
+userNameAsyncValidator = (control: UntypedFormControl) =>
+   new Observable((observer: Observer<ValidationErrors | null>) => {
+     setTimeout(() => {
+       if (!control.value) {
+         observer.next({ error: true, required: true });
+       } else if (control.value.length > 30) {
+         observer.next({ error: true, maxlength: true });
+       } else {
+         observer.next(null);
+       }
+       observer.complete();
+     }, 500);
+   });
+ ageValidator = (control: UntypedFormControl) =>
+     new Observable((observer: Observer<ValidationErrors | null>) => {
+       setTimeout(() => {
+         if (!control.value) {
+           observer.next({ error: true, required: true });
+         } else if (control.value < 1) {
+           observer.next({ error: true, minlength: true });
+         } else if (control.value> 120) {
+           observer.next({ error: true, maxlength: true });
+         } else {
+           observer.next(null);
+         }
+         observer.complete();
+       }, 500);    
+ });   
+ pwdValidator = (control: UntypedFormControl) =>
+     new Observable((observer: Observer<ValidationErrors | null>) => {
+       setTimeout(() => {
+         if (!control.value) {
+           observer.next({ error: true, required: true });
+         } else if (control.value.length < 6) {
+           observer.next({ error: true, minlength: true });
+         } else if (control.value.length > 15) {
+           observer.next({ error: true, maxlength: true });
+         } else {
+           observer.next(null);
+         }
+         observer.complete();
+       }, 500);
+}); 
+addressAsyncValidator = (control: UntypedFormControl) =>
+   new Observable((observer: Observer<ValidationErrors | null>) => {
+     setTimeout(() => {
+       if (!control.value) {
+         observer.next({ error: true, required: true });
+       } else if (control.value.length > 300) {
+         observer.next({ error: true, maxlength: true });
+       } else {
+         observer.next(null);
+       }
+       observer.complete();
+     }, 500);
+});
+phoneAsyncValidator = (control: UntypedFormControl) =>
+   new Observable((observer: Observer<ValidationErrors | null>) => {
+     setTimeout(() => {
+       if (control.value == '') {
+         observer.next({ error: true, required: true });
+       } else if (control.value.match(/^1(3|4|5|6|7|8|9)\d{9}$/) === null) {
+         observer.next({ error: true, errorPhone: true });
+       } else {
+         observer.next(null);
+       }
+       observer.complete();
+     }, 500);
+   });
   
 
 
