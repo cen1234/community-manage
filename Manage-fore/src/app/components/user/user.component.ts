@@ -18,16 +18,6 @@ interface ItemData {
 })
 export class UserComponent implements OnInit {
 
- //用户属性
-  public user_name:string = '';//用户名
-  public user_realname:string = '';//用户真实姓名
-  public user_phone:string = '';//用户电话号码
-  public user_age:number|string = 0;//用户年龄
-  public user_sex:string = '';//用户姓名
-  public user_address:string = '';//用户地址
-  public user_img:string = '';//用户图像
-  public user_role:string = '';//用户身份
-  public user_password:string = '';//用户密码
   //属性
   public isCollapsed:boolean = false;//侧边栏是否折叠
   public isVisible:boolean = false;//新增|编辑用户弹窗是否出现
@@ -204,8 +194,8 @@ export class UserComponent implements OnInit {
       userRealName:`Edward King ${index}`,
       userName: `Edward King ${index}`,
       age: 32,
-      sex:'女',
-      phone:'12345678911',
+      sex:'男',
+      phone:'18709261628',
       address: `London, Park Lane no. ${index}`
     }));   
   }
@@ -223,18 +213,20 @@ export class UserComponent implements OnInit {
   //新增用户
   add():void {
     this.isVisible = true;
+    this.userMoadl = '新增用户';
   }
 
   //编辑用户
   edit(data:any):void {
     this.isVisible = true;
-    this.user_realname = data.userRealName;
-    this.user_name = data.userName;
-    this.user_age = data.age;
-    this.user_sex = data.sex;
-    this.user_phone = data.phone;
-    this.user_address = data.address;
-    
+    this.userMoadl = '编辑用户';
+    //将要编辑的这一行用户数据绑定到表单上
+    this.UservalidateForm.controls['user_realname'].setValue(data.userRealName);
+    this.UservalidateForm.controls['user_name'].setValue(data.userName);
+    this.UservalidateForm.controls['user_age'].setValue(data.age);
+    this.UservalidateForm.controls['user_sex'].setValue(data.sex);
+    this.UservalidateForm.controls['user_phone'].setValue(data.phone);
+    this.UservalidateForm.controls['user_address'].setValue(data.address);
   }
 
   //删除用户
@@ -246,7 +238,7 @@ export class UserComponent implements OnInit {
   handleOk(): void {
     this.isOkLoading = true;
     if (this.UservalidateForm.valid) {
-
+      console.log('submit', this.UservalidateForm.value);
       setTimeout(() => {
         this.isVisible = false;
         this.isOkLoading = false;
