@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { EChartsOption } from 'echarts';
+import { EChartsOption, number } from 'echarts';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http'; 
+import { Observable, Observer, toArray } from 'rxjs';
+import { HttpClient,HttpHeaders  } from '@angular/common/http'; 
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { ThisReceiver } from '@angular/compiler';
 interface ItemData {
   id: number;
+  roleId:number;
   userRealName: string;
   username: string;
   age: number;
   sex:string;
+  password:string;
   phone:string;
   address: string;
 }
@@ -44,8 +48,9 @@ export class UserComponent implements OnInit {
   pageIndex:number = 1;//当前页
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
+  userForm:any = {};//传递给后台的用户表单信息
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});//请求头
   
-
   //身份统计图
   roleOption = {
     color:[ '#d1b7d7', "#998cc3","#9974b2","#7c78ab","#9a86ba"],
@@ -186,15 +191,17 @@ export class UserComponent implements OnInit {
     ]
   }
  
-  constructor(private fb: UntypedFormBuilder,private http:HttpClient) {
+  constructor(private fb: UntypedFormBuilder,private http:HttpClient,private message: NzMessageService) {
     this.UservalidateForm = this.fb.group({
-      user_realname: ['', [Validators.required],[this.userRealnameAsyncValidator]],
-      user_name: ['', [Validators.required],[this.userNameAsyncValidator]],
-      user_age: ['', [Validators.required],[this.ageValidator]],
-      user_sex:['',[Validators.required]],
-      user_password:['',[Validators.required],[this.pwdValidator]],
-      user_address:['',[Validators.required],[this.addressAsyncValidator]],
-      user_phone:['',[Validators.required],[this.phoneAsyncValidator]]
+      id:[''],
+      roleId:[0,[Validators.required]],
+      userRealName: ['', [Validators.required],[this.userRealnameAsyncValidator]],
+      username: ['', [Validators.required],[this.userNameAsyncValidator]],
+      age: ['', [Validators.required],[this.ageValidator]],
+      sex:['',[Validators.required]],
+      password:['',[Validators.required],[this.pwdValidator]],
+      address:['',[Validators.required],[this.addressAsyncValidator]],
+      phone:['',[Validators.required],[this.phoneAsyncValidator]],
     });
    }
 
@@ -203,13 +210,23 @@ export class UserComponent implements OnInit {
   }
 
   //取消批量删除
-  cancel(): void {
-    
-  }
+  cancel(): void {}
 
  //批量删除二次确认
   confirm(): void {
-    console.log(this.setOfCheckedId)
+    let delList:any = [];
+    this.setOfCheckedId.forEach(item => {
+      delList.push(item);
+    })
+    let url = 'api/user/deleteSelect/'+delList;
+    this.http.post(url,{Headers:this.headers}).subscribe(res => {
+      if (res === true) {
+         this.message.success('用户删除成功！', {
+            nzDuration: 500
+        });
+        this.onload();
+     }
+    })
   }
 
   //获取用户数据
@@ -229,6 +246,13 @@ export class UserComponent implements OnInit {
 
   //新增用户
   add():void {
+    this.UservalidateForm.reset();
+    for (const key in this.UservalidateForm.controls) {
+      if (this.UservalidateForm.controls.hasOwnProperty(key)) {
+        this.UservalidateForm.controls[key].markAsPristine();
+        this.UservalidateForm.controls[key].updateValueAndValidity();
+      }
+    }
     this.isVisible = true;
     this.userMoadl = '新增用户';
   }
@@ -238,24 +262,47 @@ export class UserComponent implements OnInit {
     this.isVisible = true;
     this.userMoadl = '编辑用户';
     //将要编辑的这一行用户数据绑定到表单上
-    this.UservalidateForm.controls['user_realname'].setValue(data.userRealName);
-    this.UservalidateForm.controls['user_name'].setValue(data.userName);
-    this.UservalidateForm.controls['user_age'].setValue(data.age);
-    this.UservalidateForm.controls['user_sex'].setValue(data.sex);
-    this.UservalidateForm.controls['user_phone'].setValue(data.phone);
-    this.UservalidateForm.controls['user_address'].setValue(data.address);
+    this.UservalidateForm.controls['id'].setValue(data.id);
+    this.UservalidateForm.controls['roleId'].setValue(Number(data.roleId));
+    this.UservalidateForm.controls['userRealName'].setValue(data.userRealName);
+    this.UservalidateForm.controls['username'].setValue(data.username);
+    this.UservalidateForm.controls['age'].setValue(data.age);
+    this.UservalidateForm.controls['sex'].setValue(data.sex);
+    this.UservalidateForm.controls['password'].setValue(data.password);
+    this.UservalidateForm.controls['phone'].setValue(data.phone);
+    this.UservalidateForm.controls['address'].setValue(data.address);
   }
 
-  //删除用户
+  //删除单个用户
   Singleconfirm(id:number) {
-     console.log(id)
+    let url = 'api/user/delete/'+id;
+    this.http.post(url,{headers:this.headers}).subscribe(res => {
+       if (res === true) {
+          this.message.success('用户删除成功！', {
+            nzDuration: 500
+          });
+          this.onload();
+       }
+    })
   }
 
   //新增|编辑用户数据确认提交
   handleOk(): void {
     this.isOkLoading = true;
     if (this.UservalidateForm.valid) {
-      console.log('submit', this.UservalidateForm.value);
+      let url = 'api/user';
+      this.http.post(url,JSON.stringify(this.UservalidateForm.value),{headers:this.headers}).subscribe(res => {
+        if( res === true) {
+          this.message.success('用户操作成功！', {
+            nzDuration: 500
+          });
+          this.onload();
+        }
+      },err => {
+        this.message.error('用户操作失败！', {
+          nzDuration: 500
+        });
+      })
       setTimeout(() => {
         this.isVisible = false;
         this.isOkLoading = false;
@@ -323,11 +370,10 @@ export class UserComponent implements OnInit {
     this.onload();
   }
   
-  //
+  //tab页改变
   SelectedIndexChange(newSelectIndex:number) {
      this.SelectedIndex = newSelectIndex;
      this.onload();
-     console.log('this.SelectedIndex',this.SelectedIndex)
   }
   //刷新选中状态
   refreshCheckedStatus(): void {

@@ -37,7 +37,7 @@ public class UserController {
 //    @RequestParam接收： ？pageNum=1&pageSize=10
 //    设置page条件：哪一页和页的数据多少条；
 //    设置查询条件：queryWrapper；
-//    用户可以根据 username，realname，email，phone这些关键词进行模糊查询，并带上type
+//    用户可以根据 realname，name，phone这些关键词进行模糊查询，并带上type
 //    ------
       @GetMapping("page")
       public IPage<User> findPage(@RequestParam Integer pageNum,
@@ -78,13 +78,13 @@ public class UserController {
 //      ------
 //      删除用户
 //      ------
-    @DeleteMapping("/{id}")
+    @PostMapping("/delete/{id}")
     public boolean deleteById(@PathVariable Integer id) {
         return userService.removeById(id);
     }
 
-    @DeleteMapping
-    public  boolean deleteByIds(@RequestParam Collection idlist) {
+    @PostMapping("/deleteSelect/{idlist}")
+    public  boolean deleteByIds(@PathVariable Collection idlist) {
         return userService.removeByIds(idlist);
     }
 

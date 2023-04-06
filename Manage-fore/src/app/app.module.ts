@@ -37,6 +37,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
 import { AsideComponent } from './layout/aside/aside.component';
@@ -98,6 +99,7 @@ registerLocaleData(zh);
     NzTableModule,
     NzBackTopModule,
     NzUploadModule,
+    NzMessageModule,
     //引入部分
     NgxEchartsModule.forRoot({ //引入部分
       echarts: () => import('echarts') //引入部分

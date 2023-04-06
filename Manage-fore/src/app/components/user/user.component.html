@@ -175,13 +175,13 @@
               <nz-form-item>
                 <nz-form-label [nzSpan]="7" nzRequired>用户真实姓名</nz-form-label>
                 <nz-form-control [nzSpan]="12" [nzErrorTip]="userRealnameErrorTpl">
-                  <input nz-input formControlName="user_realname" placeholder="请输入用户真实姓名" />
+                  <input nz-input formControlName="userRealName" placeholder="请输入用户真实姓名" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
                 <nz-form-control [nzSpan]="12" [nzErrorTip]="userNameErrorTpl">
-                  <input nz-input formControlName="user_name" placeholder="请输入用户名" />
+                  <input nz-input formControlName="username" placeholder="请输入用户名" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -193,7 +193,7 @@
                           [nzMin]="1"
                           [nzMax]="120" 
                           [nzStep]="1"
-                          formControlName="user_age" 
+                          formControlName="age" 
                           nzPlaceHolder="请输入用户年龄"
                           ></nz-input-number>
                       </nz-form-control>
@@ -201,21 +201,33 @@
               <nz-form-item >
                 <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
                 <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
-                    <nz-radio-group formControlName="user_sex">
+                    <nz-radio-group formControlName="sex">
                         <label nz-radio nzValue="女">女</label>
                         <label nz-radio nzValue="男">男</label>
                       </nz-radio-group>
                     </nz-form-control>
             </nz-form-item> 
             <nz-form-item >
+              <nz-form-label [nzSpan]="7" nzRequired>身份</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="身份不能为空">
+                <nz-select class="input-width" nzShowSearch  nzAllowClear nzPlaceHolder="请选择用户的身份" formControlName="roleId">
+                  <nz-option nzLabel="系统管理员" nzValue="1"></nz-option>
+                  <nz-option nzLabel="社区管理员" nzValue="2"></nz-option>
+                  <nz-option nzLabel="社区工作人员" nzValue="3"></nz-option>
+                  <nz-option nzLabel="志愿者" nzValue="4"></nz-option>
+                  <nz-option nzLabel="普通用户" nzValue="5"></nz-option>
+                </nz-select>
+              </nz-form-control>
+          </nz-form-item> 
+            <nz-form-item >   
               <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="pwdErrorTpl">
                   <nz-input-group  class="input-box input-width"  [nzSuffix]="suffixTemplate">
                       <input 
                         nz-input 
                         [type]="passwordVisible ? 'text' : 'password'" 
-                        formControlName="user_password" 
-                        id="user_password" 
+                        formControlName="password" 
+                        id="password" 
                         placeholder="请输入密码"/>
                   </nz-input-group>
                   </nz-form-control>
@@ -223,14 +235,14 @@
             <nz-form-item>
                 <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
                 <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
-                  <input class="input-width" nz-input formControlName="user_phone" placeholder="请输入电话号码" />
+                  <input class="input-width" nz-input formControlName="phone" placeholder="请输入电话号码" />
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item class="input-box">
                 <nz-form-label [nzSpan]="7" nzRequired>详细地址</nz-form-label>
                 <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
                   <nz-textarea-count [nzMaxCharacterCount]="300">
-                    <textarea rows="2"  class="input-width" formControlName="user_address" nz-input placeholder="请输入用户详细地址(包含省市区|县)"></textarea>
+                    <textarea rows="2"  class="input-width" formControlName="address" nz-input placeholder="请输入用户详细地址(包含省市区|县)"></textarea>
                   </nz-textarea-count>
                 </nz-form-control>
             </nz-form-item>
