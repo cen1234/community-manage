@@ -93,22 +93,18 @@
                 <button class="operate-btn" nz-button nzType="default">批量导入</button>
                 <button class="operate-btn" nz-button nzType="default">批量导出</button>
               </div>
-              <nz-input-group nzCompact class="select-box">
-                <nz-select [ngModel]="'真实姓名'" style="width: 120px;">
-                  <nz-option [nzLabel]="'真实姓名'" [nzValue]="'realname'"></nz-option>
-                  <nz-option [nzLabel]="'账号名'" [nzValue]="'name'"></nz-option>
-                  <nz-option [nzLabel]="'电话号码'" [nzValue]="'phone'"></nz-option>
-                </nz-select>
-                <input type="text" nz-input [ngModel]="inputValue" placeholder="请输入要搜索的信息"/>
-              </nz-input-group>
             </div>
                 <!-- 表格 -->
-            <nz-tabset class="tab">
-              <nz-tab nzTitle="系统管理员" >
+            <nz-tabset class="tab" 
+               [nzTabBarExtraContent]="extraTemplate"
+               [nzSelectedIndex]="SelectedIndex"
+               (nzSelectedIndexChange)="SelectedIndexChange($event)">
+              <nz-tab *ngFor="let tab of tabs" [nzTitle]="tab" >
                 <nz-table
                 #rowSelectionTable
                 nzShowSizeChanger
                 [nzData]="listOfData"
+                [nzFrontPagination]="false"
                 [nzPageSizeOptions]="[3,5]"
                 [nzShowQuickJumper] = "true"
                 [nzPaginationType] = "'small'"
@@ -116,6 +112,8 @@
                 [nzPageSize] = "pageSize"
                 [nzTotal] = "total"
                 (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+                (nzPageIndexChange)="nzPageIndexChange($event)"
+                (nzPageSizeChange)="nzPageSizeChange($event)"
               >
                 <thead>
                   <tr>
@@ -137,7 +135,7 @@
                   <tr *ngFor="let data of rowSelectionTable.data">
                     <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
                     <td>{{ data.userRealName }}</td>
-                    <td>{{ data.userName }}</td>
+                    <td>{{ data.username }}</td>
                     <td>{{ data.age }}</td>
                     <td>{{data.sex}}</td>
                     <td>{{data.phone}}</td>
@@ -159,10 +157,6 @@
                 </tbody>
               </nz-table>
               </nz-tab>
-              <nz-tab nzTitle="社区管理员">Content of Tab Pane 2</nz-tab>
-              <nz-tab nzTitle="社区工作人员">Content of Tab Pane 3</nz-tab>
-              <nz-tab nzTitle="志愿者">Content of Tab Pane 2</nz-tab>
-              <nz-tab nzTitle="普通用户">Content of Tab Pane 3</nz-tab>
             </nz-tabset>
             <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
         </nz-content>
@@ -281,6 +275,17 @@
 <ng-template #phoneErrorTpl let-control>
     <ng-container *ngIf="control.hasError('required')">电话号码不能为空</ng-container>
     <ng-container *ngIf="control.hasError('errorPhone')">请填写正确的电话号码</ng-container>
+  </ng-template>
+  <!-- tabs右上搜索框 -->
+  <ng-template #extraTemplate>
+    <nz-input-group nzCompact class="select-box">
+      <nz-select [(ngModel)]="selectType" style="width: 120px;">
+        <nz-option [nzLabel]="'真实姓名'" [nzValue]="'realname'"></nz-option>
+        <nz-option [nzLabel]="'账号名'" [nzValue]="'name'"></nz-option>
+        <nz-option [nzLabel]="'电话号码'" [nzValue]="'phone'"></nz-option>
+      </nz-select>
+      <input type="text" nz-input [(ngModel)]="inputValue" placeholder="请输入要搜索的信息" (keypress)="onload()"/>
+    </nz-input-group>
   </ng-template>
 
   

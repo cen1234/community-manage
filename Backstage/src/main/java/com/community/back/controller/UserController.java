@@ -42,10 +42,26 @@ public class UserController {
       @GetMapping("page")
       public IPage<User> findPage(@RequestParam Integer pageNum,
                                   @RequestParam Integer pageSize,
-                                  @RequestParam(defaultValue = "") String search) {
+                                  @RequestParam(defaultValue = "") String search,
+                                  @RequestParam(defaultValue = "name") String type,
+                                  @RequestParam Integer roleId) {
     IPage<User> page = new Page<>(pageNum,pageSize);
     QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-    queryWrapper.like("username",search);
+    switch (type) {
+        case "realname":{
+             queryWrapper.like("user_real_name",search);
+             break;
+        }
+        case "name":{
+            queryWrapper.like("username",search);
+            break;
+        }
+        case "phone":{
+            queryWrapper.like("phone",search);
+            break;
+        }
+    }
+    queryWrapper.like("role_id",roleId);
     return userService.page(page,queryWrapper);
 }
 

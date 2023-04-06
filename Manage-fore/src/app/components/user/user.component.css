@@ -49,11 +49,8 @@
     margin-right: 15px;
   }
   .select-box {
-    position: absolute;
     display: flex;
-    left: 28%;
-    top: 75.8%;
-    width: 21%;
+    width: 300px;
   }
   .input-width {
     width: 238px;

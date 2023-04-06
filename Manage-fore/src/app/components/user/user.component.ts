@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http'; 
 interface ItemData {
   id: number;
   userRealName: string;
-  userName: string;
+  username: string;
   age: number;
   sex:string;
   phone:string;
@@ -23,9 +24,18 @@ export class UserComponent implements OnInit {
   public isVisible:boolean = false;//新增|编辑用户弹窗是否出现
   public userMoadl:string = '新增用户';//新增|编辑用户弹窗标题
   public isOkLoading:boolean = false;///新增|编辑用户弹窗提交数据是否加载
-  public inputValue: string | null = null;//搜索框输入值
+  public inputValue: string = '';//搜索框输入值
   public UservalidateForm: UntypedFormGroup;//用户表格
   public passwordVisible = false;//密码输入框可视
+  public selectType:string = '';//搜索框搜索类型
+  public tabs:string[] = [
+    "系统管理员",
+    "社区管理员",
+    "社区工作人员",
+    "志愿者",
+    "普通用户"
+  ];//tabs标题
+  public SelectedIndex:number = 0;//当前激活tab面板的序列号
   checked = false;
   indeterminate = false;
   listOfCurrentPageData:readonly  ItemData[] = [];
@@ -176,7 +186,7 @@ export class UserComponent implements OnInit {
     ]
   }
  
-  constructor(private fb: UntypedFormBuilder) {
+  constructor(private fb: UntypedFormBuilder,private http:HttpClient) {
     this.UservalidateForm = this.fb.group({
       user_realname: ['', [Validators.required],[this.userRealnameAsyncValidator]],
       user_name: ['', [Validators.required],[this.userNameAsyncValidator]],
@@ -188,16 +198,8 @@ export class UserComponent implements OnInit {
     });
    }
 
-  ngOnInit(): void {
-    this.listOfData = new Array(10).fill(0).map((_, index) => ({
-      id: index,
-      userRealName:`Edward King ${index}`,
-      userName: `Edward King ${index}`,
-      age: 32,
-      sex:'男',
-      phone:'18709261628',
-      address: `London, Park Lane no. ${index}`
-    }));   
+  ngOnInit(): void {  
+    this.onload();
   }
 
   //取消批量删除
@@ -208,6 +210,21 @@ export class UserComponent implements OnInit {
  //批量删除二次确认
   confirm(): void {
     console.log(this.setOfCheckedId)
+  }
+
+  //获取用户数据
+  onload(): void {
+    let url = 'api/user/page';
+    this.http.get(url,{params:{
+      pageNum:this.pageIndex,
+      pageSize:this.pageSize,
+      search:this.inputValue,
+      type:this.selectType,
+      roleId:this.SelectedIndex+1
+    }}).subscribe((res:any) => {
+       this.listOfData = res.records;
+       this.total = res.total;
+    })
   }
 
   //新增用户
@@ -292,6 +309,25 @@ export class UserComponent implements OnInit {
   onCurrentPageDataChange($event: readonly ItemData[]): void {
     this.listOfCurrentPageData = $event;
     this.refreshCheckedStatus();
+  }
+
+  //页码改变
+  nzPageIndexChange(newPageIndex:number):void{
+      this.pageIndex = newPageIndex;
+      this.onload();
+  }
+
+  //页大小改变
+  nzPageSizeChange(newPageSize:number) {
+    this.pageSize = newPageSize;
+    this.onload();
+  }
+  
+  //
+  SelectedIndexChange(newSelectIndex:number) {
+     this.SelectedIndex = newSelectIndex;
+     this.onload();
+     console.log('this.SelectedIndex',this.SelectedIndex)
   }
   //刷新选中状态
   refreshCheckedStatus(): void {
@@ -382,6 +418,8 @@ phoneAsyncValidator = (control: UntypedFormControl) =>
        observer.complete();
      }, 500);
    });
+
+  
   
 
 
@@ -390,3 +428,5 @@ phoneAsyncValidator = (control: UntypedFormControl) =>
 
 
 }
+
+
