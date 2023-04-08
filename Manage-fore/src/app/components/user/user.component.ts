@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption, number } from 'echarts';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Observable, Observer, toArray } from 'rxjs';
+import { map, Observable, Observer, toArray } from 'rxjs';
 import { HttpClient,HttpHeaders  } from '@angular/common/http'; 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ThisReceiver } from '@angular/compiler';
@@ -25,6 +25,14 @@ export class UserComponent implements OnInit {
 
   //属性
   public isCollapsed:boolean = false;//侧边栏是否折叠
+  public sysAdmin:number = 0;//系统管理员人数
+  public comAdmin:number= 0;//社区管理员人数
+  public staff:number= 0;//社区工作人员人数
+  public volunteer:number= 0;//志愿者人数
+  public ordinary:number= 0;//普通用户人数
+  public roleData:any =[];//统计身份数组
+  public genderDara:any =[];//统计性别数组
+  public ageData:any= [];//统计年龄数组
   public isVisible:boolean = false;//新增|编辑用户弹窗是否出现
   public userMoadl:string = '新增用户';//新增|编辑用户弹窗标题
   public isOkLoading:boolean = false;///新增|编辑用户弹窗提交数据是否加载
@@ -43,8 +51,8 @@ export class UserComponent implements OnInit {
   checked = false;
   indeterminate = false;
   listOfCurrentPageData:readonly  ItemData[] = [];
-  listOfData: readonly ItemData[] = [];
-  setOfCheckedId = new Set<number>();
+  listOfData: readonly ItemData[] = [];//表格数据
+  setOfCheckedId = new Set<number>();//多选框选中集合
   pageIndex:number = 1;//当前页
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
@@ -77,12 +85,7 @@ export class UserComponent implements OnInit {
             name: '用户角色信息',
             type: 'pie',
             radius: '50%',
-            data: [
-              { value: 1048, name: '系统管理员' },
-              { value: 735, name: '社区管理员' },
-              { value: 580, name: '志愿者' },
-              { value: 484, name: '社区工作人员' },
-              { value: 300, name: '普通用户' }],
+            data: [],
             emphasis: {
                 itemStyle: {
                     shadowBlur: 10,
@@ -94,7 +97,7 @@ export class UserComponent implements OnInit {
     ]
   };
   //年龄统计图
-  genderOption = {
+  ageOption = {
     color:[ '#dfe3e5',
             '#afc3de',
             '#c3d5e6',
@@ -133,13 +136,7 @@ export class UserComponent implements OnInit {
                 type: 'pie',
                 radius: '60%',
                 roseType: 'area',//是否表现为南丁格尔图
-                data: [
-                  { value: 10, name: '20' },
-                  { value: 7, name: '22' },
-                  { value: 5, name: '21' },
-                  { value: 4, name: '25' },
-                  { value: 3, name: '26' }
-                ],
+                data: [],
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -151,7 +148,7 @@ export class UserComponent implements OnInit {
         ]
   }
   //性别统计图
-  ageOption = {
+  genderOption = {
     color:[ '#ecedf6', '#f2e7ff','#a4d6fe'],
     title: {
         text: '用户性别统计',
@@ -176,10 +173,7 @@ export class UserComponent implements OnInit {
             name: '用户性别信息',
             type: 'pie',
             radius: '50%',
-            data: [
-              {value:22,name:'女'},
-              {value:20,name:'男'}
-            ],
+            data: [],
             emphasis: {
                 itemStyle: {
                     shadowBlur: 10,
@@ -206,7 +200,8 @@ export class UserComponent implements OnInit {
    }
 
   ngOnInit(): void {  
-    this.onload();
+    // this.onload();
+    this.findAll();
   }
 
   //取消批量删除
@@ -229,7 +224,7 @@ export class UserComponent implements OnInit {
     })
   }
 
-  //获取用户数据
+  //分页获取用户数据
   onload(): void {
     let url = 'api/user/page';
     this.http.get(url,{params:{
@@ -241,6 +236,45 @@ export class UserComponent implements OnInit {
     }}).subscribe((res:any) => {
        this.listOfData = res.records;
        this.total = res.total;
+    })
+  }
+
+  //获取全部用户数据
+  findAll():void {
+    let url = 'api/user/findAll';
+    this.http.get(url).subscribe((res:any) => {
+      let temp:any = [];
+      let array = res.map((item:any) => {
+          switch(item.roleId) {
+            case 1:{
+                this.sysAdmin++;
+                temp.push(item);
+                break;
+            }
+            case 2:{
+                 this.comAdmin++;
+                 break;
+            }
+            case 3:{
+                 this.staff++;
+                 break;
+            }
+            case 4:{
+                 this.volunteer++;
+                 break;
+            }
+            case 5:{
+                 this.ordinary++;
+                 break;
+            }
+          }
+          return temp;
+      })
+      this.statisticalRole();
+      this.statisticalAge(res);
+      this.statisticalGender(res);
+      this.listOfData = temp;
+      this.total = temp.length;
     })
   }
 
@@ -465,8 +499,66 @@ phoneAsyncValidator = (control: UntypedFormControl) =>
      }, 500);
    });
 
+
+  //统计身份
+  statisticalRole():void {
+      this.roleData = [
+        {value:this.sysAdmin,name:'系统管理员'},
+        {value:this.comAdmin,name:'社区管理员'},
+        {value:this.staff,name:'社区工作人员'},
+        {value:this.volunteer,name:'志愿者'},
+        {value:this.ordinary,name:'普通用户'}
+      ]
+      this.roleOption.series[0].data = this.roleData;
+  }
   
-  
+  //统计年龄
+  statisticalAge(arr:any):void {
+    let map = new Map();
+    let num:number;
+    arr.forEach((item:any)=>{
+       if(!map.has(item.age)) {
+           num = 1;
+         map.set(item.age,1)
+       } else {
+        num = map.get(item.age) + 1;
+         map.delete(item.age);
+         map.set(item.age,num+1);
+       }
+    })
+    for (const [key,value] of map) {
+      let obj:any = {};
+      obj.value = value;
+      obj.name = key;
+      this.ageData.push(obj);
+     }
+     this.ageOption.series[0].data = this.ageData;
+  }
+
+  //统计性别
+  statisticalGender(arr:any):void {
+    let map = new Map();
+    let num:number;
+    arr.forEach((item:any)=>{
+       if(!map.has(item.sex)) {
+           num = 1;
+         map.set(item.sex,1)
+       } else {
+         num = map.get(item.sex) + 1;
+         map.delete(item.sex);
+         map.set(item.sex,num);
+       }
+    })
+    console.log(map)
+    for (const [key,value] of map) {
+      let obj:any = {};
+      obj.value = value;
+      obj.name = key;
+      this.genderDara.push(obj);
+     }
+     console.log(this.genderDara)
+     this.genderOption.series[0].data = this.genderDara;
+  }
 
 
 

@@ -27,7 +27,7 @@
                       <nz-card>
                         <nz-row [nzGutter]="16">
                           <nz-col [nzSpan]="14">
-                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'系统管理员人数'"></nz-statistic>
+                            <nz-statistic nzValue="{{sysAdmin}}" [nzTitle]="'系统管理员人数'"></nz-statistic>
                           </nz-col>
                         </nz-row>
                       </nz-card>
@@ -36,7 +36,7 @@
                       <nz-card>
                         <nz-row [nzGutter]="16">
                           <nz-col [nzSpan]="14">
-                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'社区管理员人数'"></nz-statistic>
+                            <nz-statistic nzValue="{{comAdmin}}" [nzTitle]="'社区管理员人数'"></nz-statistic>
                           </nz-col>
                         </nz-row>
                       </nz-card>
@@ -45,7 +45,7 @@
                       <nz-card>
                         <nz-row [nzGutter]="16">
                           <nz-col [nzSpan]="14">
-                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'社区工作人员人数'"></nz-statistic>
+                            <nz-statistic nzValue="{{staff}}" [nzTitle]="'社区工作人员人数'"></nz-statistic>
                           </nz-col>
                         </nz-row>
                       </nz-card>
@@ -54,7 +54,7 @@
                       <nz-card>
                         <nz-row [nzGutter]="16">
                           <nz-col [nzSpan]="12">
-                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'志愿者人数'"></nz-statistic>
+                            <nz-statistic nzValue="{{volunteer}}" [nzTitle]="'志愿者人数'"></nz-statistic>
                           </nz-col>
                         </nz-row>
                       </nz-card>
@@ -63,7 +63,7 @@
                       <nz-card>
                         <nz-row [nzGutter]="16">
                           <nz-col [nzSpan]="12">
-                            <nz-statistic [nzValue]="(1949101 | number)!" [nzTitle]="'普通用户人数'"></nz-statistic>
+                            <nz-statistic nzValue="{{ordinary}}" [nzTitle]="'普通用户人数'"></nz-statistic>
                           </nz-col>
                         </nz-row>
                       </nz-card>
@@ -73,8 +73,8 @@
                  <!-- 统计情况 -->
                  <div class="statistical-situation">
                   <div id="statistical-role" echarts [options]="roleOption"></div>
-                  <div id="statistical-gender" echarts [options]="genderOption"></div>
-                  <div id="statistical-age" echarts [options]="ageOption"></div>
+                  <div id="statistical-gender" echarts [options]="ageOption"></div>
+                  <div id="statistical-age" echarts [options]="genderOption"></div>
              </div>
             </div>
             <div class="operate">
