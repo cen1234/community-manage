@@ -45,11 +45,11 @@
             <div *ngIf="img_upload">
                 <nz-upload
                     class="avatar-uploader"
-                    nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    nzName="avatar"
+                    nzAction="api/file/upload"
+                    nzName="file"
                     nzListType="picture-card"
                     [nzShowUploadList]="false"
-                  
+                    [nzBeforeUpload]="beforeUpload"
                     (nzChange)="handleChange($event)"
               >
                 <ng-container *ngIf="!avatarUrl">
@@ -58,7 +58,10 @@
                 </ng-container>
                 <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
               </nz-upload>
-              <button class="img-btn" nz-button nzType="default" (click)="editImg()">确认</button>
+              <div class="img-group">
+                <button class="img-btn" nz-button nzType="default" (click)="editImg()">确认</button>
+                <button  nz-button nzType="default" (click)="cancel()">取消</button>
+              </div>
             </div>
          </div>
      </div>

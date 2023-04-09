@@ -92,8 +92,13 @@
     width: 128px;
     height: 128px;
   }
- .img-btn {
+.img-group {
     position: absolute;
-    top: 76%; 
+    display: flex;
+    left: 100%;
+    top: 77%;
+}
+ .img-btn {
+   margin-right: 10px;
  } 
 

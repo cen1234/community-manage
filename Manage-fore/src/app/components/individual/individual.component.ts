@@ -34,7 +34,7 @@ export class IndividualComponent implements OnInit {
   avatarUrl?: string;//上传的头像
   img_upload:boolean = false;//上传图像功能是否展示
 
-  constructor(private router:Router,private fb: UntypedFormBuilder) {
+  constructor(private router:Router,private fb: UntypedFormBuilder,private msg: NzMessageService) {
     this.validateForm = this.fb.group({
       user_realname: ['', [Validators.required],[this.userRealnameAsyncValidator]],
       user_name: ['', [Validators.required],[this.userNameAsyncValidator]],
@@ -212,47 +212,42 @@ export class IndividualComponent implements OnInit {
   editImg():void {
     this.img_upload = false;
   }
+  //
+  cancel():void {
+    this.img_upload = false;
+  }
 
   //设置头像上传格式，大小
-  // beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
-  //   new Observable((observer: Observer<boolean>) => {
-  //     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  //     if (!isJpgOrPng) {
-  //       this.msg.error('您只能上传jpeg或png格式的图片!');
-  //       observer.complete();
-  //       return;
-  //     }
-  //     const isLt2M = file.size! / 1024 / 1024 < 2;
-  //     if (!isLt2M) {
-  //       this.msg.error('上传图片大小不超过2MB!');
-  //       observer.complete();
-  //       return;
-  //     }
-  //     observer.next(isJpgOrPng && isLt2M);
-  //     observer.complete();
-  //   });
+  beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
+  new Observable((observer: Observer<boolean>) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      this.msg.error('You can only upload JPG file!');
+      observer.complete();
+      return;
+    }
+    const isLt2M = file.size! / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      this.msg.error('Image must smaller than 2MB!');
+      observer.complete();
+      return;
+    }
+    observer.next(isJpgOrPng && isLt2M);
+    observer.complete();
+  });
 
-    private getBase64(img: File, callback: (img: string) => void): void {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => callback(reader.result!.toString()));
-      reader.readAsDataURL(img);
-    }
-  
-    handleChange(info: { file: NzUploadFile }): void {
-      switch (info.file.status) {
-        case 'uploading':
-          this.loading = true;
+//说明，在上传完图片后，也拿到了fileuuid,但是不知道为什么info.file.status是error,所有直接从error里取fileuuid了
+handleChange(info: { file: NzUploadFile }): void {
+  switch (info.file.status) {
+    case 'uploading':
+      this.loading = true;
+      break;
+    case 'done':
           break;
-        case 'done':
-            this.getBase64(info.file!.originFileObj!, (img: string) => {
-            this.loading = false;
-            this.avatarUrl = img;
-          });
-          break;
-        case 'error':
-          // this.msg.error('Network error');
-          this.loading = false;
-          break;
-      }
-    }
+    case 'error':
+      this.avatarUrl ='api/file/'+ info.file.error.error.text;
+      this.loading = false;
+      break;
+  }
+}
 }
