@@ -5,6 +5,7 @@ import { map, Observable, Observer, toArray } from 'rxjs';
 import { HttpClient,HttpHeaders  } from '@angular/common/http'; 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ThisReceiver } from '@angular/compiler';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 interface ItemData {
   id: number;
   roleId:number;
@@ -58,7 +59,7 @@ export class UserComponent implements OnInit {
   total:number = 10;//表格数据总数
   userForm:any = {};//传递给后台的用户表单信息
   private headers = new HttpHeaders({'Content-Type': 'application/json'});//请求头
-  
+  fileList: NzUploadFile[] = [];
   //身份统计图
   roleOption = {
     color:[ '#d1b7d7', "#998cc3","#9974b2","#7c78ab","#9a86ba"],
@@ -352,6 +353,25 @@ export class UserComponent implements OnInit {
         });
     }
   }
+
+ 
+  //上传文件改变时的状态
+  handleChange(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      this.message.success(`${info.file.name} 上传成功`);
+      this.onload();
+    } else if (info.file.status === 'error') {
+      this.message.error(`${info.file.name} 上传失败`);
+    }
+  }
+
+  //导出用户
+  export() {
+     window.open('http://localhost:9000/user/export');
+  }
  
   //新增|编辑用户取消
   handleCancel(): void {
@@ -549,14 +569,12 @@ phoneAsyncValidator = (control: UntypedFormControl) =>
          map.set(item.sex,num);
        }
     })
-    console.log(map)
     for (const [key,value] of map) {
       let obj:any = {};
       obj.value = value;
       obj.name = key;
       this.genderDara.push(obj);
      }
-     console.log(this.genderDara)
      this.genderOption.series[0].data = this.genderDara;
   }
 

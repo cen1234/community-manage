@@ -90,8 +90,18 @@
                 >
                 <button class="operate-btn" nz-button nzType="primary" nzDanger>批量删除</button>
                 </a>
-                <button class="operate-btn" nz-button nzType="default">批量导入</button>
-                <button class="operate-btn" nz-button nzType="default">批量导出</button>
+                <nz-upload
+                    nzAction="api/user/import"
+                    [(nzFileList)]="fileList"
+                    [nzShowUploadList]="false"
+                    [nzHeaders]="{ authorization: 'authorization-text' }"
+                    (nzChange)="handleChange($event)"
+                   >
+                    <button class="operate-btn" nz-button nzType="default">
+                      <span nz-icon nzType="vertical-align-top" nzTheme="outline"></span>批量导入</button>
+                </nz-upload>
+                <button class="operate-btn" nz-button nzType="default" (click)="export()">
+                  <span nz-icon nzType="vertical-align-bottom" nzTheme="outline"></span>批量导出</button>
               </div>
             </div>
                 <!-- 表格 -->
