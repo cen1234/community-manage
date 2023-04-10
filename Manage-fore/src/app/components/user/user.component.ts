@@ -58,7 +58,8 @@ export class UserComponent implements OnInit {
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
   userForm:any = {};//传递给后台的用户表单信息
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});//请求头
+  headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
+  user:any;
   fileList: NzUploadFile[] = [];
   //身份统计图
   roleOption = {
@@ -201,7 +202,9 @@ export class UserComponent implements OnInit {
    }
 
   ngOnInit(): void {  
-    // this.onload();
+    // this.user  =localStorage.getItem("user");
+    // this.user = JSON.parse(this.user);
+    // this.headers =  new HttpHeaders({'Content-Type': 'application/json','token': this.user.token});
     this.findAll();
   }
 
@@ -215,7 +218,7 @@ export class UserComponent implements OnInit {
       delList.push(item);
     })
     let url = 'api/user/deleteSelect/'+delList;
-    this.http.post(url,{Headers:this.headers}).subscribe(res => {
+    this.http.post(url,{headers:this.headers}).subscribe(res => {
       if (res === true) {
          this.message.success('用户删除成功！', {
             nzDuration: 500
@@ -228,13 +231,14 @@ export class UserComponent implements OnInit {
   //分页获取用户数据
   onload(): void {
     let url = 'api/user/page';
-    this.http.get(url,{params:{
-      pageNum:this.pageIndex,
-      pageSize:this.pageSize,
-      search:this.inputValue,
-      type:this.selectType,
-      roleId:this.SelectedIndex+1
-    }}).subscribe((res:any) => {
+    this.http.get(url,{
+      params:{
+        pageNum:this.pageIndex,
+        pageSize:this.pageSize,
+        search:this.inputValue,
+        type:this.selectType,
+        roleId:this.SelectedIndex+1
+      }}).subscribe((res:any) => {
        this.listOfData = res.records;
        this.total = res.total;
     })

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 import { Router } from '@angular/router';
+import { HttpClient,HttpHeaders  } from '@angular/common/http'; 
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +16,15 @@ export class LoginComponent implements OnInit {
  public validateLoginForm: UntypedFormGroup; 
  public name:string | null = null;//用户名(要求用户名必填且不超过30个字符)
  public password:string | null = null;//密码(要求密码必填且长度为6-15个字符)
-
+ private headers = new HttpHeaders({'Content-Type': 'application/json'});//请求头
  public divide_title:string = "没有账号？";
  public login_flag:boolean = true;
  public register_flag:boolean = false;
  public passwordVisible = false;
   
-  constructor(private fb: UntypedFormBuilder,private router: Router) { 
+  constructor(private fb: UntypedFormBuilder,private router: Router,private http:HttpClient,private message: NzMessageService) { 
     this.validateLoginForm = this.fb.group({
-      name: ['', [Validators.required], [this.nameValidator]],
+      username: ['', [Validators.required], [this.nameValidator]],
       password: ['', [Validators.required],[this.pwdValidator]],
     });
   }
@@ -47,14 +49,57 @@ export class LoginComponent implements OnInit {
 
   //登录
   login(): void {
-     if (this.inputValidator() === false) {
-        this.router.navigate(['/user']);
+     if (this.inputValidator() === true) {
+        let url = 'api/user/login';
+        this.http.post(url,JSON.stringify(this.validateLoginForm.value),{headers:this.headers}).subscribe((res:any) => {
+          if( res.code === "200") {
+            this.message.success('用户登录成功！', {
+              nzDuration: 500
+            });
+             //登录成功跳转到首页，并将用户信息存储到浏览器本地
+            localStorage.setItem("user",JSON.stringify(res.data));
+            this.router.navigate(['/user']);
+          } else {
+              this.message.error(res.meg, {
+              nzDuration: 1000
+            });
+          }
+        })
+     } else {
+         Object.values(this.validateLoginForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
      }
   }
 
   //注册
   register(): void {
-    this.inputValidator();//校验输入框是否有效
+    console.log(1)
+    if (this.inputValidator() === true) {
+      console.log(11)
+      let url = 'api/user/register';
+      this.http.post(url,JSON.stringify(this.validateLoginForm.value),{headers:this.headers}).subscribe((res:any) => {
+         if (res.code === "200") {
+            this.message.success('用户注册成功！', {
+              nzDuration: 500
+            });
+         } else {
+            this.message.error(res.meg, {
+              nzDuration: 1000
+            });
+         }
+      })
+    } else {
+        Object.values(this.validateLoginForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 
   //设置校验规则

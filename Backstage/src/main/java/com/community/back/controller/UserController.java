@@ -1,6 +1,7 @@
 package com.community.back.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -8,8 +9,12 @@ import cn.hutool.poi.excel.StyleSet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.community.back.common.Constants;
+import com.community.back.common.Result;
+import com.community.back.dto.UserDto;
 import com.community.back.entity.User;
 import com.community.back.service.UserService;
+import com.community.back.utils.TokenUtils;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.SheetUtil;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +35,44 @@ public class UserController {
     @Resource
     private UserService userService;
 
+//      ------
+//       登录
+//      ------
+    @PostMapping("/login")
+    private Result Login(@RequestBody UserDto userDto) {
+        String username = userDto.getUsername();
+        String password = userDto.getPassword();
+        //校验username,password是否为空
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+            return Result.error(Constants.CODE_400,"参数不足!");
+        }
+        //在数据库中查到用户信息，给前台返回一些用户的信息存储到浏览器上
+        UserDto userDto1 = userService.login(userDto);
+        return Result.success(userDto1);
+    }
+
+//       -----
+//       注册
+//       -----
+    @PostMapping("/register")
+    public Result Register(@RequestBody UserDto userDto) {
+        String username = userDto.getUsername();
+        String password = userDto.getPassword();
+        //校验username,password是否为空
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+            return Result.error(Constants.CODE_400,"参数不足!");
+        }
+        //在数据库中添加注册的用户信息
+        return Result.success(userService.register(userDto));
+    }
 
 //    -----
 //    查找全部
 //    -----
     @GetMapping("/findAll")
     public List<User> find() {
+        //获取当前用户信息
+        User currentUser = TokenUtils.getCurrentUser();
         return userService.list();
     }
 

@@ -7,9 +7,10 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxEchartsModule } from 'ngx-echarts';//引入部分
+import { MyInterceptorInterceptor } from './my-interceptor.interceptor';
 //NG-ZORRO组件
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -38,6 +39,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
 import { AsideComponent } from './layout/aside/aside.component';
@@ -48,6 +50,7 @@ import { LoginComponent } from './components/login/login.component';
 import { PasswordComponent } from './components/password/password.component';
 import { IndividualComponent } from './components/individual/individual.component';
 import { UserComponent } from './components/user/user.component';
+
 
 
 
@@ -109,7 +112,12 @@ registerLocaleData(zh);
   providers: [
     { provide: NZ_I18N, 
       useValue: zh_CN ,
-    },
+    }
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: MyInterceptorInterceptor,
+    //   multi: true
+    // },
   ],
   bootstrap: [AppComponent]
 })
