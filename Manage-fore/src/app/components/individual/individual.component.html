@@ -9,10 +9,10 @@
       ></nz-page-header>
         <div class="user-img-bg">
             <nz-avatar  nzIcon="user" [nzSize]="80" style="background-color:#fff;color: #845aff;" *ngIf="false"></nz-avatar>
-            <nz-avatar  nzIcon="user" [nzSize]="80" nzSrc="../../../assets/image/user.jpg" *ngIf="true"></nz-avatar>
+            <nz-avatar  nzIcon="user" [nzSize]="80" nzSrc="{{userImg}}" *ngIf="true"></nz-avatar>
         </div>
-        <p class="user-name">{{user_name}}</p>
-        <p class="user-role" >{{user_role}}</p>
+        <p class="user-name">{{username}}</p>
+        <p class="user-role" >{{role}}</p>
         <div class="user-contact">
             <button class="user-contact-btn" nz-button nzType="default" nzShape="circle">
                 <span nz-icon nzType="wechat" nzTheme="outline" ></span>
@@ -32,13 +32,13 @@
      </div>
      <div class="bottom-box">
         <nz-descriptions nzTitle="个人信息"  class="user-ifo" nzBordered nzSize="middle">
-            <nz-descriptions-item nzTitle="真实姓名">{{user_realname}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="用户名">{{user_name}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="年龄">{{user_age}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="性别">{{user_sex}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="电话">{{user_phone}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="身份">{{user_role}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="地址">{{user_address}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="真实姓名">{{userRealName}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="用户名">{{username}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="年龄">{{age}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="性别">{{sex}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="电话">{{phone}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="身份">{{role}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="地址">{{address}}</nz-descriptions-item>
           </nz-descriptions>
           <div class="edit-img">
             <p class="img-title" (click)="startImg()">修改头像</p>
@@ -46,6 +46,7 @@
                 <nz-upload
                     class="avatar-uploader"
                     nzAction="api/file/upload"
+                    [nzData]="data"
                     nzName="file"
                     nzListType="picture-card"
                     [nzShowUploadList]="false"
@@ -80,14 +81,14 @@
             <nz-descriptions-item nzTitle="真实姓名">
                 <nz-form-item >
                     <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userRealnameErrorTpl">
-                        <input class="input-box" nz-input formControlName="user_realname" id="user_realname" />
+                        <input class="input-box" nz-input formControlName="userRealName" id="userRealName" />
                         </nz-form-control>
                 </nz-form-item>
             </nz-descriptions-item>
             <nz-descriptions-item nzTitle="用户名">
                 <nz-form-item >
                     <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userNameErrorTpl">
-                        <input class="input-box" nz-input formControlName="user_name" id="user_name" />
+                        <input class="input-box" nz-input formControlName="username" id="username" />
                         </nz-form-control>
                 </nz-form-item>
             </nz-descriptions-item>
@@ -100,8 +101,8 @@
                             [nzMin]="1"
                              [nzMax]="120" 
                              [nzStep]="1"
-                            formControlName="user_age" 
-                            id="user_age" 
+                            formControlName="age" 
+                            id="age" 
                             ></nz-input-number>
                         </nz-form-control>
                 </nz-form-item>
@@ -109,9 +110,9 @@
             <nz-descriptions-item nzTitle="性别">
                 <nz-form-item >
                     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
-                        <nz-radio-group formControlName="user_sex">
-                            <label nz-radio nzValue="0">女</label>
-                            <label nz-radio nzValue="1">男</label>
+                        <nz-radio-group formControlName="sex">
+                            <label nz-radio nzValue="女">女</label>
+                            <label nz-radio nzValue="男">男</label>
                           </nz-radio-group>
                         </nz-form-control>
                 </nz-form-item>
@@ -123,8 +124,8 @@
                             <input 
                                nz-input 
                                [type]="passwordVisible ? 'text' : 'password'" 
-                               formControlName="user_password" 
-                               id="user_password" />
+                               formControlName="password" 
+                               id="password" />
                         </nz-input-group>
                         </nz-form-control>
                 </nz-form-item>
@@ -132,7 +133,7 @@
             <nz-descriptions-item nzTitle="地址">
                 <nz-form-item class="input-box">
                     <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
-                        <input class="input-box" nz-input formControlName="user_address" id="user_address" />
+                        <input class="input-box" nz-input formControlName="address" id="address" />
                     </nz-form-control>
                 </nz-form-item>
             </nz-descriptions-item>
@@ -153,7 +154,7 @@
     <nz-form-item>
         <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
         <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
-          <input nz-input formControlName="user_phone" placeholder="请输入电话号码" />
+          <input nz-input formControlName="phone" placeholder="请输入电话号码" />
         </nz-form-control>
       </nz-form-item>
   </form>

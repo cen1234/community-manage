@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
+import { HttpClient,HttpHeaders  } from '@angular/common/http'; 
 
 @Component({
   selector: 'app-individual',
@@ -13,15 +14,16 @@ import { NzUploadFile } from 'ng-zorro-antd/upload';
 export class IndividualComponent implements OnInit {
 
   //用户属性
-  public user_name:string = '小岑';//用户名
-  public user_realname:string = '李哈哈';//用户真实姓名
-  public user_phone:string = '12345678911';//用户电话号码
-  public user_age:number|string = 21;//用户年龄
-  public user_sex:string = '女';//用户姓名
-  public user_address:string = '西安市';//用户地址
-  public user_img:string = '';//用户图像
-  public user_role:string = '管理员';//用户身份
-  public user_password:string = '123456';//用户密码
+  public id:number = 0;//id
+  public username:string = '';//用户名
+  public userRealName:string = '';//用户真实姓名
+  public phone:string = '';//用户电话号码
+  public age:number|string = 0;//用户年龄
+  public sex:string = '';//用户姓名
+  public address:string = '';//用户地址
+  public userImg:string = '';//用户图像
+  public role:string = '';//用户身份
+  public password:string = '';//用户密码
   //其他属性
   isInformationVisible = false;//修改个人信息弹出框是否出现
   isOkInformationLoading = false;//异步标识,用于提交完表单信息后关闭个人信息弹出框
@@ -33,22 +35,56 @@ export class IndividualComponent implements OnInit {
   loading = false;//上传头像加载
   avatarUrl?: string;//上传的头像
   img_upload:boolean = false;//上传图像功能是否展示
+  data:any;//上传文件携带的参数
+  user:any;//获取缓存里的用户信息
+  headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
 
-  constructor(private router:Router,private fb: UntypedFormBuilder,private msg: NzMessageService) {
+  constructor(private router:Router,private fb: UntypedFormBuilder,private msg: NzMessageService,private http:HttpClient) {
     this.validateForm = this.fb.group({
-      user_realname: ['', [Validators.required],[this.userRealnameAsyncValidator]],
-      user_name: ['', [Validators.required],[this.userNameAsyncValidator]],
-      user_age: ['', [Validators.required],[this.ageValidator]],
-      user_sex:['',[Validators.required]],
-      user_password:['',[Validators.required],[this.pwdValidator]],
-      user_address:['',[Validators.required],[this.addressAsyncValidator]]
+      id:[0],
+      roleId:[0,[Validators.required]],
+      userRealName: ['', [Validators.required],[this.userRealnameAsyncValidator]],
+      username: ['', [Validators.required],[this.userNameAsyncValidator]],
+      age: ['', [Validators.required],[this.ageValidator]],
+      sex:['',[Validators.required]],
+      password:['',[Validators.required],[this.pwdValidator]],
+      address:['',[Validators.required],[this.addressAsyncValidator]]
     });
     this.phonevalidateForm = this.fb.group({
-      user_phone:['',[Validators.required],[this.phoneAsyncValidator]]
+      id:[0],
+      username: ['', [Validators.required],[this.userNameAsyncValidator]],
+      phone:['',[Validators.required],[this.phoneAsyncValidator]]
     })
    }
 
   ngOnInit(): void {
+     this.user = localStorage.getItem("user");
+     this.user = JSON.parse(this.user);
+     this.onload();
+     this.data = () => {
+       return {"username":this.user.username};
+     }
+  }
+
+  //获取用户信息
+  onload():void {
+      let url = 'api/individual';
+      this.http.get(url,{params:{
+        username: this.user.username
+      }}).subscribe((res:any) => {
+          if (res) {
+             this.id = res.id;
+             this.userRealName = res.userRealName;
+             this.username = res.username;
+             this.age = res.age;
+             this.sex = res.sex;
+             this.password = res.password;
+             this.phone = res.phone;
+             this.address = res.address;
+             this.role = res.roleId == 1? '系统管理员':'社区管理员';
+             this.userImg = '/api/file/'+res.userImg;
+          }
+      })
   }
  
   //回到管理页面
@@ -59,11 +95,26 @@ export class IndividualComponent implements OnInit {
 
   //打开个人信息弹出框
   showInformatioinModal(): void {
+    this.validateForm.controls['id'].setValue(this.id);
+    if (this.role === '系统管理员') {
+      this.validateForm.controls['roleId'].setValue(1);
+    } else {
+      this.validateForm.controls['roleId'].setValue(2);
+    }
+    this.validateForm.controls['userRealName'].setValue(this.userRealName);
+    this.validateForm.controls['username'].setValue(this.username);
+    this.validateForm.controls['age'].setValue(this.age);
+    this.validateForm.controls['sex'].setValue(this.sex);
+    this.validateForm.controls['password'].setValue(this.password);
+    this.validateForm.controls['address'].setValue(this.address);
     this.isInformationVisible = true;
   }
 
   //打开绑定手机弹出框
   showPhoneModal(): void {
+    this.phonevalidateForm.controls['id'].setValue(this.id);
+    this.phonevalidateForm.controls['username'].setValue(this.username);
+    this.phonevalidateForm.controls['phone'].setValue(this.phone);
     this.isPhoneVisible = true;
   }
   
@@ -71,7 +122,28 @@ export class IndividualComponent implements OnInit {
   informationHandleOk(): void {
     this.isOkInformationLoading = true;
     if (this.validateForm.valid) {
-     
+      let url = 'api/individual';
+      this.http.post(url,JSON.stringify(this.validateForm.value),{headers:this.headers}).subscribe((res:any) => {
+         if (res === true) {
+            this.msg.success('用户操作成功！', {
+              nzDuration: 500
+            });
+            //在用户名和密码发生改变情况下，更新缓存里的用户名和密码
+            let userMassage:any = localStorage.getItem('user');
+            userMassage = JSON.parse(userMassage);
+            userMassage.username = this.validateForm.value.username;
+            userMassage.password = this.validateForm.value.password;
+            let user = JSON.stringify(userMassage);
+            localStorage.setItem("user" , user);
+            //在用户名发生改变情况下，更新当前user里的用户名，因为onload是按照用户名检索信息，不更新会按照改变前的进行检索，会查不到信息
+            this.user.username = this.validateForm.value.username;
+            this.onload();
+         }  
+      },err => {
+          this.msg.error('用户操作失败！', {
+            nzDuration: 500
+          });
+      })
       setTimeout(() => {
         this.isInformationVisible = false;
         this.isOkInformationLoading = false;
@@ -92,7 +164,19 @@ export class IndividualComponent implements OnInit {
   phoneHandleOk() {
     this.isOkPhoneLoading = true;
     if (this.phonevalidateForm.valid) {
-      console.log('submit', this.phonevalidateForm.value);
+      let url = 'api/individual';
+      this.http.post(url,JSON.stringify(this.phonevalidateForm.value),{headers:this.headers}).subscribe((res:any) => {
+           if (res === true) {
+            this.msg.success('用户操作成功！', {
+              nzDuration: 500
+            });
+            this.onload();
+           }
+      },err => {
+        this.msg.error('用户操作失败！', {
+          nzDuration: 500
+        });
+      })
       setTimeout(() => {
         this.isOkPhoneLoading = false;
         this.isPhoneVisible = false;
@@ -210,9 +294,13 @@ export class IndividualComponent implements OnInit {
   }    
   //确认上传头像
   editImg():void {
+    this.onload();
+    this.msg.success('头像修改成功！', {
+      nzDuration: 500
+    });
     this.img_upload = false;
   }
-  //
+  //取消上传头像
   cancel():void {
     this.img_upload = false;
   }

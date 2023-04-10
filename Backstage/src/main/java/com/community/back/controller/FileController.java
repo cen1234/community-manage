@@ -3,8 +3,12 @@ package com.community.back.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.community.back.entity.User;
+import com.community.back.service.IndividualService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -16,9 +20,12 @@ import java.net.URLEncoder;
 public class FileController {
     private String fileUploadPath = "C:/Users/cxy/Desktop/cccc/CM/files/";
 
+    @Resource
+    private IndividualService individualService;
+
     //文件上传
     @PostMapping("/upload")
-    public String upload(@RequestParam MultipartFile file) throws IOException {
+    public String upload(@RequestParam MultipartFile file,@RequestParam String username) throws IOException {
         //获取文件原始名称，文件类型，文件大小
         String originalFilename  = file.getOriginalFilename();
         String type = FileUtil.extName(originalFilename);
@@ -36,6 +43,10 @@ public class FileController {
         String  url = "http://localhost:9000/file/"+fileUuid;
         //把获取到的文件存储到磁盘目录
         file.transferTo(uploadFilePath);
+        //更新当前用户的头像
+        User user = individualService.get(username);
+        user.setUserImg(fileUuid);
+        individualService.edit(user);
         return fileUuid;
     }
 
