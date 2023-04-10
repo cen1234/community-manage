@@ -5,14 +5,27 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.community.back.common.Constants;
 import com.community.back.dto.UserDto;
+import com.community.back.entity.Menu;
 import com.community.back.entity.User;
 import com.community.back.exception.ServiceException;
+import com.community.back.mapper.MenuMapper;
+import com.community.back.mapper.RoleMapper;
 import com.community.back.mapper.UserMapper;
 import com.community.back.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService extends ServiceImpl<UserMapper,User> {
+
+    @Resource
+    private MenuService menuService;
+
+    @Resource
+    private RoleMapper roleMapper;
 
    //新增|修改用户
     public boolean saveUser(User user) {
@@ -33,8 +46,8 @@ public class UserService extends ServiceImpl<UserMapper,User> {
             userDto.setToken(token);
 
             //获取用户角色对应的菜单功能
-//            String rolename = oneData.getRole();
-//            userDto.setMenus(getRoleMenus(rolename));
+            Integer roleId = oneData.getRoleId();
+            userDto.setMenus(getRoleMenus(roleId));
             return userDto;
         } else {
             throw new ServiceException(Constants.CODE_600,"用户名或密码错误!");
@@ -67,6 +80,12 @@ public class UserService extends ServiceImpl<UserMapper,User> {
             throw new ServiceException(Constants.CODE_500,"系统错误!");
         }
         return oneData;
+    }
+
+    //获取当前角色的菜单
+    private List<Menu> getRoleMenus(Integer roleId) {
+        List<Menu> menus = menuService.find(roleId);
+        return menus;
     }
 
 }

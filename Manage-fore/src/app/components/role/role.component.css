@@ -1,0 +1,35 @@
+.inner-layout-unfold {
+    position: absolute;
+    width: 89%;
+    left: 11%;
+    top: 64px;
+   padding: 0 24px 24px;
+ }
+ .inner-layout-fold {
+   position: absolute;
+   width: 95%;
+   left: 5%;
+   top: 64px;
+   padding: 0 24px 24px;
+ }
+ .trigger-placement {
+   position: absolute;
+   left: 0;
+   top: 3%;
+ }
+ nz-breadcrumb {
+   margin: 16px 0;
+ }
+
+ nz-content {
+   background: #fff;
+   padding: 24px;
+   min-height: 280px;
+ }
+ .operate-btn {
+   left: 10%;
+ }
+ .table {
+    width: 80%;
+    margin: 20px auto;
+ }

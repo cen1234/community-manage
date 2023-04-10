@@ -39,6 +39,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
 
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
@@ -50,6 +51,7 @@ import { LoginComponent } from './components/login/login.component';
 import { PasswordComponent } from './components/password/password.component';
 import { IndividualComponent } from './components/individual/individual.component';
 import { UserComponent } from './components/user/user.component';
+import { RoleComponent } from './components/role/role.component';
 
 
 
@@ -67,7 +69,8 @@ registerLocaleData(zh);
     IndividualComponent,
     UserComponent,
     HeaderComponent,
-    AsideComponent
+    AsideComponent,
+    RoleComponent
   ],
   imports: [
     BrowserModule,
@@ -103,6 +106,7 @@ registerLocaleData(zh);
     NzBackTopModule,
     NzUploadModule,
     NzMessageModule,
+    NzTreeModule,
     //引入部分
     NgxEchartsModule.forRoot({ //引入部分
       echarts: () => import('echarts') //引入部分

@@ -1,0 +1,101 @@
+<nz-layout style="position:relative">
+    <!-- 头部 -->
+    <app-header></app-header>
+    <nz-layout>
+    <!-- 侧边 -->
+      <app-aside [isCollapsed] = "isCollapsed"></app-aside>
+      <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
+      <span
+        class="trigger trigger-placement"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></span>
+    <!-- 导航面包屑 -->
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>系统</nz-breadcrumb-item>
+          <nz-breadcrumb-item>权限管理</nz-breadcrumb-item>
+        </nz-breadcrumb>
+    <!-- 内容     -->
+        <nz-content>
+            <button class="operate-btn " nz-button nzType="default" (click)="export()">
+                <span nz-icon nzType="vertical-align-bottom" nzTheme="outline"></span>批量导出</button>
+                 <nz-table
+                 #table
+                 class="table"
+                 [nzData]="listOfData"
+                 [nzShowPagination] = false
+                 [nzBordered]="true"
+               >
+                 <thead>
+                   <tr>
+                     <th>ID</th>
+                     <th>身份</th>
+                     <th>描述</th>
+                     <th>操作</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let data of table.data" >
+                     <td *ngIf="data.isshow === '1'">{{ data.id }}</td>
+                     <td *ngIf="data.isshow === '1'">{{ data.role }}</td>
+                     <td *ngIf="data.isshow === '1'">{{ data.description}}</td>
+                     <td *ngIf="data.isshow === '1'">
+                       <a><button nz-button nzSize="small" nzType="default" (click)="edit(data)">编辑</button></a>
+                       <nz-divider nzType="vertical"></nz-divider>
+                       <a><button nz-button nzSize="small" nzType="default" (click)="role(data)">权限</button></a>
+                     </td>
+                   </tr>
+                 </tbody>
+               </nz-table>  
+            <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
+        </nz-content>
+      </nz-layout>
+    </nz-layout>
+</nz-layout>
+<!-- 编辑身份弹窗 -->
+<nz-modal
+      [(nzVisible)]="isVisible" 
+      nzTitle="编辑身份"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      [nzOkLoading]="isOkLoading"
+    >
+        <form *nzModalContent nz-form [formGroup]="validateForm">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>用户真实姓名</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="身份不能为空">
+                  <input nz-input formControlName="role" placeholder="请输入用户身份" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="描述不能为空">
+                  <input nz-input formControlName="description" placeholder="请输入用户可使用功能的描述" />
+                </nz-form-control>
+              </nz-form-item>
+        </form>
+</nz-modal>
+<!-- 权限修改弹窗 -->
+<nz-modal
+      [(nzVisible)]="isRoleVisible" 
+      nzTitle="修改权限"
+      (nzOnCancel)="RolehandleCancel()"
+      (nzOnOk)="RolehandleOk()"
+      [nzOkLoading]="isRoleOkLoading"
+    >
+    <nz-tree
+      *nzModalContent
+      #nzTreeComponent
+      [nzData]="nodes"
+      nzCheckable
+      nzMultiple
+      [nzCheckedKeys]="defaultCheckedKeys"
+      [nzExpandedKeys]="defaultExpandedKeys"
+      [nzSelectedKeys]="defaultSelectedKeys"
+      (nzClick)="nzEvent($event)"
+      (nzExpandChange)="nzEvent($event)"
+      (nzCheckBoxChange)="nzEvent($event)"
+      
+    ></nz-tree>
+</nz-modal>

@@ -10,13 +10,16 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class HeaderComponent implements OnInit {
   
-
+  public user_img :string ='';
   position:NzPlacementType = 'bottomCenter';
 
 
   constructor(private router: Router,private message: NzMessageService) { }
 
   ngOnInit(): void {
+    let user:any = localStorage.getItem("user");
+    user = JSON.parse(user);
+    this.user_img = 'api/file/' + user.userImg;
   }
    
   //登出
