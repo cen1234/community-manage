@@ -63,13 +63,13 @@
     >
         <form *nzModalContent nz-form [formGroup]="validateForm">
               <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>用户真实姓名</nz-form-label>
+                <nz-form-label [nzSpan]="7" nzRequired>用户身份</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzErrorTip="身份不能为空">
                   <input nz-input formControlName="role" placeholder="请输入用户身份" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+                <nz-form-label [nzSpan]="7" nzRequired>功能描述</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzErrorTip="描述不能为空">
                   <input nz-input formControlName="description" placeholder="请输入用户可使用功能的描述" />
                 </nz-form-control>

@@ -7,6 +7,11 @@ import { PasswordComponent } from './components/password/password.component';
 import { IndividualComponent } from './components/individual/individual.component';
 import { UserComponent } from './components/user/user.component';
 import { RoleComponent } from './components/role/role.component';
+import { CommunityComponent } from './components/community/community.component';
+import { MaterialsComponent } from './components/materials/materials.component';
+import { StaffInfoComponent } from './components/staff-info/staff-info.component';
+import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-info.component';
+import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
 const routes: Routes = [
   {
     path:'',redirectTo:'login',pathMatch:'full'
@@ -31,6 +36,21 @@ const routes: Routes = [
    },
    {
     path:'role',component:RoleComponent
+   },
+   {
+    path:'community',component:CommunityComponent
+   },
+   {
+     path:'materials',component:MaterialsComponent
+   },
+   {
+    path:'staffInfo',component:StaffInfoComponent
+   },
+   {
+    path:'volunteerInfo',component:VolunteerInfoComponent
+   },
+   {
+    path:'inneedInfo',component:InneedInfoComponent
    }
 ];
 
