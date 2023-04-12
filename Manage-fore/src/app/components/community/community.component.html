@@ -50,14 +50,19 @@
                   </nz-upload>
                   <button class="operate-btn" nz-button nzType="default" (click)="export()">
                     <span nz-icon nzType="vertical-align-bottom" nzTheme="outline"></span>批量导出</button>
+                    <nz-input-group nzCompact class="select-box">
+                      <nz-select [(ngModel)]="selectType" style="width: 120px;">
+                        <nz-option [nzLabel]="'社区名'" [nzValue]="'name'"></nz-option>
+                        <nz-option [nzLabel]="'省份'" [nzValue]="'province'"></nz-option>
+                        <nz-option [nzLabel]="'市'" [nzValue]="'city'"></nz-option>
+                        <nz-option [nzLabel]="'区县'" [nzValue]="'area'"></nz-option>
+                      </nz-select>
+                      <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入进行搜索" (keypress)="onload()"/>
+                    </nz-input-group>
                 </div>
             </div>
-            <nz-tabset class="tab" 
-            [nzTabBarExtraContent]="extraTemplate"
-            [nzSelectedIndex]="SelectedIndex"
-            (nzSelectedIndexChange)="SelectedIndexChange($event)">
-           <nz-tab *ngFor="let tab of tabs" [nzTitle]="tab" >
              <nz-table
+             class="table"
              #rowSelectionTable
              nzShowSizeChanger
              [nzData]="listOfData"
@@ -111,14 +116,49 @@
                </tr>
              </tbody>
            </nz-table>
-           </nz-tab>
-         </nz-tabset>
             <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
         </nz-content>
       </nz-layout>
     </nz-layout>
 </nz-layout>
-  <!-- tabs右上搜索框 -->
-  <ng-template #extraTemplate>
-      <input type="text" nz-input [(ngModel)]="inputValue" placeholder="输入社区名进行搜索" (keypress)="onload()"/>
-  </ng-template>
+ <!-- 新增|编辑社区弹窗 -->
+<nz-modal
+[(nzVisible)]="isVisible" 
+[nzTitle]="Moadl"
+(nzOnCancel)="handleCancel()"
+(nzOnOk)="handleOk()"
+[nzOkLoading]="isOkLoading"
+>
+  <form *nzModalContent nz-form [formGroup]="validateForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>社区名</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="社区名不能为空">
+            <input nz-input formControlName="name" placeholder="请输入社区名" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>社区所在省</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="社区所在省不能为空">
+            <input nz-input formControlName="province" placeholder="请输入社区所在省" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>社区所在市</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="社区所在市不能为空">
+            <input nz-input formControlName="city" placeholder="请输入社区所在市" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>社区所在区</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="社区所在区不能为空">
+            <input nz-input formControlName="area" placeholder="请输入社区所在区" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>社区详细地址</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="地址不能为空">
+            <input nz-input formControlName="address" placeholder="请输入社区详细地址" />
+          </nz-form-control>
+        </nz-form-item>
+  </form>
+</nz-modal>

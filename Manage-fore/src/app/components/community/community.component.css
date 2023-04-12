@@ -44,6 +44,13 @@
 .operate-btn {
   margin-right: 15px;
 }
-.tab {
+.select-box {
+  width: 350px;
+  display: flex;
+  position: fixed;
+  left: 38%;
+  top: 45.6%;
+}
+.table {
   margin-top: 40px;
 }

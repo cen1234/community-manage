@@ -148,7 +148,7 @@ public class CumController {
         }
         //设置浏览器响应格式
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        String fileName = URLEncoder.encode("角色信息","UTF-8");
+        String fileName = URLEncoder.encode("社区信息","UTF-8");
         response.setHeader("Content-Disposition","attachment;filename="+fileName+".xlsx");
 
         ServletOutputStream out=response.getOutputStream();

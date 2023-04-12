@@ -8,6 +8,7 @@ import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 
 interface ItemData {
   id: number;
+  comId:number;
   province:string;
   city: string;
   area: string;
@@ -26,12 +27,7 @@ export class CommunityComponent implements OnInit {
   public cityDara:any =[];//市数组
   public areaData:any= [];//区数组
   public inputValue: string = '';//搜索框输入值
-  public tabs:string[] = [
-    "所在省",
-    "所在市",
-    "所在区",
-  ];//tabs标题
-  public SelectedIndex:number = 0;//当前激活tab面板的序列号
+  public selectType:string = 'name';//搜索框搜索类型
   checked = false;
   indeterminate = false;
   listOfCurrentPageData:readonly  ItemData[] = [];
@@ -40,6 +36,10 @@ export class CommunityComponent implements OnInit {
   pageIndex:number = 1;//当前页
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
+  public isVisible:boolean = false;//新增|编辑弹窗是否出现
+  public Moadl:string = '新增社区';//新增|编辑弹窗标题
+  public isOkLoading:boolean = false;///新增|编辑弹窗提交数据是否加载
+  public validateForm: UntypedFormGroup;//用户表格
   headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
   //省份统计图
   provinceOption = {
@@ -80,11 +80,7 @@ export class CommunityComponent implements OnInit {
                 type: 'pie',
                 radius: '60%',
                 roseType: 'area',//是否表现为南丁格尔图
-                data: [
-                  {value:1,name:'陕西省'},
-                  {value:1,name:'山西省'},
-                  {value:1,name:'河北省'}
-                ],
+                data: this.provinceData,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -135,11 +131,7 @@ export class CommunityComponent implements OnInit {
                 type: 'pie',
                 radius: '60%',
                 roseType: 'area',//是否表现为南丁格尔图
-                data: [
-                  {value:2,name:'西安市'},
-                  {value:1,name:'咸阳市'},
-                  {value:1,name:'延安市'}
-                ],
+                data: this.cityDara,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -190,11 +182,7 @@ export class CommunityComponent implements OnInit {
                 type: 'pie',
                 radius: '60%',
                 roseType: 'area',//是否表现为南丁格尔图
-                data: [
-                  {value:2,name:'临潼区'},
-                  {value:1,name:'高新区'},
-                  {value:1,name:'长安区'}
-                ],
+                data: this.areaData,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -208,77 +196,133 @@ export class CommunityComponent implements OnInit {
 
 
   constructor(private fb: UntypedFormBuilder,private http:HttpClient,private message: NzMessageService) { 
-
+    this.validateForm = this.fb.group({
+      id:[''],
+      comId:[0],
+      name: ['', [Validators.required]],
+      province: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      area: ['', [Validators.required]],
+      address:['',[Validators.required]]
+    
+    });
   }
 
   ngOnInit(): void {
-    this.listOfData = new Array(5).fill(0).map((_, index) => ({
-      id: index,
-      province:'陕西省',
-      city:'西安市',
-      area:'长安区',
-      name: `Edward King ${index}`,
-      address: `London, Park Lane no. ${index}`
-    }));
+    this.onload();
+    this.findAll();
   }
+
+  //获取全部社区数据
+  findAll():void {
+    let url = 'api/community/findAll';
+    this.http.get(url).subscribe((res:any) => {
+      this.statisticalProvince(res);
+      this.statisticalCity(res);
+      this.statisticalArea(res);
+    })
+  }
+  
   
    //分页获取社区数据
    onload(): void {
-    // let url = 'api/user/page';
-    // this.http.get(url,{
-    //   params:{
-    //     pageNum:this.pageIndex,
-    //     pageSize:this.pageSize,
-    //     search:this.inputValue,
-    //     type:this.selectType,
-    //     roleId:this.SelectedIndex+1
-    //   }}).subscribe((res:any) => {
-    //    this.listOfData = res.records;
-    //    this.total = res.total;
-    // })
+    let url = 'api/community/page';
+    this.http.get(url,{
+      params:{
+        pageNum:this.pageIndex,
+        pageSize:this.pageSize,
+        search:this.inputValue,
+        type:this.selectType,
+      }}).subscribe((res:any) => {
+       this.listOfData = res.records;
+       this.total = res.total;
+    })
   }
    
   
   //新增社区
     add():void {
-      // this.UservalidateForm.reset();
-      // for (const key in this.UservalidateForm.controls) {
-      //   if (this.UservalidateForm.controls.hasOwnProperty(key)) {
-      //     this.UservalidateForm.controls[key].markAsPristine();
-      //     this.UservalidateForm.controls[key].updateValueAndValidity();
-      //   }
-      // }
-      // this.isVisible = true;
-      // this.userMoadl = '新增用户';
+      this.validateForm.reset();
+      for (const key in this.validateForm.controls) {
+        if (this.validateForm.controls.hasOwnProperty(key)) {
+          this.validateForm.controls[key].markAsPristine();
+          this.validateForm.controls[key].updateValueAndValidity();
+        }
+      }
+      this.isVisible = true;
+      this.Moadl = '新增社区';
+      this.validateForm.controls['comId'].setValue(Math.round( Math.random()*10000));
     }
 
       //编辑社区
   edit(data:any):void {
-    // this.isVisible = true;
-    // this.userMoadl = '编辑用户';
-    // //将要编辑的这一行用户数据绑定到表单上
-    // this.UservalidateForm.controls['id'].setValue(data.id);
-    // this.UservalidateForm.controls['roleId'].setValue(Number(data.roleId));
-    // this.UservalidateForm.controls['userRealName'].setValue(data.userRealName);
-    // this.UservalidateForm.controls['username'].setValue(data.username);
-    // this.UservalidateForm.controls['age'].setValue(data.age);
-    // this.UservalidateForm.controls['sex'].setValue(data.sex);
-    // this.UservalidateForm.controls['password'].setValue(data.password);
-    // this.UservalidateForm.controls['phone'].setValue(data.phone);
-    // this.UservalidateForm.controls['address'].setValue(data.address);
+    this.isVisible = true;
+    this.Moadl = '编辑社区';
+    //将要编辑的这一行用户数据绑定到表单上
+    this.validateForm.controls['id'].setValue(data.id);
+    this.validateForm.controls['name'].setValue(data.name);
+    this.validateForm.controls['province'].setValue(data.province);
+    this.validateForm.controls['city'].setValue(data.city);
+    this.validateForm.controls['area'].setValue(data.area);
+    this.validateForm.controls['address'].setValue(data.address);
+  }
+
+    //新增|编辑取消
+    handleCancel(): void {
+      this.isVisible = false;
+      this.validateForm.reset();
+      for (const key in this.validateForm.controls) {
+        if (this.validateForm.controls.hasOwnProperty(key)) {
+          this.validateForm.controls[key].markAsPristine();
+          this.validateForm.controls[key].updateValueAndValidity();
+        }
+      }
+    }
+
+  //新增|编辑数据确认提交
+  handleOk(): void {
+    this.isOkLoading = true;
+    if (this.validateForm.valid) {
+      let url = 'api/community';
+      this.http.post(url,JSON.stringify(this.validateForm.value),{headers:this.headers}).subscribe(res => {
+        if( res === true) {
+          this.message.success('用户操作成功！', {
+            nzDuration: 500
+          });
+          this.onload();
+        }
+      },err => {
+        this.message.error('用户操作失败！', {
+          nzDuration: 500
+        });
+      })
+      setTimeout(() => {
+        this.isVisible = false;
+        this.isOkLoading = false;
+      }, 500);
+    } else {
+        this.isVisible = true;
+        this.isOkLoading = false;
+        Object.values(this.validateForm.controls).forEach(control => {
+          if (control.invalid) {
+            control.markAsDirty();
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        });
+    }
   }
 
     //删除单个社区
     Singleconfirm(id:number) {
-      // let url = 'api/user/delete/'+id;
-      // this.http.post(url,{headers:this.headers}).subscribe(res => {
-      //    if (res === true) {
-      //       this.message.success('用户删除成功！', {
-      //         nzDuration: 500
-      //       });
-      //       this.onload();
-      //    }
-      // })
+      let url = 'api/community/delete/'+id;
+      this.http.post(url,{headers:this.headers}).subscribe(res => {
+         if (res === true) {
+            this.message.success('社区删除成功！', {
+              nzDuration: 500
+            });
+            this.onload();
+         }
+      })
     }
 
     //取消批量删除
@@ -286,19 +330,19 @@ export class CommunityComponent implements OnInit {
 
     //批量删除二次确认
      confirm(): void {
-      //  let delList:any = [];
-      //  this.setOfCheckedId.forEach(item => {
-      //    delList.push(item);
-      //  })
-      //  let url = 'api/user/deleteSelect/'+delList;
-      //  this.http.post(url,{headers:this.headers}).subscribe(res => {
-      //    if (res === true) {
-      //       this.message.success('用户删除成功！', {
-      //          nzDuration: 500
-      //      });
-          //  this.onload();
-      //   }
-      //  })
+       let delList:any = [];
+       this.setOfCheckedId.forEach(item => {
+         delList.push(item);
+       })
+       let url = 'api/community/deleteSelect/'+delList;
+       this.http.post(url,{headers:this.headers}).subscribe(res => {
+         if (res === true) {
+            this.message.success('社区删除成功！', {
+               nzDuration: 500
+           });
+           this.onload();
+        }
+       })
      }
 
        //上传文件改变时的状态
@@ -316,14 +360,9 @@ export class CommunityComponent implements OnInit {
 
     //导出社区
     export() {
-      // window.open('http://localhost:9000/user/export');
+      window.open('http://localhost:9000/community/export');
    }
 
-    //tab页改变
-  SelectedIndexChange(newSelectIndex:number) {
-    this.SelectedIndex = newSelectIndex;
-    // this.onload();
- }
 
   //当前页发生改变
   onCurrentPageDataChange($event: readonly ItemData[]): void {
@@ -334,13 +373,13 @@ export class CommunityComponent implements OnInit {
   //页码改变
   nzPageIndexChange(newPageIndex:number):void{
       this.pageIndex = newPageIndex;
-      // this.onload();
+      this.onload();
   }
 
   //页大小改变
   nzPageSizeChange(newPageSize:number) {
     this.pageSize = newPageSize;
-    // this.onload();
+    this.onload();
   }
 
    //刷新选中状态
@@ -369,5 +408,76 @@ export class CommunityComponent implements OnInit {
     this.listOfCurrentPageData.forEach(item => this.updateCheckedSet(item.id, value));
     this.refreshCheckedStatus();
   }
+
+  //统计省
+  statisticalProvince(arr: any) {
+    let map = new Map();
+    let num:number;
+    arr.forEach((item:any)=>{
+       if(!map.has(item.province)) {
+           num = 1;
+         map.set(item.province,1)
+       } else {
+        num = map.get(item.province) + 1;
+         map.delete(item.province);
+         map.set(item.province,num+1);
+       }
+    })
+    for (const [key,value] of map) {
+      let obj:any = {};
+      obj.value = value;
+      obj.name = key;
+      this.provinceData.push(obj);
+     }
+     this.provinceOption.series[0].data = this.provinceData;
+  }
+
+  //统计市
+  statisticalCity(arr: any) {
+    let map = new Map();
+    let num:number;
+    arr.forEach((item:any)=>{
+       if(!map.has(item.city)) {
+           num = 1;
+         map.set(item.city,1)
+       } else {
+        num = map.get(item.city) + 1;
+         map.delete(item.city);
+         map.set(item.city,num+1);
+       }
+    })
+    for (const [key,value] of map) {
+      let obj:any = {};
+      obj.value = value;
+      obj.name = key;
+      this.cityDara.push(obj);
+     }
+     this.cityOption.series[0].data = this.cityDara;
+  }
+
+  //统计区
+  statisticalArea(arr: any) {
+    let map = new Map();
+    let num:number;
+    arr.forEach((item:any)=>{
+       if(!map.has(item.area)) {
+           num = 1;
+         map.set(item.area,1)
+       } else {
+        num = map.get(item.area) + 1;
+         map.delete(item.area);
+         map.set(item.area,num+1);
+       }
+    })
+    for (const [key,value] of map) {
+      let obj:any = {};
+      obj.value = value;
+      obj.name = key;
+      this.areaData.push(obj);
+     }
+     this.areaOption.series[0].data = this.areaData;
+    
+  }
+ 
 
 }
