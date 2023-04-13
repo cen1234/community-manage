@@ -11,6 +11,7 @@ public class UserDto {
     private String username;
     private String password;
     private String userImg;
+    private Integer comId;
     private String token;
 
     @TableField(exist = false)

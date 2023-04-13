@@ -17,6 +17,9 @@ import java.util.List;
 @Service
 public class CumService extends ServiceImpl<CumMapper, Cum>{
 
+    @Resource
+    private CumMapper cumMapper;
+
     //新增|修改社区
     public boolean saveCommunity(Cum cum) {
         if (cum.getId() == null) {

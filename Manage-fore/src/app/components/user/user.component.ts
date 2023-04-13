@@ -9,6 +9,7 @@ import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 interface ItemData {
   id: number;
   roleId:number;
+  comId:number;
   userRealName: string;
   username: string;
   age: number;
@@ -58,6 +59,7 @@ export class UserComponent implements OnInit {
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
   userForm:any = {};//传递给后台的用户表单信息
+  communityInfo:any = [];//存储社区id和名字的数组
   headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
   user:any;
   fileList: NzUploadFile[] = [];
@@ -191,6 +193,7 @@ export class UserComponent implements OnInit {
     this.UservalidateForm = this.fb.group({
       id:[''],
       roleId:[0,[Validators.required]],
+      comId:[0,[Validators.required]],
       userRealName: ['', [Validators.required],[this.userRealnameAsyncValidator]],
       username: ['', [Validators.required],[this.userNameAsyncValidator]],
       age: ['', [Validators.required],[this.ageValidator]],
@@ -206,6 +209,7 @@ export class UserComponent implements OnInit {
     // this.user = JSON.parse(this.user);
     // this.headers =  new HttpHeaders({'Content-Type': 'application/json','token': this.user.token});
     this.findAll();
+    this.getCommunity();
   }
 
   //取消批量删除
@@ -281,6 +285,20 @@ export class UserComponent implements OnInit {
       this.listOfData = temp;
       this.total = temp.length;
     })
+  }
+
+  //获取社区id及社区名
+  getCommunity():void {
+    let url = 'api/community/findAll';
+    this.http.get(url).subscribe((res:any) => {
+      this.communityInfo = res.map((item:any) => {
+        let obj:any = {};
+         obj['comId'] = item.id;
+         obj['name'] = item.name;
+         return obj;
+      })
+    })
+
   }
 
   //新增用户

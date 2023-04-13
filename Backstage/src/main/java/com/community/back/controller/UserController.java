@@ -160,6 +160,7 @@ public class UserController {
         //自定义标题名
         writer.addHeaderAlias("id","ID");
         writer.addHeaderAlias("roleId","身份码");
+        writer.addHeaderAlias("comId","社区码");
         writer.addHeaderAlias("userRealName","真实姓名");
         writer.addHeaderAlias("username","用户名");
         writer.addHeaderAlias("password","密码");

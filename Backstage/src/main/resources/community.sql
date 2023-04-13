@@ -8,6 +8,7 @@ CREATE TABLE
 CREATE TABLE `user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `role_id` INT(11) DEFAULT 1 COMMENT '角色身份id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
   `username` VARCHAR(30) NOT NULL COMMENT '用户名',
   `user_real_name` VARCHAR(30) NULL COMMENT '用户真实姓名',
   `password` VARCHAR(15) NOT NULL COMMENT '密码',
@@ -18,16 +19,17 @@ CREATE TABLE `user` (
   `user_img` VARCHAR(500) DEFAULT NULL COMMENT '用户头像',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  FOREIGN KEY(role_id) REFERENCES role(id)
+  FOREIGN KEY(role_id) REFERENCES role(id),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户信息'
 
 
 -- 插入员工数据
-INSERT IGNORE INTO `user` VALUES (1,1, 'hhh',   '李哈哈', '123456',   '女', 11, '18709261628', '二次元', '');
-INSERT IGNORE INTO `user` VALUES (2,3, 'z',   'sjd', '123456',   '女', 11, '18709261628', '二次元', '');
-INSERT IGNORE INTO `user` VALUES (3,2, 'z1',   'sjd1', '123456',   '女', 11, '18709261628', '二次元', '');
-INSERT IGNORE INTO `user` VALUES (4,4, 'z2',   'sjd2', '123456',   '女', 11, '18709261628', '二次元', '');
-INSERT IGNORE INTO `user` VALUES (5,4, 'z3',   'sjd3', '123456',   '女', 11, '18709261628', '二次元', '');
+INSERT IGNORE INTO `user` VALUES (1,1,1, 'hhh',   '李哈哈', '123456',   '女', 11, '18709261628', '二次元', '');
+INSERT IGNORE INTO `user` VALUES (2,3,1, 'z',   'sjd', '123456',   '女', 11, '18709261628', '二次元', '');
+INSERT IGNORE INTO `user` VALUES (3,2,1, 'z1',   'sjd1', '123456',   '女', 11, '18709261628', '二次元', '');
+INSERT IGNORE INTO `user` VALUES (4,4,1, 'z2',   'sjd2', '123456',   '女', 11, '18709261628', '二次元', '');
+INSERT IGNORE INTO `user` VALUES (5,4,1, 'z3',   'sjd3', '123456',   '女', 11, '18709261628', '二次元', '');
 
 -------------------------------------------------------
 ---------------角色身份表----------------------------
@@ -89,11 +91,11 @@ INSERT IGNORE INTO `menu` VALUES (7,7,6,2, '工作人员信息管理','11','/sta
 --------------------------------------------------------------------------------
 ----------------社区表------------------------------------------
 ----------------------------------------------------------------------------------
-DROP TABLE IF EXISTS `com`;
+DROP TABLE IF EXISTS `cum`;
 
 CREATE TABLE
 
-CREATE TABLE `com` (
+CREATE TABLE `cum` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `com_id` INT(11) NOT NULL  COMMENT '社区Id',
   `name` VARCHAR(30) NOT NULL COMMENT '社区名字',
@@ -107,9 +109,63 @@ CREATE TABLE `com` (
 
 
 -- 插入菜单数据
-INSERT IGNORE INTO `com` VALUES (1,1,'西柚小区1','陕西省','西安市', '长安区','111');
-INSERT IGNORE INTO `com` VALUES (2,2,'西柚小区2','陕西省','西安市', '长安区','111');
-INSERT IGNORE INTO `com` VALUES (3,3,'西柚小区3','陕西省','西安市', '长安区','111');
-INSERT IGNORE INTO `com` VALUES (4,4,'西柚小区4','陕西省','西安市', '长安区','111');
-INSERT IGNORE INTO `com` VALUES (5,5,'西柚小区5','陕西省','西安市', '长安区','111');
-INSERT IGNORE INTO `com` VALUES (6,6,'西柚小区6','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (1,1,'西柚小区1','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (2,2,'西柚小区2','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (3,3,'西柚小区3','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (4,4,'西柚小区4','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (5,5,'西柚小区5','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (6,6,'西柚小区6','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (7,7,'西柚小区7','陕西省','西安市', '长安区','111');
+INSERT IGNORE INTO `cum` VALUES (8,8,'西柚小区6','山西省','西安市', '长安区','111');
+
+
+----------------------------------------------------------
+----------- 物资表----------------------------
+----------------------------------------------------------
+DROP TABLE IF EXISTS `materials`;
+
+CREATE TABLE
+
+CREATE TABLE `materials` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '物资名字',
+  `count` INT(11) NULL COMMENT '物资总数',
+  `belongCommunity` VARCHAR(30) NULL COMMENT '所属社区',
+  `available` VARCHAR(30) NULL COMMENT '物资是否可用 true->可用 false->禁用',
+  `borrowedCount` INT(11) NULL COMMENT '总借用数量',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='物资信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `materials` VALUES (1,1,'酒精',100,'西柚小区1', 'true',20);
+INSERT IGNORE INTO `materials` VALUES (2,1,'急救药品',100,'西柚小区1', 'true',30);
+INSERT IGNORE INTO `materials` VALUES (3,1,'梯子',10,'西柚小区1', 'true',2);
+INSERT IGNORE INTO `materials` VALUES (4,1,'创可贴',100,'西柚小区1', 'true',20);
+
+
+---------------------------------------------------------------
+---------- 借用物资-用户关系表--------------
+----------------------------------------------------------------
+DROP TABLE IF EXISTS `userMaterials`;
+
+CREATE TABLE
+
+CREATE TABLE `userMaterials` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `userName` VARCHAR(30) NOT NULL COMMENT '用户',
+  `materialsName` VARCHAR(30)NOT NULL COMMENT '被借用物资名',
+  `count` INT(11) NOT NULL COMMENT '被借用物资数量',
+  `phone` VARCHAR(50) DEFAULT NULL COMMENT '联系电话',
+  `address` VARCHAR(255) DEFAULT NULL COMMENT '用户地址',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='借用物资-用户关系表'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `userMaterials` VALUES (1,'hhh','酒精',20,'18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (2,'hhh','急救药品',30,'18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (3,'hhh','梯子',2,'18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (1,'hhh','创可贴',20,'18709261628', '二次元');

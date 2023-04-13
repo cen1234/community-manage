@@ -52,7 +52,7 @@
                 <nz-input-group nzCompact class="select-box">
                   <nz-select [(ngModel)]="selectType" style="width: 120px;">
                     <nz-option [nzLabel]="'物资名'" [nzValue]="'name'"></nz-option>
-                    <nz-option [nzLabel]="'类别'" [nzValue]="'available'"></nz-option>
+                    <nz-option [nzLabel]="'使用状态'" [nzValue]="'available'"></nz-option>
                   </nz-select>
                   <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入进行搜索" (keypress)="onload()"/>
                 </nz-input-group>
@@ -83,21 +83,18 @@
               ></th>
               <th>物资名</th>
               <th>物资总数</th>
-              <th>所属社区</th>
-              <th>可用</th>
-              <th>借用人</th>
-              <th>借用数量</th>
+              <th>使用状态</th>
+              <th>总借用数量</th>
               <th>行为</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of rowSelectionTable.data">
+            <ng-template ngFor let-data [ngForOf]="rowSelectionTable.data">
+            <tr>
               <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
               <td>{{data.name}}</td>
               <td>{{ data.count }}</td>
-              <td>{{ data.belongCommunity }}</td>
               <td>{{ data.available }}</td>
-              <td>{{data.borrowedPeople}}</td>
               <td>{{data.borrowedCount}}</td>
               <td>
                 <a><button nz-button nzSize="small" nzType="default" (click)="edit(data)">编辑</button></a>
@@ -111,8 +108,11 @@
                   >
                   <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
                 </a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a><button nz-button nzSize="small" nzType="default" (click)="getBorrow(data.id)">查看借用</button></a>
               </td>
-            </tr>
+            </tr>       
+          </ng-template>
           </tbody>
         </nz-table>
         <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
@@ -120,4 +120,124 @@
       </nz-layout>
     </nz-layout>
 </nz-layout>
+<!-- 新增|编辑物资弹窗 -->
+<nz-modal
+[(nzVisible)]="isVisible" 
+[nzTitle]="Moadl"
+(nzOnCancel)="handleCancel()"
+(nzOnOk)="handleOk()"
+[nzOkLoading]="isOkLoading"
+>
+  <form *nzModalContent nz-form [formGroup]="validateForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>物资名</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="物资名不能为空">
+            <input nz-input formControlName="name" placeholder="请输入物资名" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>物资总数</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="CountErrorTpl">
+              <nz-input-number  
+                  class="input-box input-width" 
+                  nz-input 
+                  [nzMin]="0"
+                  [nzStep]="1"
+                  formControlName="count" 
+                  nzPlaceHolder="请输入物资总数"
+                  ></nz-input-number>
+              </nz-form-control>
+        </nz-form-item>
+        <nz-form-item >
+        <nz-form-label [nzSpan]="7" nzRequired>使用状态</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="物资使用状态不能为空">
+            <nz-radio-group formControlName="available">
+                <label nz-radio nzValue="可用">可用</label>
+                <label nz-radio nzValue="不可用">不可用</label>
+              </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item> 
+        <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>物资总借用数量</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="borrowedCountErrorTpl">
+          <nz-input-number  
+              class="input-box input-width" 
+              nz-input 
+              [nzMin]="0"
+              [nzStep]="1"
+              formControlName="borrowedCount" 
+              nzPlaceHolder="请输入物资总借用数量"
+              ></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+  </form>
+</nz-modal>
+<!-- 物资-借用人信息弹窗 -->
+<nz-modal
+    nzWidth="1000px"
+    [(nzVisible)]="UMisVisible" 
+    [nzTitle]="'物资借用'"
+    (nzOnCancel)="UMhandleCancel()"
+    (nzOnOk)="UMhandleOk()"
+    [nzOkLoading]="isOkLoading"
+    >
+    <nz-table 
+       *nzModalContent 
+       class="inner-table" 
+       #innerTable 
+       [nzData]="childListData" 
+       nzSize="small" 
+       [nzScroll]="{ y: '240px' }"
+       [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>借用人</th>
+          <th>借用物资</th>
+          <th>借用物资数量</th>
+          <th>物资是否归还</th>
+          <th>联系电话</th>
+          <th>地址</th>
+          <th>行为</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of innerTable.data">
+          <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
+              <td>{{ data.userName }}</td>
+              <td>{{ data.materialsName }}</td> 
+              <td>{{ data.count }}</td>
+              <td>{{data.back}}</td>
+              <td>{{ data.phone }}</td>
+              <td>{{data.address}}</td>
+              <td>
+                <a><button nz-button nzSize="small" nzType="default" (click)="startEdit(data.id)">编辑</button></a>
+              </td>
+          </ng-container>
+          <ng-template #editTemplate>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.userName" /></td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.materialsName" /></td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.count" /></td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.back" /></td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.phone" /></td>
+            <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.address" /></td>
+            <td>
+              <a (click)="saveEdit(data.id)" class="save" style="margin-right: 5px;">保存</a>
+              <a nz-popconfirm nzPopconfirmTitle="确认取消?" (nzOnConfirm)="cancelEdit(data.id)">取消</a>
+            </td>
+          </ng-template>
+        </tr>
+      </tbody>
+    </nz-table> 
+</nz-modal>
+  <!-- 物资总数量错误提示 -->
+<ng-template #CountErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">物资总数量不能为空</ng-container>
+  <ng-container *ngIf="control.hasError('minlength')">物资总数量不小于0</ng-container>
+</ng-template>
+  <!--物资总借用数量错误提示 -->
+  <ng-template #borrowedCountErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">物资总借用数量不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">物资总借用数量不小于0</ng-container>
+  </ng-template>
+
 

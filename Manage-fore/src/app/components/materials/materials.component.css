@@ -62,3 +62,10 @@
 .table {
   margin-top: 40px;
 }
+.input-width {
+  width: 238px;
+}
+.inner-table {
+  width: 1000px;
+  margin: 0 auto;
+}

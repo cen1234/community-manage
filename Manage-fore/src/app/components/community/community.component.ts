@@ -39,7 +39,7 @@ export class CommunityComponent implements OnInit {
   public isVisible:boolean = false;//新增|编辑弹窗是否出现
   public Moadl:string = '新增社区';//新增|编辑弹窗标题
   public isOkLoading:boolean = false;///新增|编辑弹窗提交数据是否加载
-  public validateForm: UntypedFormGroup;//用户表格
+  public validateForm: UntypedFormGroup;//社区表格
   headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
   //省份统计图
   provinceOption = {

@@ -13,6 +13,8 @@ public class User {
 
     private Integer roleId;
 
+    private Integer comId;
+
     private String username;
 
     private String userRealName;

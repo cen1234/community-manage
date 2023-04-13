@@ -229,6 +229,14 @@
                 </nz-select>
               </nz-form-control>
           </nz-form-item> 
+          <nz-form-item >
+            <nz-form-label [nzSpan]="7" nzRequired>所在社区</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="所在社区不能为空">
+              <nz-select class="input-width" nzShowSearch  nzAllowClear nzPlaceHolder="请选择用户所在社区" formControlName="comId">
+                <nz-option *ngFor="let item of communityInfo" nzLabel="{{item.name}}" nzValue="{{item.comId}}"></nz-option>
+              </nz-select>
+            </nz-form-control>
+        </nz-form-item> 
             <nz-form-item >   
               <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="pwdErrorTpl">

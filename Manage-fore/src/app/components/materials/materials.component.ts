@@ -8,12 +8,23 @@ import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 
 interface ItemData {
   id: number;
+  comId:number;
   name:string;
   count:number;
   belongCommunity:string;
   available: string;
-  borrowedPeople:string;
-  borrowedCount:number
+  borrowedCount:number;
+  isExpand:boolean;
+}
+interface childDate {
+  id: number;
+  materialsId: number;
+  userName: string;
+  materialsName: string;
+  count: number;
+  back:string;
+  phone:string;
+  address:string;
 }
 @Component({
   selector: 'app-materials',
@@ -23,19 +34,29 @@ interface ItemData {
 export class MaterialsComponent implements OnInit {
   
   public isCollapsed:boolean = false;//侧边栏是否折叠
-  public speciesXData:any =[];//物质名数组
-  public speciesYData:any =[];//物质数量数组
-  public availableDara:any =[];//可用物资数组
+  public speciesXDate:any =[];//物资名数组
+  public speciesAllDate:any =[];//物资总数量数组
+  public speciesBorrowDate:any =[];//被借用物资数量数组
+  public availableDate:any =[];//可用物资数组
   public inputValue: string = '';//搜索框输入值
-  public selectType:string = '物资名';//搜索框搜索类型
+  public selectType:string = '';//搜索框搜索类型
   checked = false;
   indeterminate = false;
   listOfCurrentPageData:readonly  ItemData[] = [];
-  listOfData: readonly ItemData[] = [];//表格数据
+  listOfData: readonly ItemData[] = [];//物资表格数据
+  childListData: childDate[] = [];//物资-借用人表格数据
   setOfCheckedId = new Set<number>();//多选框选中集合
   pageIndex:number = 1;//当前页
   pageSize:number = 5;//每页展示多少数据
-  total:number = 10;//表格数据总数
+  total:number = 10;//物资表格数据总数
+  public isVisible:boolean = false;//新增|编辑弹窗是否出现
+  public UMisVisible:boolean = false;//物资借用弹窗是否出现
+  public Moadl:string = '新增物资';//新增|编辑弹窗标题
+  public isOkLoading:boolean = false;///新增|编辑弹窗提交数据是否加载
+  public validateForm: UntypedFormGroup;//社区表格
+  public communityId:number = 1;//社区Id
+  public communityName:string = '';//社区名
+  editCache: { [key: string]: { edit: boolean; data: childDate } } = {};
   headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
    //物质种类数量统计图
    speciesOption = {
@@ -88,7 +109,7 @@ export class MaterialsComponent implements OnInit {
             color:'#c1c7cf'
             },
             type: 'category',
-            data: ['酒精', '灭火器', '梯子', '急救药品', '创可贴']
+            data: this.speciesXDate
           },
           {
             inverse:false,
@@ -105,7 +126,7 @@ export class MaterialsComponent implements OnInit {
             color:'white'
             },
             type: 'category',
-            data: ['酒精', '灭火器', '梯子', '急救药品', '创可贴']
+            data: this.speciesXDate
           }
         ],
         yAxis: {
@@ -139,7 +160,7 @@ export class MaterialsComponent implements OnInit {
             itemStyle:{
                 barBorderRadius:2,
             },   
-            data: [20, 30, 29, 10, 13]
+            data: this.speciesBorrowDate
           },
           {
             name: '总数',
@@ -152,7 +173,7 @@ export class MaterialsComponent implements OnInit {
               color:'rgba(145, 204, 117, 0.2)',
               borderWith:3
             },
-            data: [100, 100, 100, 100, 100],
+            data: this.speciesAllDate,
           }
         ]
   }
@@ -196,11 +217,7 @@ export class MaterialsComponent implements OnInit {
                 type: 'pie',
                 radius: '60%',
                 roseType: 'area',//是否表现为南丁格尔图
-                data: [
-                  {value:1,name:'灭火器'},
-                  {value:1,name:'酒精'},
-                  {value:1,name:'梯子'}
-                ],
+                data: this.availableDate,
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
@@ -212,96 +229,159 @@ export class MaterialsComponent implements OnInit {
         ]
   }
   constructor(private fb: UntypedFormBuilder,private http:HttpClient,private message: NzMessageService) {
-
+    this.validateForm = this.fb.group({
+      id:[''],
+      comId:[1],
+      name: ['', [Validators.required]],
+      count: [0, [Validators.required],[this.countAsyncValidator]],
+      belongCommunity: [''],
+      available: ['', [Validators.required]],
+      borrowedCount:[0,[Validators.required],[this.borrowedCountAsyncValidator]]
+    });
    }
 
   ngOnInit(): void {
-    this.listOfData = [
-      {
-        id: 1,
-        name:'酒精',
-        count:100,
-        belongCommunity:'西柚小区',
-        available: `可用`,
-        borrowedPeople: `嘻嘻`,
-        borrowedCount: 10
-      },{
-        id: 2,
-        name:'灭火器',
-        count:100,
-        belongCommunity:'西柚小区',
-        available: `可用`,
-        borrowedPeople: `嘻嘻`,
-        borrowedCount: 30
-      },{
-        id: 3,
-        name:'梯子',
-        count:100,
-        belongCommunity:'西柚小区',
-        available: `可用`,
-        borrowedPeople: `嘻嘻`,
-        borrowedCount: 29
-      }]
+    //获取社区管理员所在社区的id
+    let user:any = localStorage.getItem('user');
+    user = JSON.parse(user);
+    this.communityId = user.comId;
 
+    this.onload();
+    this.findAll();
   }
+
+   //获取全部物资数据
+   findAll():void {
+    let url = 'api/materials/findAll';
+    this.http.get(url).subscribe((res:any) => {
+      this.statisticalSpecies(res);
+      this.statisticalAvailable(res);
+    })
+  }
+ 
   
   //分页获取数据
   onload(): void {
-    // let url = 'api/user/page';
-    // this.http.get(url,{
-    //   params:{
-    //     pageNum:this.pageIndex,
-    //     pageSize:this.pageSize,
-    //     search:this.inputValue,
-    //     type:this.selectType,
-    //     roleId:this.SelectedIndex+1
-    //   }}).subscribe((res:any) => {
-    //    this.listOfData = res.records;
-    //    this.total = res.total;
-    // })
+    let url = 'api/materials/page';
+    this.http.get(url,{
+      params:{
+        pageNum:this.pageIndex,
+        pageSize:this.pageSize,
+        search:this.inputValue,
+        type:this.selectType,
+      }}).subscribe((res:any) => {
+        res.records.forEach((item:any) => {
+          item.isExpand = item.isExpand === 'true'?true:false;
+        })
+       this.listOfData = res.records;
+       this.total = res.total;
+    })
   }
    
   
   //新增
     add():void {
-      // this.UservalidateForm.reset();
-      // for (const key in this.UservalidateForm.controls) {
-      //   if (this.UservalidateForm.controls.hasOwnProperty(key)) {
-      //     this.UservalidateForm.controls[key].markAsPristine();
-      //     this.UservalidateForm.controls[key].updateValueAndValidity();
-      //   }
-      // }
-      // this.isVisible = true;
-      // this.userMoadl = '新增用户';
+      this.validateForm.reset();
+      for (const key in this.validateForm.controls) {
+        if (this.validateForm.controls.hasOwnProperty(key)) {
+          this.validateForm.controls[key].markAsPristine();
+          this.validateForm.controls[key].updateValueAndValidity();
+        }
+      }
+      this.isVisible = true;
+      this.Moadl = '新增物资';
+      this.findName();
+      setTimeout(() => {
+        this.validateForm.controls['comId'].setValue(this.communityId);
+        this.validateForm.controls['belongCommunity'].setValue(this.communityName);
+      },1000)
     }
 
       //编辑
   edit(data:any):void {
-    // this.isVisible = true;
-    // this.userMoadl = '编辑用户';
-    // //将要编辑的这一行用户数据绑定到表单上
-    // this.UservalidateForm.controls['id'].setValue(data.id);
-    // this.UservalidateForm.controls['roleId'].setValue(Number(data.roleId));
-    // this.UservalidateForm.controls['userRealName'].setValue(data.userRealName);
-    // this.UservalidateForm.controls['username'].setValue(data.username);
-    // this.UservalidateForm.controls['age'].setValue(data.age);
-    // this.UservalidateForm.controls['sex'].setValue(data.sex);
-    // this.UservalidateForm.controls['password'].setValue(data.password);
-    // this.UservalidateForm.controls['phone'].setValue(data.phone);
-    // this.UservalidateForm.controls['address'].setValue(data.address);
+    this.isVisible = true;
+    this.Moadl = '编辑物资';
+    //将要编辑的这一行用户数据绑定到表单上
+    this.validateForm.controls['id'].setValue(data.id);
+    this.validateForm.controls['name'].setValue(data.name);
+    this.validateForm.controls['count'].setValue(data.count);
+    this.validateForm.controls['available'].setValue(data.available);
+    this.validateForm.controls['borrowedCount'].setValue(data.borrowedCount);
   }
+
+  //根据comId获取小区名字
+   findName():void {
+      let url = 'api/community/getName';
+      this.http.get(url,{params:{
+        comId: this.communityId
+      }}).subscribe((res:any) => {
+        console.log(res)
+         if (res) {
+           this.communityName = res.name;
+         }
+      })
+   }
+
+   //新增|编辑取消
+   handleCancel(): void {
+    this.isVisible = false;
+    this.validateForm.reset();
+    for (const key in this.validateForm.controls) {
+      if (this.validateForm.controls.hasOwnProperty(key)) {
+        this.validateForm.controls[key].markAsPristine();
+        this.validateForm.controls[key].updateValueAndValidity();
+      }
+    }
+  }
+
+//新增|编辑数据确认提交
+handleOk(): void {
+  this.isOkLoading = true;
+  console.log(0)
+  if (this.validateForm.valid) {
+    console.log(1)
+    let url = 'api/materials';
+    this.http.post(url,JSON.stringify(this.validateForm.value),{headers:this.headers}).subscribe(res => {
+      if( res === true) {
+        this.message.success('用户操作成功！', {
+          nzDuration: 500
+        });
+        this.onload();
+      }
+    },err => {
+      this.message.error('用户操作失败！', {
+        nzDuration: 500
+      });
+    })
+    setTimeout(() => {
+      this.isVisible = false;
+      this.isOkLoading = false;
+    }, 500);
+  } else {
+    console.log(2)
+      this.isVisible = true;
+      this.isOkLoading = false;
+      Object.values(this.validateForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+  }
+}
+
 
     //删除单个
     Singleconfirm(id:number) {
-      // let url = 'api/user/delete/'+id;
-      // this.http.post(url,{headers:this.headers}).subscribe(res => {
-      //    if (res === true) {
-      //       this.message.success('用户删除成功！', {
-      //         nzDuration: 500
-      //       });
-      //       this.onload();
-      //    }
-      // })
+      let url = 'api/materials/delete/'+id;
+      this.http.post(url,{headers:this.headers}).subscribe(res => {
+         if (res === true) {
+            this.message.success('物资删除成功！', {
+              nzDuration: 500
+            });
+            this.onload();
+         }
+      })
     }
 
     //取消批量删除
@@ -309,20 +389,83 @@ export class MaterialsComponent implements OnInit {
 
     //批量删除二次确认
      confirm(): void {
-      //  let delList:any = [];
-      //  this.setOfCheckedId.forEach(item => {
-      //    delList.push(item);
-      //  })
-      //  let url = 'api/user/deleteSelect/'+delList;
-      //  this.http.post(url,{headers:this.headers}).subscribe(res => {
-      //    if (res === true) {
-      //       this.message.success('用户删除成功！', {
-      //          nzDuration: 500
-      //      });
-          //  this.onload();
-      //   }
-      //  })
+       let delList:any = [];
+       this.setOfCheckedId.forEach(item => {
+         delList.push(item);
+       })
+       let url = 'api/materials/deleteSelect/'+delList;
+       this.http.post(url,{headers:this.headers}).subscribe(res => {
+         if (res === true) {
+            this.message.success('物资删除成功！', {
+               nzDuration: 500
+           });
+           this.onload();
+        }
+       })
      }
+
+     //查看借用
+     getBorrow(id:number):void {
+          let url = 'api/userMaterials/findBorrowed';
+          this.http.get(url,{
+            params:{
+              materialsId:id
+            }
+          }).subscribe((res:any) => {
+             this.childListData = res;
+             this.UMisVisible = true;
+             this.updateEditCache();
+          })    
+     }
+
+    //查看借用关闭
+    UMhandleOk(): void {
+      this.UMisVisible = false;
+    }
+    UMhandleCancel():void {
+      this.UMisVisible = false;
+    }
+
+    //开始编辑物资-借用人表格数据
+    startEdit(id: number): void {
+      this.editCache[id].edit = true;
+    }
+
+    //取消编辑物资-借用人表格数据
+    cancelEdit(id: number): void {
+      const index = this.childListData.findIndex(item => item.id === id);
+      this.editCache[id] = {
+        data: { ...this.childListData[index] },
+        edit: false
+      };
+    }
+
+    //保存编辑物资-借用人表格数据
+    saveEdit(id: number): void {
+      const index = this.childListData.findIndex(item => item.id === id);
+      Object.assign(this.childListData[index], this.editCache[id].data);
+      let url = 'api/userMaterials';
+      this.http.post(url,JSON.stringify(this.childListData[index]),{headers:this.headers}).subscribe((res:any) => {
+         if (res) {
+            this.message.success('用户操作成功！', {
+              nzDuration: 500
+            });
+            this.editCache[id].edit = false;
+         }
+      })
+    }
+
+    //更新编辑物资-借用人表格数据
+    updateEditCache(): void {
+      this.childListData.forEach(item => {
+        this.editCache[item.id] = {
+          edit: false,
+          data: { ...item }
+        };
+      });
+    }
+
+
 
        //上传文件改变时的状态
       handleChange(info: NzUploadChangeParam): void {
@@ -337,9 +480,9 @@ export class MaterialsComponent implements OnInit {
         }
       }
 
-    //导出社区
+    //导出物资
     export() {
-      // window.open('http://localhost:9000/user/export');
+      window.open('http://localhost:9000/materials/export');
    }
 
    //当前页发生改变
@@ -351,13 +494,13 @@ export class MaterialsComponent implements OnInit {
   //页码改变
   nzPageIndexChange(newPageIndex:number):void{
       this.pageIndex = newPageIndex;
-      // this.onload();
+      this.onload();
   }
 
   //页大小改变
   nzPageSizeChange(newPageSize:number) {
     this.pageSize = newPageSize;
-    // this.onload();
+    this.onload();
   }
 
    //刷新选中状态
@@ -386,4 +529,67 @@ export class MaterialsComponent implements OnInit {
     this.listOfCurrentPageData.forEach(item => this.updateCheckedSet(item.id, value));
     this.refreshCheckedStatus();
   }
+  
+  //统计物资种类数量
+  statisticalAvailable(arr: any) {
+    arr.forEach((item:any)=>{
+      this.speciesXDate.push(item.name);
+      this.speciesAllDate.push(item.count);
+      this.speciesBorrowDate.push(item.borrowedCount);
+    })
+    this.speciesOption.xAxis[0].data = this.speciesXDate;
+    this.speciesOption.xAxis[1].data = this.speciesXDate;
+    this.speciesOption.series[0].data = this.speciesBorrowDate;
+    this.speciesOption.series[1].data = this.speciesAllDate;
+  }
+ 
+  //统计可用物资种类及占比
+  statisticalSpecies(arr: any) {
+    let map = new Map();
+    arr.forEach((item:any)=>{
+      if (item.available === '可用') {
+        map.set(item.name,item.count - item.borrowedCount);
+      }
+    })
+    for (const [key,value] of map) {
+      let obj:any = {};
+      obj.value = value;
+      obj.name = key;
+      this.availableDate.push(obj);
+     }
+     this.availableOption.series[0].data = this.availableDate;
+   }
+   
+   //物资总数量校验规则
+   countAsyncValidator = (control: UntypedFormControl) =>
+      new Observable((observer: Observer<ValidationErrors | null>) => {
+        setTimeout(() => {
+          if (control.value === null) {
+            observer.next({ error: true, required: true });
+          } else if (control.value < 0) {
+            observer.next({ error: true, minlength: true });
+          } else {
+            observer.next(null);
+          }
+          observer.complete();
+        }, 500);    
+  });  
+ 
+  //物资借用总数量
+  borrowedCountAsyncValidator = (control: UntypedFormControl) =>
+      new Observable((observer: Observer<ValidationErrors | null>) => {
+        setTimeout(() => {
+          if (control.value === null) {
+            observer.next({ error: true, required: true });
+          } else if (control.value < 0) {
+            observer.next({ error: true, minlength: true });
+          } else {
+            observer.next(null);
+          }
+          observer.complete();
+        }, 500);    
+});  
+
+
+
 }
