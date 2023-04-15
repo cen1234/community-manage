@@ -18,6 +18,10 @@ interface ItemData {
   phone:string;
   address: string;
 }
+interface communityData {
+  name:string;
+  comId:number;
+}
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -59,7 +63,7 @@ export class UserComponent implements OnInit {
   pageSize:number = 5;//每页展示多少数据
   total:number = 10;//表格数据总数
   userForm:any = {};//传递给后台的用户表单信息
-  communityInfo:any = [];//存储社区id和名字的数组
+  communityInfo:communityData [] = [];//存储社区id和名字的数组
   headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
   user:any;
   fileList: NzUploadFile[] = [];

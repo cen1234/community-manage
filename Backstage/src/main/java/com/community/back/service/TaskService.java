@@ -2,7 +2,6 @@ package com.community.back.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.community.back.entity.Task;
-import com.community.back.entity.Volunteer;
 import com.community.back.mapper.TaskMapper;
 import org.springframework.stereotype.Service;
 

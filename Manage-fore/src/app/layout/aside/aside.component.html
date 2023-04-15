@@ -17,7 +17,7 @@
       <li nz-submenu nzOpen nzIcon="solution" nzTitle="社区工作人员">
         <ul>
           <li nz-menu-item [routerLink]="['/staffInfo']">工作人员信息管理</li>
-          <li nz-menu-item>工作人员工作管理</li>
+          <li nz-menu-item [routerLink]="['/work']">工作人员工作管理</li>
         </ul>
       </li>
       <li nz-submenu nzOpen nzIcon="team" nzTitle="社区志愿者">
@@ -36,12 +36,13 @@
         <span nz-icon nzType="appstore" nzTheme="outline"></span>
         <span>社区物资管理</span>
       </li>
-      <li nz-submenu nzOpen nzIcon="user-delete" nzTitle="特殊人员">
-        <ul>
-          <li nz-menu-item  [routerLink]="['/inneedInfo']">特殊人员信息管理</li>
-          <li nz-menu-item>组织活动</li>
-          <li nz-menu-item>问题追踪</li>
-        </ul>
+      <li nz-menu-item [routerLink]="['/inneedInfo']">
+        <span nz-icon nzType="user-delete" nzTheme="outline"></span>
+        <span>特殊人员信息管理</span>
+      </li>
+      <li nz-menu-item [routerLink]="['/question']">
+        <span nz-icon nzType="question" nzTheme="outline"></span>
+        <span>问题追踪</span>
       </li>
     </ul>
   </nz-sider>

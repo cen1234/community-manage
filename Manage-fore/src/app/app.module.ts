@@ -59,6 +59,7 @@ import { StaffInfoComponent } from './components/staff-info/staff-info.component
 import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-info.component';
 import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { WorkComponent } from './components/work/work.component';
 
 
 
@@ -83,7 +84,8 @@ registerLocaleData(zh);
     StaffInfoComponent,
     VolunteerInfoComponent,
     InneedInfoComponent,
-    ApplyComponent
+    ApplyComponent,
+    WorkComponent
   ],
   imports: [
     BrowserModule,

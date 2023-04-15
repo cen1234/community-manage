@@ -13,6 +13,7 @@ import { StaffInfoComponent } from './components/staff-info/staff-info.component
 import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-info.component';
 import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { WorkComponent } from './components/work/work.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,9 @@ const routes: Routes = [
    },
    {
     path:'staffInfo',component:StaffInfoComponent
+   },
+   {
+    path:'work',component:WorkComponent
    },
    {
     path:'volunteerInfo',component:VolunteerInfoComponent

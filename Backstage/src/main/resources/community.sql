@@ -234,3 +234,34 @@ INSERT IGNORE INTO `approver` VALUES (1,1,'李哈哈','审批通过','2023-09-28
 INSERT IGNORE INTO `approver` VALUES (2,2,'李哈哈','审批通过','2023-09-28 11:50:36');
 INSERT IGNORE INTO `approver` VALUES (3,1,'sjd','审批通过','2023-09-28 11:50:36');
 INSERT IGNORE INTO `approver` VALUES (4,4,'sjd','审批通过','2023-09-28 11:50:36');
+
+----------------------------------------------------------------------------------
+--------------------------志愿者任务表---------------
+----------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `task`;
+
+CREATE TABLE
+
+CREATE TABLE `task` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `implementer_id` INT(11) DEFAULT 1 COMMENT '实施人Id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30)  NULL COMMENT '任务名',
+  `content` VARCHAR(1000) NULL COMMENT '任务内容',
+  `score` INT(11) NULL COMMENT '任务总评分',
+  `getscore` INT(11) NULL COMMENT '实际评分',
+  `founder` VARCHAR(30) DEFAULT NULL COMMENT '创建人',
+  `implementer` VARCHAR(30) DEFAULT NULL COMMENT '实施人',
+  `comment` VARCHAR(255) DEFAULT NULL COMMENT '任务评价',
+  `creat_time` VARCHAR(30) DEFAULT NULL COMMENT '创建时间',
+  `finish_time` VARCHAR(30) DEFAULT NULL COMMENT '完成时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='任务信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `task` VALUES (1,1,1,'111','1111111111',5,1,'hhh','aaa','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `task` VALUES (2,1,1,'111','1111111111',5,1,'hhh','aaa','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `task` VALUES (3,2,1,'111','1111111111',5,1,'hhh','aaa2','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `task` VALUES (4,2,1,'111','1111111111',5,1,'hhh','aaa2','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `task` VALUES (5,2,2,'222','1111111111',5,1,'hhh','aaa2','11111','2023-09-28 11:50:36',NULL);
