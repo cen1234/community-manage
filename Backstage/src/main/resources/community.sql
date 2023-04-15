@@ -131,41 +131,106 @@ CREATE TABLE `materials` (
   `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
   `name` VARCHAR(30) NOT NULL COMMENT '物资名字',
   `count` INT(11) NULL COMMENT '物资总数',
-  `belongCommunity` VARCHAR(30) NULL COMMENT '所属社区',
-  `available` VARCHAR(30) NULL COMMENT '物资是否可用 true->可用 false->禁用',
-  `borrowedCount` INT(11) NULL COMMENT '总借用数量',
+  `belong_community` VARCHAR(30) NULL COMMENT '所属社区',
+  `available` VARCHAR(30) NULL COMMENT '物资是否可用',
+  `borrowed_count` INT(11) NULL COMMENT '总借用数量',
+  `is_expand` VARCHAR(5) NULL COMMENT '是否展开',
   PRIMARY KEY (`id`),
   FOREIGN KEY(com_id) REFERENCES cum(id)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='物资信息'
 
 
 -- 插入菜单数据
-INSERT IGNORE INTO `materials` VALUES (1,1,'酒精',100,'西柚小区1', 'true',20);
-INSERT IGNORE INTO `materials` VALUES (2,1,'急救药品',100,'西柚小区1', 'true',30);
-INSERT IGNORE INTO `materials` VALUES (3,1,'梯子',10,'西柚小区1', 'true',2);
-INSERT IGNORE INTO `materials` VALUES (4,1,'创可贴',100,'西柚小区1', 'true',20);
+INSERT IGNORE INTO `materials` VALUES (1,1,'酒精',100,'西柚小区1', 'true',20,'false');
+INSERT IGNORE INTO `materials` VALUES (2,1,'急救药品',100,'西柚小区1', 'true',30,'false');
+INSERT IGNORE INTO `materials` VALUES (3,1,'梯子',10,'西柚小区1', 'true',2,'false');
+INSERT IGNORE INTO `materials` VALUES (4,1,'创可贴',100,'西柚小区1', 'true',20,'false');
 
 
 ---------------------------------------------------------------
 ---------- 借用物资-用户关系表--------------
 ----------------------------------------------------------------
-DROP TABLE IF EXISTS `userMaterials`;
+DROP TABLE IF EXISTS `usermaterials`;
 
 CREATE TABLE
 
-CREATE TABLE `userMaterials` (
+CREATE TABLE `usermaterials` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `userName` VARCHAR(30) NOT NULL COMMENT '用户',
-  `materialsName` VARCHAR(30)NOT NULL COMMENT '被借用物资名',
+  `materials_id` INT(11) DEFAULT 1 COMMENT '物资Id',
+  `user_name` VARCHAR(30) NOT NULL COMMENT '用户',
+  `materials_name` VARCHAR(30)NOT NULL COMMENT '被借用物资名',
   `count` INT(11) NOT NULL COMMENT '被借用物资数量',
+  `back` VARCHAR(5)  NULL COMMENT '被借用物资是否已归还',
   `phone` VARCHAR(50) DEFAULT NULL COMMENT '联系电话',
   `address` VARCHAR(255) DEFAULT NULL COMMENT '用户地址',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(materials_id) REFERENCES materials(id)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='借用物资-用户关系表'
 
 
 -- 插入菜单数据
-INSERT IGNORE INTO `userMaterials` VALUES (1,'hhh','酒精',20,'18709261628', '二次元');
-INSERT IGNORE INTO `userMaterials` VALUES (2,'hhh','急救药品',30,'18709261628', '二次元');
-INSERT IGNORE INTO `userMaterials` VALUES (3,'hhh','梯子',2,'18709261628', '二次元');
-INSERT IGNORE INTO `userMaterials` VALUES (1,'hhh','创可贴',20,'18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (1,1,'hhh','酒精',20,'是','18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (2,2,'hhh','急救药品',30,'是','18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (3,3,'hhh','梯子',2,'否','18709261628', '二次元');
+INSERT IGNORE INTO `userMaterials` VALUES (4,4,'hhh','创可贴',20,'否','18709261628', '二次元');
+
+
+-------------------------------------------------------------------------
+------------------志愿者表-----------------------
+-----------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `volunteer`;
+
+CREATE TABLE
+
+CREATE TABLE `volunteer` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '志愿者名字',
+  `age` INT(11) NULL COMMENT '年龄',
+  `sex` VARCHAR(5) NULL COMMENT '性别',
+  `phone` VARCHAR(50) NULL COMMENT '电话',
+  `address` VARCHAR(255)  NULL COMMENT '地址',
+  `belong_community` VARCHAR(30) NULL COMMENT '所属社区',
+  `available` VARCHAR(30) NULL COMMENT '是否空闲',
+  `score` INT(11) NULL COMMENT '总评分',
+  `work_count` INT(11) NULL COMMENT '总任务数量',
+  `skill` VARCHAR(255) NULL COMMENT '擅长技能',
+  `formal` VARCHAR(5) NULL COMMENT '是否正式 两个状态：正式|申请',
+  `apply_time` VARCHAR(255) NULL COMMENT '申请开始时间',
+  `formal_time` VARCHAR(255)NULL COMMENT '成为正式开始时间',
+  `approver` VARCHAR(30) DEFAULT NULL COMMENT '当前审批人',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='志愿者信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `volunteer` VALUES (1,1,'aaa',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','正式','2023-09-28 11:50:36','2023-09-29 11:50:36',NULL);
+INSERT IGNORE INTO `volunteer` VALUES (2,1,'aaa2',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','正式','2023-09-28 11:50:36','2023-09-29 11:50:36',NULL);
+INSERT IGNORE INTO `volunteer` VALUES (3,1,'aaa3',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','申请','2023-09-28 11:50:36',NULL,'hhh');
+INSERT IGNORE INTO `volunteer` VALUES (4,1,'aaa4',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','申请','2023-09-28 11:50:36',NULL,NULL);
+
+
+-------------------------------------------------------------------------
+-------------------审批人-申请者表------------------
+---------------------------------------------------------------------------
+DROP TABLE IF EXISTS `approver`;
+
+CREATE TABLE
+
+CREATE TABLE `approver` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `apply_id` INT(11) DEFAULT 1 COMMENT '申请人Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '审批人名字',
+  `advice` VARCHAR(255) NULL COMMENT '审批人意见',
+  `approver_time` VARCHAR(30) DEFAULT NULL COMMENT '审批时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='审批人-申请者信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `approver` VALUES (1,1,'李哈哈','审批通过','2023-09-28 11:50:36');
+INSERT IGNORE INTO `approver` VALUES (2,2,'李哈哈','审批通过','2023-09-28 11:50:36');
+INSERT IGNORE INTO `approver` VALUES (3,1,'sjd','审批通过','2023-09-28 11:50:36');
+INSERT IGNORE INTO `approver` VALUES (4,4,'sjd','审批通过','2023-09-28 11:50:36');

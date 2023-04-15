@@ -250,10 +250,12 @@ export class MaterialsComponent implements OnInit {
     this.findAll();
   }
 
-   //获取全部物资数据
+   //获取当前社区物资数据
    findAll():void {
     let url = 'api/materials/findAll';
-    this.http.get(url).subscribe((res:any) => {
+    this.http.get(url,{params:{
+      comId:this.communityId
+    }}).subscribe((res:any) => {
       this.statisticalSpecies(res);
       this.statisticalAvailable(res);
     })
@@ -269,6 +271,7 @@ export class MaterialsComponent implements OnInit {
         pageSize:this.pageSize,
         search:this.inputValue,
         type:this.selectType,
+        comId:this.communityId
       }}).subscribe((res:any) => {
         res.records.forEach((item:any) => {
           item.isExpand = item.isExpand === 'true'?true:false;
@@ -337,9 +340,7 @@ export class MaterialsComponent implements OnInit {
 //新增|编辑数据确认提交
 handleOk(): void {
   this.isOkLoading = true;
-  console.log(0)
   if (this.validateForm.valid) {
-    console.log(1)
     let url = 'api/materials';
     this.http.post(url,JSON.stringify(this.validateForm.value),{headers:this.headers}).subscribe(res => {
       if( res === true) {
@@ -358,7 +359,6 @@ handleOk(): void {
       this.isOkLoading = false;
     }, 500);
   } else {
-    console.log(2)
       this.isVisible = true;
       this.isOkLoading = false;
       Object.values(this.validateForm.controls).forEach(control => {

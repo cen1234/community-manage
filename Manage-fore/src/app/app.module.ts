@@ -40,7 +40,8 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzTreeModule } from 'ng-zorro-antd/tree';
-
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
+import { NzRateModule } from 'ng-zorro-antd/rate';
 //公共组件
 import { HeaderComponent } from './layout/header/header.component';
 import { AsideComponent } from './layout/aside/aside.component';
@@ -57,6 +58,7 @@ import { MaterialsComponent } from './components/materials/materials.component';
 import { StaffInfoComponent } from './components/staff-info/staff-info.component';
 import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-info.component';
 import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
+import { ApplyComponent } from './components/apply/apply.component';
 
 
 
@@ -80,7 +82,8 @@ registerLocaleData(zh);
     MaterialsComponent,
     StaffInfoComponent,
     VolunteerInfoComponent,
-    InneedInfoComponent
+    InneedInfoComponent,
+    ApplyComponent
   ],
   imports: [
     BrowserModule,
@@ -117,6 +120,8 @@ registerLocaleData(zh);
     NzUploadModule,
     NzMessageModule,
     NzTreeModule,
+    NzTimelineModule,
+    NzRateModule,
     //引入部分
     NgxEchartsModule.forRoot({ //引入部分
       echarts: () => import('echarts') //引入部分

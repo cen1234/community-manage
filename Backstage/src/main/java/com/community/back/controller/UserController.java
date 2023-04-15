@@ -205,4 +205,17 @@ public class UserController {
 }
 
 
+//    --------------------------------
+//    获取所有当前登录用户所在社区的社区管理员
+//    --------------------------------
+    @GetMapping("/getApprover")
+    public List<User> findApprover(@RequestParam Integer comId) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("com_id",comId);
+        queryWrapper.like("role_id",2);
+        return userService.list(queryWrapper);
+    }
+
+
+
 }

@@ -1,0 +1,156 @@
+<nz-layout style="position:relative">
+    <!-- 头部 -->
+    <app-header></app-header>
+    <nz-layout>
+    <!-- 侧边 -->
+      <app-aside [isCollapsed] = "isCollapsed"></app-aside>
+      <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
+      <span
+        class="trigger trigger-placement"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></span>
+    <!-- 导航面包屑 -->
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>系统</nz-breadcrumb-item>
+          <nz-breadcrumb-item>志愿者审批管理</nz-breadcrumb-item>
+        </nz-breadcrumb>
+    <!-- 内容     -->
+        <nz-content>
+            <div class="operate">
+                <p class="operate-title">志愿者审批管理</p>
+                <div >
+                  <a
+                    nz-popconfirm
+                    nzPopconfirmTitle="您确认要删除所申请者吗?"
+                    nzPopconfirmPlacement="bottom"
+                    (nzOnConfirm)="confirm()"
+                    (nzOnCancel)="cancel()"
+                  >
+                  <button class="operate-btn" nz-button nzType="primary" nzDanger>批量删除</button>
+                  </a>
+                  <button class="operate-btn" nz-button nzType="default" (click)="export()">
+                    <span nz-icon nzType="vertical-align-bottom" nzTheme="outline"></span>批量导出</button>
+                      <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入申请者姓名进行搜索" (keypress)="onload()"/>
+            
+                </div>
+              </div>
+            <nz-table
+            class="table"
+            #rowSelectionTable
+            nzShowSizeChanger
+            [nzData]="listOfData"
+            [nzFrontPagination]="false"
+            [nzPageSizeOptions]="[3,5]"
+            [nzShowQuickJumper] = "true"
+            [nzPaginationType] = "'small'"
+            [nzPageIndex] = "pageIndex"
+            [nzPageSize] = "pageSize"
+            [nzTotal] = "total"
+            (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+            (nzPageIndexChange)="nzPageIndexChange($event)"
+            (nzPageSizeChange)="nzPageSizeChange($event)"
+          >
+            <thead>
+              <tr>
+                <th
+                  [(nzChecked)]="checked"
+                  [nzIndeterminate]="indeterminate"
+                  (nzCheckedChange)="onAllChecked($event)"
+                ></th>
+                <th>申请人</th>
+                <th>年龄</th>
+                <th>性别</th>
+                <th>电话</th>
+                <th>地址</th>
+                <th>擅长</th>
+                <th>行为</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of rowSelectionTable.data">
+                <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+                <td>{{data.name}}</td>
+                <td>{{ data.age }}</td>
+                <td>{{ data.sex }}</td>
+                <td>{{ data.phone }}</td>
+                <td>{{data.address}}</td>
+                <td>{{data.skill}}</td>
+                <td>
+                  <a
+                      nz-popconfirm
+                      nzPopconfirmTitle="您确认要删除申请者吗?"
+                      nzPopconfirmPlacement="bottom"
+                      (nzOnConfirm)="Singleconfirm(data.id)"
+                      (nzOnCancel)="cancel()"
+                    >
+                    <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
+                  </a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a>
+                    <button style="margin-right: 15px;" nz-button nzSize="small" nzType="default" (click)="apply(data)">审批</button>
+                  </a>
+                  <a>
+                    <button nz-button nzSize="small" nzType="default" (click)="check(data)">查看审批进度</button>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <div class="apply-box" *ngIf="show">
+              <p class="apply-title">查看审批流程</p>
+              <nz-timeline>
+                <nz-timeline-item nzColor="green">
+                    <span>{{applydata.name}}已提交申请表</span> 
+                    <span class="apply-time">{{applydata.applyTime}}</span>
+                </nz-timeline-item>
+                <nz-timeline-item *ngFor="let item of approverData" nzColor="green">
+                    <span>{{item.name}}审批意见：{{item.advice}}</span> 
+                    <span class="apply-time">{{item.approverTime}}</span>
+                </nz-timeline-item>
+                <nz-timeline-item *ngIf="!isApproved" nzColor="red" [nzDot]="dotTemplate">等待审批</nz-timeline-item>
+                <nz-timeline-item *ngIf="isApproved && nextApprover != ''" nzColor="red" [nzDot]="dotTemplate">等待{{nextApprover}}的审批</nz-timeline-item>
+                <nz-timeline-item *ngIf="isApproved && applyObj['formal'] === '正式'" nzColor="green">
+                  <span>{{applydata.name}}已成为正式志愿者</span>
+                  <span class="apply-time">{{getCurrentTime()}}</span>
+                </nz-timeline-item>
+              </nz-timeline>
+          </div>
+          <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
+        </nz-content>
+      </nz-layout>
+    </nz-layout>
+</nz-layout>
+<!-- 等待审批 -->
+<ng-template #dotTemplate>
+    <span nz-icon nzType="clock-circle-o" style="font-size: 16px;"></span>
+</ng-template>
+<!-- 审批弹窗 -->
+<nz-modal
+[(nzVisible)]="isVisible" 
+[nzTitle]="'审批'"
+(nzOnCancel)="handleCancel()"
+(nzOnOk)="handleOk()"
+[nzOkLoading]="isOkLoading"
+>
+  <div *nzModalContent>
+     <span class="prompt-title">审批意见：</span>
+     <textarea class="advice-text" rows="4" nz-input [(ngModel)]="advice" placeholder="请输入审批意见"></textarea>
+     <span class="prompt-title">是否为最终审批：</span>
+     <nz-radio-group [(ngModel)]="isFinal">
+        <label nz-radio nzValue="是">是</label>
+        <label nz-radio nzValue="否">否</label>
+    </nz-radio-group>
+    <div  *ngIf="isFinal === '否'" class="next" >
+        <span class="prompt-title">下一位审批人：</span>
+        <nz-select 
+            class="next-select"
+            nzShowSearch nzAllowClear 
+            nzPlaceHolder="请输入或选择下一位审批人" 
+            [(ngModel)]="nextApprover">
+              <nz-option *ngFor="let item of userData" [nzLabel]="item" [nzValue]="item"></nz-option>
+        </nz-select>
+    </div>
+  </div>
+</nz-modal>

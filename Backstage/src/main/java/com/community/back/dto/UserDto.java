@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class UserDto {
     private String username;
+    private String userRealName;
     private String password;
     private String userImg;
     private Integer comId;

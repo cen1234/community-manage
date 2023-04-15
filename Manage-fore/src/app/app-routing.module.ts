@@ -12,6 +12,8 @@ import { MaterialsComponent } from './components/materials/materials.component';
 import { StaffInfoComponent } from './components/staff-info/staff-info.component';
 import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-info.component';
 import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
+import { ApplyComponent } from './components/apply/apply.component';
+
 const routes: Routes = [
   {
     path:'',redirectTo:'login',pathMatch:'full'
@@ -48,6 +50,9 @@ const routes: Routes = [
    },
    {
     path:'volunteerInfo',component:VolunteerInfoComponent
+   },
+   {
+    path:'apply',component:ApplyComponent
    },
    {
     path:'inneedInfo',component:InneedInfoComponent

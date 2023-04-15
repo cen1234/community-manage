@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.community.back.entity.Materials;
+import com.community.back.entity.Volunteer;
 import com.community.back.service.MaterialsService;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.SheetUtil;
@@ -35,7 +36,9 @@ public class MaterialsController {
 //    查找全部
 //    -----
     @GetMapping("/findAll")
-    public List<Materials> find() {
+    public List<Materials> find( @RequestParam Integer comId) {
+        QueryWrapper<Materials> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("com_id",comId);
         return materialsService.list();
     }
 
@@ -47,7 +50,8 @@ public class MaterialsController {
     public IPage<Materials> findPage(@RequestParam Integer pageNum,
                                @RequestParam Integer pageSize,
                                @RequestParam(defaultValue = "") String search,
-                               @RequestParam String type
+                               @RequestParam String type,
+                               @RequestParam Integer comId
     ) {
         IPage<Materials> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Materials> queryWrapper = new QueryWrapper<>();
@@ -61,6 +65,7 @@ public class MaterialsController {
                 break;
             }
         }
+        queryWrapper.like("com_id",comId);
         return materialsService.page(page,queryWrapper);
     }
 
