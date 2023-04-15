@@ -265,3 +265,68 @@ INSERT IGNORE INTO `task` VALUES (2,1,1,'111','1111111111',5,1,'hhh','aaa','1111
 INSERT IGNORE INTO `task` VALUES (3,2,1,'111','1111111111',5,1,'hhh','aaa2','11111','2023-09-28 11:50:36',NULL);
 INSERT IGNORE INTO `task` VALUES (4,2,1,'111','1111111111',5,1,'hhh','aaa2','11111','2023-09-28 11:50:36',NULL);
 INSERT IGNORE INTO `task` VALUES (5,2,2,'222','1111111111',5,1,'hhh','aaa2','11111','2023-09-28 11:50:36',NULL);
+
+
+----------------------------------------------------------------------
+---------------社区工作人员表-----------------
+-----------------------------------------------------------------------
+DROP TABLE IF EXISTS `staff`;
+
+CREATE TABLE
+
+CREATE TABLE `staff` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '社区工作人员名字',
+  `age` INT(11) NULL COMMENT '年龄',
+  `sex` VARCHAR(5) NULL COMMENT '性别',
+  `phone` VARCHAR(50) NULL COMMENT '电话',
+  `address` VARCHAR(255)  NULL COMMENT '地址',
+  `belong_community` VARCHAR(30) NULL COMMENT '所属社区',
+  `belong_department` VARCHAR(30) NULL COMMENT '所属部门',
+  `available` VARCHAR(30) NULL COMMENT '是否空闲',
+  `score` INT(11) NULL COMMENT '总评分',
+  `work_count` INT(11) NULL COMMENT '总任务数量',
+  `skill` VARCHAR(255) NULL COMMENT '擅长技能',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='社区工作人员信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `staff` VALUES (1,1,'bbb',20,'女', '18709261268','11111','西柚小区1','执行部','空闲',10,2,'111');
+INSERT IGNORE INTO `staff` VALUES (2,1,'bbb2',20,'女', '18709261268','11111','西柚小区1','执行部','空闲',10,2,'111');
+INSERT IGNORE INTO `staff` VALUES (3,1,'bbb3',20,'女', '18709261268','11111','西柚小区1','执行部','不空闲',10,2,'111');
+INSERT IGNORE INTO `staff` VALUES (4,1,'bbb4',20,'女', '18709261268','11111','西柚小区1','执行部','不空闲',10,2,'111');
+INSERT IGNORE INTO `staff` VALUES (5,2,'bbb5',20,'女', '18709261268','11111','西柚小区2','执行部','不空闲',10,2,'111');
+
+
+-----------------------------------------------------------------------------
+------------社区工作人员-工作表-------------
+------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `work`;
+
+CREATE TABLE
+
+CREATE TABLE `work` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `implementer_id` INT(11) DEFAULT 1 COMMENT '实施人Id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30)  NULL COMMENT '任务名',
+  `content` VARCHAR(1000) NULL COMMENT '任务内容',
+  `score` INT(11) NULL COMMENT '任务总评分',
+  `getscore` INT(11) NULL COMMENT '实际评分',
+  `founder` VARCHAR(30) DEFAULT NULL COMMENT '创建人',
+  `implementer` VARCHAR(30) DEFAULT NULL COMMENT '实施人',
+  `comment` VARCHAR(255) DEFAULT NULL COMMENT '任务评价',
+  `creat_time` VARCHAR(30) DEFAULT NULL COMMENT '创建时间',
+  `finish_time` VARCHAR(30) DEFAULT NULL COMMENT '完成时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='社区工作人员任务信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `work` VALUES (1,1,1,'111','1111111111',5,1,'hhh','bbb','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `work` VALUES (2,1,1,'111','1111111111',5,1,'hhh','bbb','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `work` VALUES (3,2,1,'111','1111111111',5,1,'hhh','bbb2','11111','2023-09-28 11:50:36',NULL);
+INSERT IGNORE INTO `work` VALUES (4,2,1,'111','1111111111',5,1,'hhh','bbb2','11111','2023-09-28 11:50:36',NULL);

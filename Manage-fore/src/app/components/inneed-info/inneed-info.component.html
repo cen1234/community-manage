@@ -78,6 +78,7 @@
   >
     <thead>
       <tr>
+        <th></th>
         <th
           [(nzChecked)]="checked"
           [nzIndeterminate]="indeterminate"
@@ -89,12 +90,13 @@
         <th>电话</th>
         <th>地址</th>
         <th>类型</th>
-        <th>备注</th>
         <th>行为</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of rowSelectionTable.data">
+      <ng-container *ngFor="let data of rowSelectionTable.data">
+      <tr >
+        <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
         <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
         <td>{{data.name}}</td>
         <td>{{ data.age }}</td>
@@ -102,7 +104,6 @@
         <td>{{ data.phone }}</td>
         <td>{{data.address}}</td>
         <td>{{data.type}}</td>
-        <td>{{data.remarks}}</td>
         <td>
           <a><button nz-button nzSize="small" nzType="default" (click)="edit(data)">编辑</button></a>
           <nz-divider nzType="vertical"></nz-divider>
@@ -117,6 +118,10 @@
           </a>
         </td>
       </tr>
+      <tr [nzExpand]="expandSet.has(data.id)">
+        <span>{{data.remarks}}</span>
+     </tr>
+    </ng-container>
     </tbody>
   </nz-table>
       <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
@@ -124,3 +129,92 @@
       </nz-layout>
     </nz-layout>
 </nz-layout>
+<!-- 新增|修改弹窗 -->
+<nz-modal
+[(nzVisible)]="isVisible" 
+[nzTitle]="modalTitle"
+(nzOnCancel)="handleCancel()"
+(nzOnOk)="handleOk()"
+[nzOkLoading]="isOkLoading"
+>
+  <form *nzModalContent nz-form [formGroup]="validateForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzErrorTip="姓名不能为空">
+             <input class="input-width" nz-input formControlName="name" placeholder="请输入姓名" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>年龄</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="ageErrorTpl">
+              <nz-input-number  
+                  class="input-width" 
+                  nz-input 
+                  [nzMin]="1"
+                  [nzMax]="120" 
+                  [nzStep]="1"
+                  formControlName="age" 
+                  nzPlaceHolder="请输入用户年龄"
+                  ></nz-input-number>
+              </nz-form-control>
+      </nz-form-item>
+      <nz-form-item >
+        <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
+            <nz-radio-group formControlName="sex">
+                <label nz-radio nzValue="女">女</label>
+                <label nz-radio nzValue="男">男</label>
+              </nz-radio-group>
+            </nz-form-control>
+    </nz-form-item> 
+    <nz-form-item >
+      <nz-form-label [nzSpan]="7" nzRequired>类型</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="类型不能为空">
+          <nz-radio-group formControlName="type">
+              <label nz-radio nzValue="老">老</label>
+              <label nz-radio nzValue="残">残</label>
+              <label nz-radio nzValue="孕">孕</label>
+              <label nz-radio nzValue="孤">孤</label>
+            </nz-radio-group>
+          </nz-form-control>
+  </nz-form-item> 
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
+      <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
+        <input class="input-width" nz-input formControlName="phone" placeholder="请输入电话号码" />
+      </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="input-box">
+      <nz-form-label [nzSpan]="7" nzRequired>详细地址</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
+        <nz-textarea-count [nzMaxCharacterCount]="300">
+          <textarea rows="2"  class="input-width" formControlName="address" nz-input placeholder="请输入详细地址(包含省市区|县)"></textarea>
+        </nz-textarea-count>
+      </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="input-box">
+    <nz-form-label [nzSpan]="7">备注</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-textarea-count [nzMaxCharacterCount]="300" nzErrorTip="最多不超过300字">
+        <textarea rows="7"  class="input-width" formControlName="remarks" nz-input placeholder="请输入人员背景备注"></textarea>
+      </nz-textarea-count>
+    </nz-form-control>
+</nz-form-item>
+  </form>
+</nz-modal>
+<!-- 年龄错误提示 -->
+<ng-template #ageErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">年龄不能为空</ng-container>
+  <ng-container *ngIf="control.hasError('minlength')">年龄不小于1</ng-container>
+  <ng-container *ngIf="control.hasError('maxlength')">用户名不超过120</ng-container>
+</ng-template>
+<!-- 地址错误提示 -->
+<ng-template #addressErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">地址不能为空</ng-container>
+  <ng-container *ngIf="control.hasError('maxlength')">地址不超过300个字符</ng-container>
+</ng-template>
+<!-- 电话号码错误提示 -->
+<ng-template #phoneErrorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')">电话号码不能为空</ng-container>
+  <ng-container *ngIf="control.hasError('errorPhone')">请填写正确的电话号码</ng-container>
+</ng-template>

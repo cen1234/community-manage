@@ -429,7 +429,7 @@ export class StaffInfoComponent implements OnInit {
     let map = new Map();
     let num:number;
     arr.forEach((item:any)=>{
-       if(!map.has(item.age)) {
+       if(!map.has(item.sex)) {
            num = 1;
          map.set(item.sex,1)
        } else {
