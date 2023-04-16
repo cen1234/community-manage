@@ -1,0 +1,286 @@
+<nz-layout style="position:relative">
+    <!-- 头部 -->
+    <app-header></app-header>
+    <nz-layout>
+    <!-- 侧边 -->
+      <app-aside [isCollapsed] = "isCollapsed"></app-aside>
+      <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
+      <span
+        class="trigger trigger-placement"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></span>
+    <!-- 导航面包屑 -->
+        <nz-breadcrumb>
+          <nz-breadcrumb-item>系统</nz-breadcrumb-item>
+          <nz-breadcrumb-item>社区医院管理</nz-breadcrumb-item>
+        </nz-breadcrumb>
+    <!-- 内容     -->
+    <nz-content>
+     <div class="operate">
+      <p class="operate-title">社区医院管理</p>
+      <div >
+        <a>
+            <button class="operate-btn" nz-button nzType="default" (click)="add()">新增医院</button>
+        </a> 
+        <a
+          nz-popconfirm
+          nzPopconfirmTitle="您确认要删除所选社区医院吗?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirm()"
+          (nzOnCancel)="cancel()"
+        >
+        <button class="operate-btn" nz-button nzType="primary" nzDanger>批量删除</button>
+        </a>
+        <nz-upload
+            nzAction="api/hospital/importHospital"
+            [nzShowUploadList]="false"
+            [nzHeaders]="{ authorization: 'authorization-text' }"
+            (nzChange)="handleChange($event)"
+           >
+            <button class="operate-btn" nz-button nzType="default">
+              <span nz-icon nzType="vertical-align-top" nzTheme="outline"></span>批量导入</button>
+        </nz-upload>
+        <button class="operate-btn" nz-button nzType="default" (click)="export()">
+          <span nz-icon nzType="vertical-align-bottom" nzTheme="outline"></span>批量导出</button>
+        <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入医院名进行搜索" (keypress)="onload()"/>
+      </div>
+    </div>
+    <nz-table
+    class="table"
+    #rowSelectionTable
+    nzShowSizeChanger
+    [nzData]="listOfData"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[3,5]"
+    [nzShowQuickJumper] = "true"
+    [nzPaginationType] = "'small'"
+    [nzPageIndex] = "pageIndex"
+    [nzPageSize] = "pageSize"
+    [nzTotal] = "total"
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    (nzPageIndexChange)="nzPageIndexChange($event)"
+    (nzPageSizeChange)="nzPageSizeChange($event)"
+  >
+    <thead>
+      <tr>
+        <th
+          [(nzChecked)]="checked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)"
+        ></th>
+        <th>医院名</th>
+        <th>电话</th>
+        <th>地址</th>
+        <th>备注</th>
+        <th>行为</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data">
+        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+        <td>{{data.name}}</td>
+        <td>{{ data.phone }}</td>
+        <td>{{data.address}}</td>
+        <td>{{data.remarks}}</td>
+        <td>
+            <a>
+                <button class="operate-btn" nz-button nzType="default" (click)="edit(data)">编辑</button>
+            </a>
+            <nz-divider nzType="vertical"></nz-divider>   
+          <a
+              nz-popconfirm
+              nzPopconfirmTitle="您确认要删除此社区医院吗?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="Singleconfirm(data.id)"
+              (nzOnCancel)="cancel()"
+            >
+            <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
+          </a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a >
+            <button class="check-btn" nz-button nzSize="small" nzType="default" (click)="check(data.id)">查看医生</button>
+          </a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <nz-upload
+            nzAction="api/hospital/importDoctor"
+            [nzShowUploadList]="false"
+            [nzHeaders]="{ authorization: 'authorization-text' }"
+            (nzChange)="handleChange($event)"
+           >
+            <button class="operate-btn" nz-button nzType="default">
+              <span nz-icon nzType="vertical-align-top" nzTheme="outline"></span>导入医生</button>
+        </nz-upload>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+    <!-- 医生管理 -->
+    <div class="doctor-box" *ngIf="isShow">
+       <p class="work-title" (click)="close()">医生管理</p>
+       <nz-table
+       class="table"
+       #rowSelectionTableDoctor
+       nzShowSizeChanger
+       [nzData]="listOfDataDoctor"
+       [nzFrontPagination]="false"
+       [nzPageSizeOptions]="[3,5]"
+       [nzShowQuickJumper] = "true"
+       [nzPaginationType] = "'small'"
+       [nzPageIndex] = "pageIndexDoctor"
+       [nzPageSize] = "pageSizeDoctor"
+       [nzTotal] = "totalDoctor"
+       (nzCurrentPageDataChange)="onCurrentPageDataChangeDoctor($event)"
+       (nzPageIndexChange)="nzPageIndexChangeDoctor($event)"
+       (nzPageSizeChange)="nzPageSizeChangeDoctor($event)"
+     >
+       <thead>
+         <tr>
+           <th>姓名</th>
+           <th>年龄</th>
+           <th>性别</th>
+           <th>电话</th>
+           <th>所属科室</th>
+           <th>备注</th>
+           <th>操作</th>
+         </tr>
+       </thead>
+       <tbody>
+          <tr  *ngFor="let data of listOfDataDoctor">
+              <td>{{data.name}}</td>
+              <td>{{ data.age }}</td>
+              <td>{{ data.sex }}</td>
+              <td>{{ data.phone }}</td>
+              <td>{{ data.belongDepartment }}</td>
+              <td>{{data.remarks}}</td>
+              <td>
+                  <button class="operate-btn" nzSize="small"  nz-button nzType="default" (click)="editDoctor(data)">编辑</button>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <button class="operate-btn" nzSize="small"  nz-button nzType="primary" nzDanger (click)="deleteDoctor(data.id)">删除</button>
+              </td>
+         </tr>
+       </tbody>
+     </nz-table>
+    </div>
+      <nz-back-top [nzVisibilityHeight]="150"></nz-back-top>
+    </nz-content>
+      </nz-layout>
+    </nz-layout>
+</nz-layout>
+<!-- 编辑医生 -->
+<nz-modal
+[(nzVisible)]="isVisibleDoctor" 
+[nzTitle]="'编辑医生'"
+(nzOnCancel)="handleCancelDoctor()"
+(nzOnOk)="handleOkDoctor()"
+[nzOkLoading]="isOkLoadingDoctor"
+>
+  <form *nzModalContent nz-form [formGroup]="validateFormDoctor">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="姓名不能为空">
+           <input class="input-width" nz-input formControlName="name" placeholder="请输入姓名" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>所属科室</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="所属科室不能为空">
+           <input class="input-width" nz-input formControlName="belongDepartment" placeholder="请输入所属科室" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>年龄</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="ageErrorTpl">
+            <nz-input-number  
+                class="input-width" 
+                nz-input 
+                [nzMin]="1"
+                [nzMax]="120" 
+                [nzStep]="1"
+                formControlName="age" 
+                nzPlaceHolder="请输入医生年龄"
+                ></nz-input-number>
+            </nz-form-control>
+      </nz-form-item>
+    <nz-form-item >
+      <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
+          <nz-radio-group formControlName="sex">
+              <label nz-radio nzValue="女">女</label>
+              <label nz-radio nzValue="男">男</label>
+            </nz-radio-group>
+          </nz-form-control>
+  </nz-form-item> 
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
+    <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
+      <input class="input-width" nz-input formControlName="phone" placeholder="请输入电话号码" />
+    </nz-form-control>
+</nz-form-item>
+<nz-form-item class="input-box">
+  <nz-form-label [nzSpan]="7">备注</nz-form-label>
+  <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-textarea-count [nzMaxCharacterCount]="300" nzErrorTip="最多不超过300字">
+      <textarea rows="7"  class="input-width" formControlName="remarks" nz-input placeholder="请输入人员背景备注"></textarea>
+    </nz-textarea-count>
+  </nz-form-control>
+</nz-form-item>
+  </form>
+</nz-modal>
+<!-- 新增|编辑医院 -->
+<nz-modal
+[(nzVisible)]="isVisible" 
+[nzTitle]="modal"
+(nzOnCancel)="handleCancel()"
+(nzOnOk)="handleOk()"
+[nzOkLoading]="isOkLoading"
+>
+  <form *nzModalContent nz-form [formGroup]="validateForm">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>医院名</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzErrorTip="医院不能为空">
+            <input class="input-width" nz-input formControlName="name" placeholder="请输入医院" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
+            <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
+            <input class="input-width" nz-input formControlName="phone" placeholder="请输入电话号码" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="input-box">
+            <nz-form-label [nzSpan]="7" nzRequired>详细地址</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
+            <nz-textarea-count [nzMaxCharacterCount]="300">
+                <textarea rows="2"  class="input-width" formControlName="address" nz-input placeholder="请输入详细地址(包含省市区|县)"></textarea>
+            </nz-textarea-count>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="input-box">
+        <nz-form-label [nzSpan]="7">备注</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-textarea-count [nzMaxCharacterCount]="300" nzErrorTip="最多不超过300字">
+            <textarea rows="7"  class="input-width" formControlName="remarks" nz-input placeholder="请输入人员背景备注"></textarea>
+            </nz-textarea-count>
+        </nz-form-control>
+        </nz-form-item>
+  </form>
+</nz-modal>
+<!-- 年龄错误提示 -->
+<ng-template #ageErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">年龄不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">年龄不小于1</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">用户名不超过120</ng-container>
+  </ng-template>
+<!-- 地址错误提示 -->
+<ng-template #addressErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">地址不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">地址不超过300个字符</ng-container>
+  </ng-template>
+  <!-- 电话号码错误提示 -->
+  <ng-template #phoneErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">电话号码不能为空</ng-container>
+    <ng-container *ngIf="control.hasError('errorPhone')">请填写正确的电话号码</ng-container>
+  </ng-template>
+

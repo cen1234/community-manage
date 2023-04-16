@@ -1,6 +1,7 @@
 --------------------------------------------------
 -------------用户表-----------------------
 ----------------------------------------------------
+-- 创建用户表
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE
@@ -34,6 +35,7 @@ INSERT IGNORE INTO `user` VALUES (5,4,1, 'z3',   'sjd3', '123456',   '女', 11, 
 -------------------------------------------------------
 ---------------角色身份表----------------------------
 -------------------------------------------------------
+-- 创建角色表
 DROP TABLE IF EXISTS `role`;
 
 CREATE TABLE
@@ -59,6 +61,7 @@ INSERT IGNORE INTO `role` VALUES (5,  '普通人员',NULL,'0');
 -------------------------------------------------------
 ----------------菜单表----------------------------
 -------------------------------------------------------
+-- 创建菜单表
 DROP TABLE IF EXISTS `menu`;
 
 CREATE TABLE
@@ -330,3 +333,33 @@ INSERT IGNORE INTO `work` VALUES (1,1,1,'111','1111111111',5,1,'hhh','bbb','1111
 INSERT IGNORE INTO `work` VALUES (2,1,1,'111','1111111111',5,1,'hhh','bbb','11111','2023-09-28 11:50:36',NULL);
 INSERT IGNORE INTO `work` VALUES (3,2,1,'111','1111111111',5,1,'hhh','bbb2','11111','2023-09-28 11:50:36',NULL);
 INSERT IGNORE INTO `work` VALUES (4,2,1,'111','1111111111',5,1,'hhh','bbb2','11111','2023-09-28 11:50:36',NULL);
+
+--------------------------------------------------------------------------------
+-------------------特殊人员表----------
+--------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `innneed`;
+
+CREATE TABLE
+
+CREATE TABLE `inneed` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '特殊人员名字',
+  `age` INT(11) NULL COMMENT '年龄',
+  `sex` VARCHAR(5) NULL COMMENT '性别',
+  `phone` VARCHAR(50) NULL COMMENT '电话',
+  `address` VARCHAR(255)  NULL COMMENT '地址',
+  `belong_community` VARCHAR(30) NULL COMMENT '所属社区',
+  `type` VARCHAR(30) NULL COMMENT '类型',
+  `remarks` VARCHAR(1000) NULL COMMENT '备注',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='特殊人员信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `inneed` VALUES (1,1,'ccc',60,'女', '18709261268','11111','西柚小区1','残障人士','111');
+INSERT IGNORE INTO `inneed` VALUES (2,1,'ccc2',60,'女', '18709261268','11111','西柚小区1','残障人士','111');
+INSERT IGNORE INTO `inneed` VALUES (3,1,'ccc3',60,'男', '18709261268','11111','西柚小区1','残障人士','111');
+INSERT IGNORE INTO `inneed` VALUES (4,1,'ccc4',80,'女', '18709261268','11111','西柚小区1','老人','111');
+INSERT IGNORE INTO `inneed` VALUES (5,2,'ccc5',60,'女', '18709261268','11111','西柚小区2','残障人士','111');

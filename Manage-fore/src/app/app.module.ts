@@ -60,6 +60,8 @@ import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-in
 import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { WorkComponent } from './components/work/work.component';
+import { HospitalComponent } from './components/hospital/hospital.component';
+import { HealthComponent } from './components/health/health.component';
 
 
 
@@ -85,7 +87,9 @@ registerLocaleData(zh);
     VolunteerInfoComponent,
     InneedInfoComponent,
     ApplyComponent,
-    WorkComponent
+    WorkComponent,
+    HospitalComponent,
+    HealthComponent
   ],
   imports: [
     BrowserModule,

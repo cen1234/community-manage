@@ -3,7 +3,7 @@
       <li nz-submenu nzOpen nzIcon="user" nzTitle="账号与用户">
         <ul>
           <li nz-menu-item  [routerLink]="['/user']">账号管理</li>
-          <li nz-menu-item  >用户问题追踪</li>
+          <!-- <li nz-menu-item  >用户问题追踪</li> -->
         </ul>
       </li>
       <li nz-menu-item [routerLink]="['/role']" nzPopoverContent="权限管理">
@@ -28,8 +28,8 @@
       </li>
       <li nz-submenu nzOpen nzIcon="plus" nzTitle="社区医院">
         <ul>
-          <li nz-menu-item>社区医院管理</li>
-          <li nz-menu-item>健康小知识</li>
+          <li nz-menu-item [routerLink]="['/hospital']">社区医院管理</li>
+          <li nz-menu-item [routerLink]="['/health']">健康小知识</li>
         </ul>
       </li>
       <li nz-menu-item [routerLink]="['/materials']">

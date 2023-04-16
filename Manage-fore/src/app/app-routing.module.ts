@@ -14,6 +14,8 @@ import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-in
 import { InneedInfoComponent } from './components/inneed-info/inneed-info.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { WorkComponent } from './components/work/work.component';
+import { HospitalComponent } from './components/hospital/hospital.component';
+import { HealthComponent } from './components/health/health.component';
 
 const routes: Routes = [
   {
@@ -58,6 +60,13 @@ const routes: Routes = [
    {
     path:'apply',component:ApplyComponent
    },
+   {
+    path:'hospital',component:HospitalComponent
+   },
+   {
+    path:'health',component:HealthComponent
+   },
+
    {
     path:'inneedInfo',component:InneedInfoComponent
    }

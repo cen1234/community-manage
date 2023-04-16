@@ -121,7 +121,6 @@ export class WorkComponent implements OnInit {
             return obj;
          })
          this.isVisibleTask = true;
-
       }
       
     })
