@@ -102,20 +102,15 @@ export class RoleComponent implements OnInit {
 
   //修改权限
   role(data:any):void {
-    this.isRoleVisible = true;
     this.roleId = data.id;
     //获取所有菜单
     let url = 'api/menu';
-    this.http.get(url,{
-      params:{
-        roleId: 0
-      }
-    }).subscribe((res:any) => {
+    this.http.get(url).subscribe((res:any) => {
        this.nodes = res.map((item:any) => {
           let obj:any = {};
           if (item.children.length == 0) {
               obj['title'] = item.name;
-              obj['key'] = item.menuId;
+              obj['key'] = item.id;
               obj['isLeaf'] = true;
           } else {
               obj['title'] = item.name;
@@ -123,7 +118,7 @@ export class RoleComponent implements OnInit {
               obj['children'] = item.children.map((child:any) => {
                   let objChild:any = {};
                   objChild['title'] = child.name;
-                  objChild['key'] = child.menuId;
+                  objChild['key'] = child.id;
                   objChild['isLeaf'] = true;
                   return objChild;
               })
@@ -133,16 +128,17 @@ export class RoleComponent implements OnInit {
        //展开所有的一级菜单
        this.defaultExpandedKeys = this.nodes.map((item:any) => {
            return item.key;
-       }) 
-    })
-     //获取修改权限当前角色所有的菜单
+       })
+       //获取修改权限当前角色所有的菜单
      let url1 = 'api/role/roleMenu';
      this.http.get(url1,{params:{
       roleId: data.id
      }}).subscribe((res:any) => {
         this.defaultCheckedKeys = res;
         this.defaultSelectedKeys = res;
+        this.isRoleVisible = true;
      })
+    })
   }
 
   nzEvent(event: NzFormatEmitEvent): void {
@@ -156,11 +152,15 @@ export class RoleComponent implements OnInit {
   
   //权限修改确认提交
   RolehandleOk():void {
-    this.isOkLoading = true;
+    this.isRoleOkLoading = true;
     let url = 'api/role/roleMenu/'+this.roleId;
     this.checkedKey = this.getSelectedNode();
     this.http.post(url,JSON.stringify(this.checkedKey[0]),{headers:this.headers}).subscribe((res:any) => {
-       console.log(res)
+        if (res.code === '200') {
+          this.isOkLoading = false;
+          this.isRoleOkLoading = false;
+          this.isRoleVisible = false;
+        }
     })
   }
 

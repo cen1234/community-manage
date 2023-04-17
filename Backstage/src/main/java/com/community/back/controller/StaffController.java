@@ -73,6 +73,17 @@ public class StaffController {
 
 
 
+//   -----
+//    根据id获取社区工作人员信息
+//    -----
+    @GetMapping("/getInfo/{name}")
+    public  Staff getInfo(@PathVariable String name) {
+        return staffService.getByName(name);
+    }
+
+
+
+
 //    ------
 //    新增|修改社区工作人员
 //    ------

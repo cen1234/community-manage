@@ -5,22 +5,24 @@
     <!-- 侧边 -->
       <app-aside [isCollapsed] = "isCollapsed"></app-aside>
       <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
-      <span
-        class="trigger trigger-placement"
-        nz-icon
-        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"
-      ></span>
-    <!-- 导航面包屑 -->
-        <nz-breadcrumb>
-          <nz-breadcrumb-item>系统</nz-breadcrumb-item>
-          <nz-breadcrumb-item>志愿者审批管理</nz-breadcrumb-item>
-        </nz-breadcrumb>
+        <div class="top">
+          <span
+          class="trigger trigger-placement"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed"
+        ></span>
+      <!-- 导航面包屑 -->
+          <nz-breadcrumb>
+            <nz-breadcrumb-item>系统</nz-breadcrumb-item>
+            <nz-breadcrumb-item>志愿者审批管理</nz-breadcrumb-item>
+          </nz-breadcrumb>
+        </div>
     <!-- 内容     -->
         <nz-content>
-            <div class="operate">
+            <div>
                 <p class="operate-title">志愿者审批管理</p>
-                <div >
+                <div class="operate">
                   <a
                     nz-popconfirm
                     nzPopconfirmTitle="您确认要删除所申请者吗?"

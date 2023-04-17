@@ -13,18 +13,14 @@ import java.util.stream.Collectors;
 public class MenuService extends ServiceImpl<MenuMapper, Menu>{
 
 //    获取全部菜单信息
-    public List<Menu> find(Integer roleId) {
+    public List<Menu> find() {
         //查询出所有数据
-        QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
-        if (roleId != 0) {
-            queryWrapper.like("role_id",roleId);
-        }
-        List<Menu> list = list(queryWrapper);
+        List<Menu> list = list();
         //找出pid为null的一级菜单
         List<Menu> parentNode= list.stream().filter(menu -> menu.getPid() == null).collect(Collectors.toList());
         //找出一级菜单的子菜单
         for (Menu menu:parentNode) {
-            menu.setChildren(list.stream().filter(m -> menu.getMenuId().equals(m.getPid())).collect(Collectors.toList()));
+            menu.setChildren(list.stream().filter(m -> menu.getId().equals(m.getPid())).collect(Collectors.toList()));
         }
 
         return parentNode;

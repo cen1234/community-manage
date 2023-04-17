@@ -5,17 +5,19 @@
     <!-- 侧边 -->
       <app-aside [isCollapsed] = "isCollapsed"></app-aside>
       <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
-      <span
-        class="trigger trigger-placement"
-        nz-icon
-        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"
-      ></span>
-    <!-- 导航面包屑 -->
-        <nz-breadcrumb>
-          <nz-breadcrumb-item>系统</nz-breadcrumb-item>
-          <nz-breadcrumb-item>工作人员工作管理</nz-breadcrumb-item>
-        </nz-breadcrumb>
+        <div class="top">
+          <span
+          class="trigger trigger-placement"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed"
+        ></span>
+      <!-- 导航面包屑 -->
+          <nz-breadcrumb>
+            <nz-breadcrumb-item>系统</nz-breadcrumb-item>
+            <nz-breadcrumb-item>工作人员工作管理</nz-breadcrumb-item>
+          </nz-breadcrumb>   
+        </div>
     <!-- 内容     -->
         <nz-content>
          <div>
@@ -77,7 +79,7 @@
               <td>
                   <button class="operate-btn" nzSize="small"  nz-button nzType="default" (click)="rate(data.id)">打分</button>
                   <nz-divider nzType="vertical"></nz-divider>
-                  <button class="operate-btn" nzSize="small"  nz-button nzType="default" (click)="finish(data.id)">完成任务</button>
+                  <button class="operate-btn" nzSize="small"  nz-button nzType="default" (click)="finish(data)">完成任务</button>
               </td>
          </tr>
          <tr [nzExpand]="expandSet.has(data.id)">

@@ -5,17 +5,20 @@
     <!-- 侧边 -->
       <app-aside [isCollapsed] = "isCollapsed"></app-aside>
       <nz-layout [ngClass]="{'inner-layout-unfold':!isCollapsed,'inner-layout-fold':isCollapsed}" >
-      <span
-        class="trigger trigger-placement"
-        nz-icon
-        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"
-      ></span>
-    <!-- 导航面包屑 -->
+       <div class="top">
+          <!-- 折叠展开按钮 -->
+          <span
+          class="trigger trigger-placement"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed"
+        ></span>
+         <!-- 导航面包屑 -->
         <nz-breadcrumb>
           <nz-breadcrumb-item>系统</nz-breadcrumb-item>
           <nz-breadcrumb-item>社区管理</nz-breadcrumb-item>
         </nz-breadcrumb>
+       </div> 
     <!-- 内容     -->
         <nz-content>
             <div class="statistics-box">
@@ -26,9 +29,9 @@
                   <div id="statistical-area" echarts [options]="areaOption"></div>
                 </div>
             </div>
-            <div class="operate">
+            <div>
                 <p class="operate-title">社区管理</p>
-                <div >
+                <div class="operate">
                   <button class="operate-btn" nz-button nzType="default" (click)="add()">新增社区</button>
                   <a
                     nz-popconfirm

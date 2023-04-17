@@ -1,48 +1,15 @@
 <nz-sider nzWidth="200px" nzTheme="light" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null"  class="aside">
-    <ul nz-menu nzMode="inline" class="sider-menu">
-      <li nz-submenu nzOpen nzIcon="user" nzTitle="账号与用户">
-        <ul>
-          <li nz-menu-item  [routerLink]="['/user']">账号管理</li>
-          <!-- <li nz-menu-item  >用户问题追踪</li> -->
+    <ul nz-menu nzMode="inline" class="sider-menu" *ngFor="let item of menus">
+      <!-- 包含二级菜单 -->
+      <li  *ngIf="item.children.length>0" nz-submenu nzOpen nzIcon="{{item.icon}}" nzTitle="{{item.name}}">
+        <ul *ngFor="let child of item.children">
+          <li nz-menu-item  [routerLink]="[child.path]">{{child.name}}</li>
         </ul>
       </li>
-      <li nz-menu-item [routerLink]="['/role']" nzPopoverContent="权限管理">
-          <span nz-icon nzType="key" nzTheme="outline"></span>
-          <span>权限管理</span>
-      </li>
-      <li nz-menu-item [routerLink]="['/community']">
-        <span nz-icon nzType="home" nzTheme="outline"></span>
-        <span>社区管理</span>
-      </li>
-      <li nz-submenu nzOpen nzIcon="solution" nzTitle="社区工作人员">
-        <ul>
-          <li nz-menu-item [routerLink]="['/staffInfo']">工作人员信息管理</li>
-          <li nz-menu-item [routerLink]="['/work']">工作人员工作管理</li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzIcon="team" nzTitle="社区志愿者">
-        <ul>
-          <li nz-menu-item  [routerLink]="['/volunteerInfo']">志愿者管理</li>
-          <li nz-menu-item  [routerLink]="['/apply']">志愿者审批管理</li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzIcon="plus" nzTitle="社区医院">
-        <ul>
-          <li nz-menu-item [routerLink]="['/hospital']">社区医院管理</li>
-          <li nz-menu-item [routerLink]="['/health']">健康小知识</li>
-        </ul>
-      </li>
-      <li nz-menu-item [routerLink]="['/materials']">
-        <span nz-icon nzType="appstore" nzTheme="outline"></span>
-        <span>社区物资管理</span>
-      </li>
-      <li nz-menu-item [routerLink]="['/inneedInfo']">
-        <span nz-icon nzType="user-delete" nzTheme="outline"></span>
-        <span>特殊人员信息管理</span>
-      </li>
-      <li nz-menu-item [routerLink]="['/question']">
-        <span nz-icon nzType="question" nzTheme="outline"></span>
-        <span>问题追踪</span>
+      <!-- 只有一级菜单 -->
+      <li *ngIf="!item.children.length" nz-menu-item [routerLink]="[item.path]">
+          <span nz-icon nzType="{{item.icon}}" nzTheme="outline"></span>
+          <span>{{item.name}}</span>
       </li>
     </ul>
   </nz-sider>

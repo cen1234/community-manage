@@ -12,10 +12,13 @@
    top: 64px;
    padding: 0 24px 24px;
  }
+ .top {
+   position: relative;
+ }
  .trigger-placement {
-   position: absolute;
-   left: 0;
-   top: 3%;
+    position: absolute;
+    left: -18px;
+    top: 35%;
  }
  nz-breadcrumb {
    margin: 16px 0;
@@ -41,15 +44,18 @@
   font-weight: 700;
   font-size: 15px;
 }
+.operate {
+  position: relative;
+}
 .operate-btn {
   margin-right: 15px;
 }
 .select-box {
   width: 350px;
   display: flex;
-  position: fixed;
-  left: 38%;
-  top: 45.6%;
+  position: absolute;
+  left: 29%;
+  top: 4.6%;
 }
 .table {
   margin-top: 40px;

@@ -547,7 +547,7 @@ handleOk(): void {
   statisticalSpecies(arr: any) {
     let map = new Map();
     arr.forEach((item:any)=>{
-      if (item.available === '可用') {
+      if (item.available === 'true') {
         map.set(item.name,item.count - item.borrowedCount);
       }
     })

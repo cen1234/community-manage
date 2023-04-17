@@ -12,10 +12,13 @@
     top: 64px;
     padding: 0 24px 24px;
   }
+  .top {
+    position: relative;
+  }
   .trigger-placement {
-    position: absolute;
-    left: 0;
-    top: 3%;
+     position: absolute;
+     left: -18px;
+     top: 35%;
   }
   nz-breadcrumb {
     margin: 16px 0;

@@ -7,9 +7,7 @@ import java.util.List;
 @Data
 public class Menu {
     private Integer id;
-    private Integer menuId;
     private Integer pid;
-    private Integer roleId;
     private String  name;
     private String  description;
     private String  path;

@@ -18,8 +18,12 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     let user:any = localStorage.getItem("user");
-    user = JSON.parse(user);
-    this.user_img = 'api/file/' + user.userImg;
+    if (!user) {
+      this.router.navigate(['/no-login']);
+    } else {
+      user = JSON.parse(user);
+      this.user_img = 'api/file/' + user.userImg;
+    }
   }
    
   //登出

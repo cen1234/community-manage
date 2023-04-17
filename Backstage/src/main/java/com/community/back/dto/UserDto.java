@@ -13,6 +13,7 @@ public class UserDto {
     private String password;
     private String userImg;
     private Integer comId;
+    private Integer roleId;
     private String token;
 
     @TableField(exist = false)

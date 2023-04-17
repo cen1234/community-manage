@@ -94,6 +94,14 @@ public class VolunteerController {
         queryWrapper.like("approver",approver);
         return volunteerService.page(page,queryWrapper);
     }
+//
+//    -----
+//    根据志愿者id获取此志愿者信息
+//    -----
+    @GetMapping("/getInfo/{id}")
+    public  Volunteer getInfo(  @PathVariable Integer id) {
+        return volunteerService.getById(id);
+    }
 
 
  //    ------

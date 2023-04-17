@@ -8,8 +8,8 @@ import com.community.back.dto.UserDto;
 import com.community.back.entity.Menu;
 import com.community.back.entity.User;
 import com.community.back.exception.ServiceException;
-import com.community.back.mapper.MenuMapper;
 import com.community.back.mapper.RoleMapper;
+import com.community.back.mapper.RolemenuMapper;
 import com.community.back.mapper.UserMapper;
 import com.community.back.utils.TokenUtils;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,9 @@ public class UserService extends ServiceImpl<UserMapper,User> {
 
     @Resource
     private RoleMapper roleMapper;
+
+    @Resource
+    private RolemenuMapper rolemenuMapper;
 
    //新增|修改用户
     public boolean saveUser(User user) {
@@ -84,8 +87,20 @@ public class UserService extends ServiceImpl<UserMapper,User> {
 
     //获取当前角色的菜单
     private List<Menu> getRoleMenus(Integer roleId) {
-        List<Menu> menus = menuService.find(roleId);
-        return menus;
+
+        List<Integer> menuIds = rolemenuMapper.selectByRoleId(roleId);
+        //查出所有菜单
+        List<Menu> menus = menuService.find();
+        //筛选出用户对应的菜单
+        List<Menu> userMenus =new ArrayList<>();
+        for (Menu menu:menus) {
+            if (menuIds.contains(menu.getId())) {
+                userMenus.add(menu);
+            }
+            List<Menu> children = menu.getChildren();
+            children.removeIf(child ->!menuIds.contains(child.getId()));
+        }
+        return userMenus;
     }
 
 }

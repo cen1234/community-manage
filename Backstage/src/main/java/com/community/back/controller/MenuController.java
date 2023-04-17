@@ -32,7 +32,7 @@ public class MenuController {
 //    获取全部菜单信息
 //    -----
     @GetMapping
-    public List<Menu> find(@RequestParam Integer roleId) {
-        return menuService.find(roleId);
+    public List<Menu> find() {
+        return menuService.find();
     }
 }

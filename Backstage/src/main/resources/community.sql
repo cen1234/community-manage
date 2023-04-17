@@ -363,3 +363,89 @@ INSERT IGNORE INTO `inneed` VALUES (2,1,'ccc2',60,'女', '18709261268','11111','
 INSERT IGNORE INTO `inneed` VALUES (3,1,'ccc3',60,'男', '18709261268','11111','西柚小区1','残障人士','111');
 INSERT IGNORE INTO `inneed` VALUES (4,1,'ccc4',80,'女', '18709261268','11111','西柚小区1','老人','111');
 INSERT IGNORE INTO `inneed` VALUES (5,2,'ccc5',60,'女', '18709261268','11111','西柚小区2','残障人士','111');
+
+
+--------------------------------------------------------------------
+-----------社区医院表------------------
+--------------------------------------------------------------------
+DROP TABLE IF EXISTS `hospital`;
+
+CREATE TABLE
+
+CREATE TABLE `hospital` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '社区医院名字',
+  `belong_community` VARCHAR(30) NULL COMMENT '所属社区',
+  `phone` VARCHAR(50) NULL COMMENT '电话',
+  `address` VARCHAR(255)  NULL COMMENT '地址',
+  `remarks` VARCHAR(1000) NULL COMMENT '备注',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='社区医院信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `hospital` VALUES (1,1,'ddd','西柚小区1','18709261628', '长安区','111');
+INSERT IGNORE INTO `hospital` VALUES (2,1,'ddd2','西柚小区1','18709261628', '长安区','111');
+INSERT IGNORE INTO `hospital` VALUES (3,1,'ddd3','西柚小区1','18709261628', '长安区','111');
+INSERT IGNORE INTO `hospital` VALUES (4,1,'ddd4','西柚小区1','18709261628', '长安区','111');
+INSERT IGNORE INTO `hospital` VALUES (5,2,'ddd5','西柚小区2','18709261628', '长安区','111');
+
+
+--------------------------------------------------------------------
+-------------------医生表----------------
+--------------------------------------------------------------------
+DROP TABLE IF EXISTS `doctor`;
+
+CREATE TABLE
+
+CREATE TABLE `doctor` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `hospital_id` INT(11) DEFAULT 1 COMMENT '社区医院Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '医生名字',
+  `age` INT(11) NULL COMMENT '年龄',
+  `sex` VARCHAR(5) NULL COMMENT '性别',
+  `phone` VARCHAR(50) NULL COMMENT '电话',
+  `belong_department` VARCHAR(30) NULL COMMENT '所属科室',
+  `remarks` VARCHAR(1000) NULL COMMENT '备注',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(hospital_id) REFERENCES hospital(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='医生信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `doctor` VALUES (1,1,'fff',24,'女','18709261628', '内科','111');
+INSERT IGNORE INTO `doctor` VALUES (2,1,'fff2',24,'女','18709261628', '内科','111');
+INSERT IGNORE INTO `doctor` VALUES (3,1,'fff3',24,'女','18709261628', '内科','111');
+INSERT IGNORE INTO `doctor` VALUES (4,1,'fff4',24,'女','18709261628', '内科','111');
+INSERT IGNORE INTO `doctor` VALUES (5,2,'fff5',24,'女','18709261628', '内科','111');
+
+INSERT IGNORE INTO `doctor` VALUES (6,2,'fff999',24,'女','18709261628', '内科','111');
+
+
+-------------------------------------------------------------------------------
+------------健康小知识-----------
+-------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `health`;
+
+CREATE TABLE
+
+CREATE TABLE `health` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `name` VARCHAR(30) NOT NULL COMMENT '标题',
+  `content` VARCHAR(1000) NULL COMMENT '内容',
+  `founder` VARCHAR(30) DEFAULT NULL COMMENT '创建人',
+ `creat_time` VARCHAR(30) DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='健康小知识'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `health` VALUES (1,1,'ggg','11111','hhh', '2023-4-15 13:44:03');
+INSERT IGNORE INTO `health` VALUES (2,1,'ggg2','11111','hhh', '2023-4-15 13:44:03');
+INSERT IGNORE INTO `health` VALUES (3,1,'ggg3','11111','hhh', '2023-4-15 13:44:03');
+INSERT IGNORE INTO `health` VALUES (4,1,'ggg4','11111','hhh', '2023-4-15 13:44:03');
+INSERT IGNORE INTO `health` VALUES (5,2,'ggg5','11111','hhh', '2023-4-15 13:44:03');

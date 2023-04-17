@@ -64,6 +64,7 @@ export class VolunteerInfoComponent implements OnInit {
   totalTask:number = 10;//所属志愿者表格数据总数
   communityId:number = 1;//存储社区id
   founder:string = '';//存储当前登录社区管理员姓名
+  volunteerId:number = 0;//存储当前查看的志愿者id
   isShow:boolean = false;//是否显示任务表格
   expandSet = new Set<number>();
   public isVisible:boolean = false;//打分弹窗是否出现
@@ -508,6 +509,8 @@ export class VolunteerInfoComponent implements OnInit {
         this.loadTask(id);
         this.isShow = true;
       },1000)
+      this.volunteerId = id;
+
   }
 
   //关闭查看任务
@@ -516,9 +519,10 @@ export class VolunteerInfoComponent implements OnInit {
   }
 
   //是否完成任务
-  finish(id:number):void {
+  finish(data:any):void {
+    //结束本任务
     let obj:any = {};
-    obj['id'] = id;
+    obj['id'] = data.id;
     obj['finishTime'] = this.getCurrentTime();
     let url = 'api/task';
     this.http.post(url,JSON.stringify(obj),{headers:this.headers}).subscribe((res:any) => {
@@ -528,6 +532,29 @@ export class VolunteerInfoComponent implements OnInit {
         });
        }
     })
+    //获取志愿者表的任务数及总分
+    let count:number = 0;
+    let score:number = 0;
+    let taskUrl = 'api/volunteer/getInfo/'+ this.volunteerId;
+    this.http.get(taskUrl).subscribe((res:any) => {
+          if (res) {
+            count = res.workCount + 1;
+            score = res.score + data.getscore;
+            //修改志愿者表的任务数及总分
+            let updateUrl = 'api/volunteer';
+            let UpdateObj:any = {};
+            UpdateObj['id'] =  this.volunteerId; 
+            UpdateObj['workCount'] = count; 
+            UpdateObj['score'] = score;
+            this.http.post(updateUrl,JSON.stringify(UpdateObj),{headers:this.headers}).subscribe((res:any) => {
+                if (res) {
+                  this.onload();
+                }
+            }) 
+          }
+    })
+   
+    // taskObj['']
   }
 
   rate(id:number):void {

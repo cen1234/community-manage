@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.community.back.common.Result;
 import com.community.back.entity.Role;
 import com.community.back.service.RoleService;
+import com.community.back.service.RolemenuService;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.SheetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+
+    @Resource
+    private RolemenuService rolemenuService;
 
 
 
@@ -106,7 +110,7 @@ public class RoleController {
 //      ----------------
         @GetMapping("/roleMenu")
         public List<Integer> getRoleMenu(@RequestParam Integer roleId) {
-            return roleService.selectByRoleId(roleId);
+            return rolemenuService.selectByRoleId(roleId);
         }
 
 //    ---------------
@@ -114,7 +118,6 @@ public class RoleController {
 //    ---------------
     @PostMapping("/roleMenu/{roleId}")
     public Result roleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
-        System.out.println(menuIds);
         roleService.setRoleMenu(roleId,menuIds);
         return Result.success();
     }

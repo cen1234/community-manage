@@ -234,9 +234,10 @@ export class WorkComponent implements OnInit {
   
 
   //完成工作
-  finish(id:number):void {
+  finish(data:any):void {
+    //结束本任务
     let obj:any = {};
-    obj['id'] = id;
+    obj['id'] = data.id;
     obj['finishTime'] = this.getCurrentTime();
     let url = 'api/work';
     this.http.post(url,JSON.stringify(obj),{headers:this.headers}).subscribe((res:any) => {
@@ -246,6 +247,29 @@ export class WorkComponent implements OnInit {
         });
         this.onload();
        }
+    })
+    //获取社区工作人员表的任务数及总分
+    let count:number = 0;
+    let score:number = 0;
+    let id:number = 0;
+    let taskUrl = 'api/staff/getInfo/'+ data.implementer;
+    this.http.get(taskUrl).subscribe((res:any) => {
+          if (res) {
+            count = res.workCount + 1;
+            score = res.score + data.getscore;
+            id = res.id;
+            // 修改社区工作人员表的任务数及总分
+            let updateUrl = 'api/staff';
+            let UpdateObj:any = {};
+            UpdateObj['id'] =  id; 
+            UpdateObj['workCount'] = count; 
+            UpdateObj['score'] = score;
+            this.http.post(updateUrl,JSON.stringify(UpdateObj),{headers:this.headers}).subscribe((res:any) => {
+                if (res) {
+                  console.log(res);
+                }
+            }) 
+          }
     })
   }
 

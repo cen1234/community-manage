@@ -12,11 +12,14 @@
    top: 64px;
    padding: 0 24px 24px;
  }
- .trigger-placement {
+ .top {
+  position: relative;
+}
+.trigger-placement {
    position: absolute;
-   left: 0;
-   top: 3%;
- }
+   left: -18px;
+   top: 35%;
+}
  nz-breadcrumb {
    margin: 16px 0;
  }
@@ -46,6 +49,9 @@
   font-weight: 700;
   font-size: 15px;
 }
+.operate {
+  position: relative;
+}
 .operate-btn {
   margin-right: 15px;
 }
@@ -53,8 +59,8 @@
   width: 350px;
   display: flex;
   position: absolute;
-  left: 31%;
-  top: 52.6%;
+  left: 29%;
+  top: 4.6%;
 }
 .search {
   width: 250px;

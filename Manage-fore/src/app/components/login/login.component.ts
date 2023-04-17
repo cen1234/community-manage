@@ -58,7 +58,11 @@ export class LoginComponent implements OnInit {
             });
              //登录成功跳转到首页，并将用户信息存储到浏览器本地
             localStorage.setItem("user",JSON.stringify(res.data));
-            this.router.navigate(['/user']);
+            if (res.data.roleId == 1) {
+              this.router.navigate(['/user']);
+            } else if (res.data.roleId == 2) {
+               this.router.navigate(['/staffInfo']);
+            }
           } else {
               this.message.error(res.meg, {
               nzDuration: 1000
