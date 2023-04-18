@@ -553,8 +553,6 @@ export class VolunteerInfoComponent implements OnInit {
             }) 
           }
     })
-   
-    // taskObj['']
   }
 
   rate(id:number):void {

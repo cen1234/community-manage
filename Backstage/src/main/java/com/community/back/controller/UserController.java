@@ -1,6 +1,5 @@
 package com.community.back.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -14,7 +13,9 @@ import com.community.back.common.Result;
 import com.community.back.dto.UserDto;
 import com.community.back.entity.User;
 import com.community.back.service.UserService;
+import com.community.back.utils.SMSUtils;
 import com.community.back.utils.TokenUtils;
+import com.community.back.utils.ValidateCodeUtils;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.SheetUtil;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,12 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private SMSUtils smsUtils;
+
+    private Integer code = 0;
+
 
 //      ------
 //       登录
@@ -215,6 +222,29 @@ public class UserController {
         queryWrapper.like("role_id",2);
         return userService.list(queryWrapper);
     }
+
+
+//    ---------
+//    发送验证码
+//    ---------
+    @GetMapping("/sendSmg")
+    public Integer sendSmg(@RequestParam String phone) throws Exception {
+        //获取随机验证码
+        code = ValidateCodeUtils.generateValidateCode(6);
+        //发送短信
+        smsUtils.sendMessage("阿里云短信测试", "SMS_154950909", phone, code.toString());
+        return code;
+    }
+
+//    --------
+//    验证码正确返回密码信息
+//    --------
+     @GetMapping("/getPassword")
+    public String getPwd(@RequestParam String phone) {
+        String pwd = userService.getPwd(phone);
+        return pwd;
+     }
+
 
 
 

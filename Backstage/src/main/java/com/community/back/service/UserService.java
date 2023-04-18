@@ -13,6 +13,7 @@ import com.community.back.mapper.RolemenuMapper;
 import com.community.back.mapper.UserMapper;
 import com.community.back.utils.TokenUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -29,6 +30,11 @@ public class UserService extends ServiceImpl<UserMapper,User> {
 
     @Resource
     private RolemenuMapper rolemenuMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
+
 
    //新增|修改用户
     public boolean saveUser(User user) {
@@ -103,4 +109,9 @@ public class UserService extends ServiceImpl<UserMapper,User> {
         return userMenus;
     }
 
+
+
+    public String getPwd(String phone) {
+        return userMapper.getPwd(phone);
+    }
 }
