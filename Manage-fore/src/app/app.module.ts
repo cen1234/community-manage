@@ -62,6 +62,7 @@ import { ApplyComponent } from './components/apply/apply.component';
 import { WorkComponent } from './components/work/work.component';
 import { HospitalComponent } from './components/hospital/hospital.component';
 import { HealthComponent } from './components/health/health.component';
+import { QuestionComponent } from './components/question/question.component';
 
 
 
@@ -89,7 +90,8 @@ registerLocaleData(zh);
     ApplyComponent,
     WorkComponent,
     HospitalComponent,
-    HealthComponent
+    HealthComponent,
+    QuestionComponent
   ],
   imports: [
     BrowserModule,

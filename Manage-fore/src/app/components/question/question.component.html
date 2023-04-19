@@ -15,24 +15,15 @@
       <!-- 导航面包屑 -->
           <nz-breadcrumb>
             <nz-breadcrumb-item>系统</nz-breadcrumb-item>
-            <nz-breadcrumb-item>健康小知识管理</nz-breadcrumb-item>
+            <nz-breadcrumb-item>问题管理管理</nz-breadcrumb-item>
           </nz-breadcrumb>
         </div>
     <!-- 内容     -->
     <nz-content>
      <div>
-      <p class="operate-title">健康小知识管理</p>
+      <p class="operate-title">问题管理管理</p>
       <div  class="operate">
-        <a>
-            <button class="operate-btn" nz-button nzType="default" (click)="add()">新增</button>
-        </a> 
-        <nz-input-group nzCompact class="select-box">
-            <nz-select [(ngModel)]="selectType" style="width: 120px;">
-              <nz-option [nzLabel]="'标题'" [nzValue]="'name'"></nz-option>
-              <nz-option [nzLabel]="'创建人'" [nzValue]="'founder'"></nz-option>
-            </nz-select>
-            <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入进行搜索" (keypress)="onload()"/>
-        </nz-input-group>
+          <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入创建人姓名进行搜索" (keypress)="onload()"/>
       </div>
     </div>
     <nz-table
@@ -54,8 +45,8 @@
     <thead>
       <tr>
         <th></th>
-          <th>标题</th>
           <th>创建人</th>
+          <th>问题是否解决</th>
           <th>创建时间</th>
       </tr>
     </thead>
@@ -63,8 +54,8 @@
         <ng-container *ngFor="let data of listOfData">
             <tr >
                 <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-                <td>{{data.name}}</td>
                 <td>{{ data.founder }}</td>
+                <td>{{ data.isSolve }}</td>
                 <td>{{data.creatTime}}</td>
            </tr>
            <tr [nzExpand]="expandSet.has(data.id)">
@@ -78,28 +69,5 @@
       </nz-layout>
     </nz-layout>
 </nz-layout>
-<!-- 健康小知识 -->
-<nz-modal
-[(nzVisible)]="isVisible" 
-[nzTitle]="'发布健康小知识'"
-(nzOnCancel)="handleCancel()"
-(nzOnOk)="handleOk()"
-[nzOkLoading]="isOkLoading"
->
-  <form *nzModalContent nz-form [formGroup]="validateForm">
-        <nz-form-item>
-          <nz-form-label [nzSpan]="7" nzRequired>标题</nz-form-label>
-          <nz-form-control [nzSpan]="12" nzErrorTip="标题不能为空" >
-            <input class="input-width" nz-input formControlName="name" placeholder="请输入标题" />
-          </nz-form-control>
-        </nz-form-item>  
-        <nz-form-item>
-          <nz-form-label [nzSpan]="7" nzRequired>内容</nz-form-label>
-          <nz-form-control [nzSpan]="12" nzErrorTip="内容不能为空" >
-            <nz-textarea-count [nzMaxCharacterCount]="2000">
-              <textarea rows="20"  class="input-textarea" formControlName="content" nz-input placeholder="请输入内容"></textarea>
-            </nz-textarea-count>
-          </nz-form-control>
-        </nz-form-item>
-  </form>
-</nz-modal>
+
+

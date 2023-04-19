@@ -44,18 +44,7 @@
     left: 5%;
     top: 2.6%;
   }
-  .operate-btn {
-    margin-right: 15px;
-  }
   .search {
-    width: 250px;
-  }
-  .table {
-    margin-top: 40px;
-  }
-  .input-width {
-    width: 237px;
-  }
-  .input-textarea {
-    width: 254px;
+    width: 233px;
+    margin-bottom: 33px;
   }

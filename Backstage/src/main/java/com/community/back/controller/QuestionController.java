@@ -40,7 +40,7 @@ public class QuestionController {
     }
 
  //    ------
-//    分页查询
+//    分页查询未解决的问题
 //    ------
 
     @GetMapping("page")
@@ -52,7 +52,8 @@ public class QuestionController {
         IPage<Question> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("com_id",comId);
-        queryWrapper.like("name",search);
+        queryWrapper.like("founder",search);
+        queryWrapper.like("is_solve","否");
         return questionService.page(page,queryWrapper);
     }
 
