@@ -1,0 +1,26 @@
+<div>
+    <img class="login-bg" src="../../../assets/image/login.jpg">
+    <p class="login-title">居民生活帮系统</p>
+    <div class="box">
+          <input  
+              [(ngModel)]="phone"
+              nzSize="large"
+              id="'phoneNumber'" 
+              class="phone"
+              placeholder="请输入电话号码"
+              nz-input 
+              />
+        <button class="btn" nz-button nzType="primary" nzSize="large" (click)="login()">登录</button>
+        <nz-input-group  class="code" nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+          <input [(ngModel)]="inputcode" style="border: none;" type="text" nz-input placeholder="请输入验证码"/>
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button class="sendSmg" style="border-radius: 3rem;" nz-button nzType="primary" nzSize="large" nzShape="circle" nzSearch (click)="getCode()">
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+          </button>
+        </ng-template>
+  </div>
+</div>
+
+
+

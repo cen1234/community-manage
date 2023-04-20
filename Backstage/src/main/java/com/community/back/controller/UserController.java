@@ -43,7 +43,7 @@ public class UserController {
 
 
 //      ------
-//       登录
+//       管理端登录
 //      ------
     @PostMapping("/login")
     private Result Login(@RequestBody UserDto userDto) {
@@ -56,6 +56,32 @@ public class UserController {
         //在数据库中查到用户信息，给前台返回一些用户的信息存储到浏览器上
         UserDto userDto1 = userService.login(userDto);
         return Result.success(userDto1);
+    }
+
+//    ------
+//    客户端登录
+//    ------
+    @GetMapping("/clientLogin")
+    public Result ClientLogin(@RequestParam String phone) {
+        if (StrUtil.isBlank(phone)) {
+            return Result.error(Constants.CODE_400,"参数不足!");
+        }
+        //查询电话是否存在，存在则为登录，返回用户信息;
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone",phone);
+        User oneData;
+        oneData = userService.getOne(queryWrapper);
+        if (oneData != null) {
+            return Result.success(oneData);
+        }
+            //电话不存在则为注册
+            oneData = new User();
+            oneData.setUsername(ValidateCodeUtils.generateValidateCode(6).toString());
+            oneData.setPassword("123456");
+            oneData.setPhone(phone);
+            oneData.setRoleId(5);
+            userService.save(oneData);
+            return Result.success(oneData);
     }
 
 //       -----
@@ -244,6 +270,7 @@ public class UserController {
         String pwd = userService.getPwd(phone);
         return pwd;
      }
+
 
 
 
