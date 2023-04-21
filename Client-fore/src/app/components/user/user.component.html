@@ -1,1 +1,52 @@
-<p>user works!</p>
+<nz-layout>
+    <div class="header">
+        <a>
+            <span  class="login-out" nz-icon nzType="setting" nzTheme="outline" (click)="loginOut()"></span>
+        </a>
+    </div>
+    <nz-content>
+        <!-- 用户个人信息 -->
+        <div class="user-info">
+            <div>
+                <nz-avatar *ngIf="!userImg" class="user-img" nzIcon="user"></nz-avatar>
+                <nz-avatar *ngIf="userImg" class="user-img" nzIcon="user" nzSrc="{{userImg}}"></nz-avatar>
+            </div>
+            <div class="user-username" (click)="check()">{{userName}}</div>
+            <nz-tag *ngIf="userRole != ''" class="role" nzColor="processing">{{userRole}}</nz-tag>
+            <a  class="edit" nz-button nzType="link" (click)="edit()">编辑资料 ></a>
+        </div>
+        <nz-divider class="divide-line"></nz-divider>
+        <p class="general-title">通用功能</p>
+        <div class="general">
+                <a class="my-quesrtion">
+                    <span class="general-icon" nz-icon nzType="question-circle" nzTheme="outline"></span>
+                    <span class="general-word">问题管理</span>
+                </a>
+                <a class="edit-img" (click)="editImg()">
+                    <span class="general-icon" nz-icon nzType="file-ppt" nzTheme="outline"></span>
+                    <span class="general-word">编辑头像</span>
+                </a>
+                <a class="certificate">
+                    <span class="general-icon" nz-icon nzType="solution" nzTheme="outline"></span>
+                    <span class="general-word">特殊认证</span>
+                </a>
+        </div>
+            <p class="special-title">特殊功能</p>
+            <div class="special">
+                <a class="apply" *ngIf="userRole != '志愿者'">
+                    <span class="special-icon" nz-icon nzType="edit" nzTheme="outline"></span>
+                    <span class="special-word">申请志愿者</span>
+                </a>
+                <a class="volunteer-work" *ngIf="userRole == '志愿者'">
+                    <span class="special-icon" nz-icon nzType="file" nzTheme="outline"></span>
+                    <span class="special-word">志愿者工作</span>
+                </a>
+                <a class="staff-work" *ngIf="userRole == '社区工作人员'">
+                    <span class="special-icon" nz-icon nzType="file-word" nzTheme="outline"></span>
+                    <span class="special-word">社区工作</span>
+                </a>
+        </div>
+    </nz-content>
+    <app-footer></app-footer> 
+</nz-layout>
+

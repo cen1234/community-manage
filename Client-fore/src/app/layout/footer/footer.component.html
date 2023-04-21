@@ -1,1 +1,13 @@
-<p>footer works!</p>
+<div class="footer">
+    <a class="home"  [routerLink]="['/home']">
+        <span nz-icon nzType="home" nzTheme="outline" class="footer-icon"></span>
+        <span class="footer-word">首页</span>
+    </a>
+    <div class="create"  [routerLink]="['/create']">
+        <button nz-button class="create-btn" nzType="primary" nzShape="circle"><span nz-icon nzType="plus"></span></button>
+    </div>
+    <a class="user" [routerLink]="['/user']">
+        <span nz-icon nzType="user" nzTheme="outline" class="footer-icon"></span>
+        <span class="footer-word">我的</span>
+    </a>
+</div>

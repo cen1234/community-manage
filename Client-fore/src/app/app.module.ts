@@ -42,6 +42,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzTreeModule } from 'ng-zorro-antd/tree';
 import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 import { NzRateModule } from 'ng-zorro-antd/rate';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 //公共组件
 
 //子组件
@@ -50,6 +51,9 @@ import { HomeComponent } from './components/home/home.component';
 import { UserComponent } from './components/user/user.component';
 import { CreateComponent } from './components/create/create.component';
 import { FooterComponent } from './layout/footer/footer.component';
+import { InformationComponent } from './components/information/information.component';
+import { EditInfoComponent } from './components/edit-info/edit-info.component';
+import { EditImgComponent } from './components/edit-img/edit-img.component';
 
 
 
@@ -64,7 +68,10 @@ registerLocaleData(zh);
     HomeComponent,
     UserComponent,
     CreateComponent,
-    FooterComponent
+    FooterComponent,
+    InformationComponent,
+    EditInfoComponent,
+    EditImgComponent
   ],
   imports: [
     BrowserModule,
@@ -103,6 +110,7 @@ registerLocaleData(zh);
     NzTreeModule,
     NzTimelineModule,
     NzRateModule,
+    NzDrawerModule,
     //引入部分
     NgxEchartsModule.forRoot({ //引入部分
       echarts: () => import('echarts') //引入部分

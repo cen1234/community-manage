@@ -1,0 +1,36 @@
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMask]="true"
+      [nzMaskStyle]="{'background':'linear-gradient(to bottom, #8e90ff,#fff)','opacity':'0.5','animation':'none'}"
+      class="drawer"
+      nzTitle="编辑头像"
+      [nzMaskClosable]="false"
+      [nzVisible]="visible"
+      (nzOnClose)="close()"
+      [nzFooter]="footerTpl"
+    >
+    <ng-container *nzDrawerContent>
+        <nz-upload
+        class="avatar-uploader"
+        nzAction="api/file/upload"
+        [nzData]="data"
+        nzName="file"
+        nzListType="picture-card"
+        [nzShowUploadList]="false"
+        [nzBeforeUpload]="beforeUpload"
+        (nzChange)="handleChange($event)"
+  >
+    <ng-container *ngIf="!avatarUrl">
+      <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
+      <div class="ant-upload-text">Upload</div>
+    </ng-container>
+    <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+  </nz-upload>
+    </ng-container>
+    <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px;" (click)="close()">取消</button>
+          <button nz-button nzType="primary" (click)="ok()">确认</button>
+        </div>
+      </ng-template>
+    </nz-drawer>

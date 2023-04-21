@@ -4,7 +4,9 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { UserComponent } from './components/user/user.component';
 import { CreateComponent } from './components/create/create.component';
-
+import { InformationComponent } from './components/information/information.component';
+import { EditInfoComponent } from './components/edit-info/edit-info.component';
+import { EditImgComponent } from './components/edit-img/edit-img.component';
 const routes: Routes = [
   {
     path:'',redirectTo:'home',pathMatch:'full'
@@ -16,6 +18,12 @@ const routes: Routes = [
     path:'create',component:CreateComponent
   },{
     path:'user',component:UserComponent
+  },{
+    path:'information',component:InformationComponent
+  },{
+    path:'editInfo',component:EditInfoComponent
+  },{
+    path:'editImg',component:EditImgComponent
   }
 
   

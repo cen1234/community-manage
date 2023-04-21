@@ -271,6 +271,14 @@ public class UserController {
         return pwd;
      }
 
+//     ----
+//     根据用户id获取用户全部信息
+//     -----
+    @GetMapping("/getInfo")
+    public User getInfo(@RequestParam Integer id) {
+        return userService.getById(id);
+    }
+
 
 
 

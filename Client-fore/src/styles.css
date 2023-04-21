@@ -3,6 +3,9 @@
     margin: 0;
     padding: 0;
   }
+ a {
+   color: black;
+ } 
   /* 自定义参数覆盖 */
   .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
     background-color: #f6f5fa;
@@ -92,4 +95,21 @@ html {
   line-height: 1.5715;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.ant-drawer-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  color: rgba(0,0,0,.85);
+  background-color: #fbfbfb;
+  border-radius: 2px 2px 0 0;
+}
+.ant-drawer-body {
+  flex-grow: 1;
+  padding: 24px;
+  overflow: auto;
+  word-wrap: break-word;
+  background-color: #fbfbfb;
 }

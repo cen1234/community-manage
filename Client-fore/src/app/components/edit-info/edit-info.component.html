@@ -1,0 +1,131 @@
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMask]="true"
+      [nzMaskStyle]="{'background':'linear-gradient(to bottom, #8e90ff,#fff)','opacity':'0.5','animation':'none'}"
+      class="drawer"
+      [nzMaskClosable]="false"
+      [nzVisible]="visible"
+      nzTitle="编辑资料"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+    <form nz-form *nzDrawerContent [formGroup]="validateForm">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>用户真实姓名</nz-form-label>
+            <nz-form-control [nzSpan]="12" [nzErrorTip]="userRealnameErrorTpl">
+              <input class="input-width" nz-input formControlName="userRealName" placeholder="请输入用户真实姓名" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>用户名</nz-form-label>
+            <nz-form-control [nzSpan]="12" [nzErrorTip]="userNameErrorTpl">
+              <input class="input-width" nz-input formControlName="username" placeholder="请输入用户名" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>年龄</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="ageErrorTpl">
+                  <nz-input-number  
+                      class="input-box input-width" 
+                      nz-input 
+                      [nzMin]="1"
+                      [nzMax]="120" 
+                      [nzStep]="1"
+                      formControlName="age" 
+                      nzPlaceHolder="请输入用户年龄"
+                      ></nz-input-number>
+                  </nz-form-control>
+          </nz-form-item>
+          <nz-form-item >
+            <nz-form-label [nzSpan]="7" nzRequired>性别</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="性别不能为空">
+                <nz-radio-group formControlName="sex">
+                    <label nz-radio nzValue="女">女</label>
+                    <label nz-radio nzValue="男">男</label>
+                  </nz-radio-group>
+                </nz-form-control>
+        </nz-form-item> 
+      <nz-form-item >
+        <nz-form-label [nzSpan]="7" nzRequired>所在社区</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="所在社区不能为空">
+          <nz-select class="input-width" nzShowSearch  nzAllowClear nzPlaceHolder="请选择用户所在社区" formControlName="comId">
+            <nz-option *ngFor="let item of communityInfo" nzLabel="{{item.name}}" nzValue="{{item.comId}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+    </nz-form-item> 
+        <nz-form-item >   
+          <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="pwdErrorTpl">
+              <nz-input-group class="input-width"  [nzSuffix]="suffixTemplate">
+                  <input 
+                    
+                    nz-input 
+                    [type]="passwordVisible ? 'text' : 'password'" 
+                    formControlName="password" 
+                    id="password" 
+                    placeholder="请输入密码"/>
+              </nz-input-group>
+              </nz-form-control>
+        </nz-form-item>      
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>电话号码</nz-form-label>
+            <nz-form-control [nzSpan]="12"  [nzErrorTip]="phoneErrorTpl">
+              <input class="input-width" nz-input formControlName="phone" placeholder="请输入电话号码" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="input-box">
+            <nz-form-label [nzSpan]="7" nzRequired>详细地址</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="addressErrorTpl">
+              <nz-textarea-count [nzMaxCharacterCount]="300">
+                <textarea rows="2" style="width:20rem" class="input-width" formControlName="address" nz-input placeholder="请输入用户详细地址(包含省市区|县)"></textarea>
+              </nz-textarea-count>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+    <div style="float: right">
+        <button nz-button style="margin-right: 8px;" (click)="close()">取消</button>
+        <button nz-button nzType="primary" (click)="submit()">提交</button>
+    </div>
+    </ng-template>
+</nz-drawer>
+<!-- 密码输入框可视 -->
+<ng-template #suffixTemplate>
+    <span
+      nz-icon
+      [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+      (click)="passwordVisible = !passwordVisible"
+    ></span>
+  </ng-template>
+      <!-- 用户真实姓名错误提示 -->
+      <ng-template #userRealnameErrorTpl let-control>
+        <ng-container *ngIf="control.hasError('required')">真实姓名不能为空</ng-container>
+        <ng-container *ngIf="control.hasError('maxlength')">真实姓名不超过30个字符</ng-container>
+      </ng-template>
+      <!-- 用户名错误提示 -->
+    <ng-template #userNameErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">用户名不能为空</ng-container>
+      <ng-container *ngIf="control.hasError('maxlength')">用户名不超过30个字符</ng-container>
+    </ng-template>
+    <!-- 年龄错误提示 -->
+    <ng-template #ageErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">年龄不能为空</ng-container>
+      <ng-container *ngIf="control.hasError('minlength')">年龄不小于1</ng-container>
+      <ng-container *ngIf="control.hasError('maxlength')">用户名不超过120</ng-container>
+    </ng-template>
+    <!-- 密码错误提示 -->
+    <ng-template #pwdErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">密码不能为空</ng-container>
+      <ng-container *ngIf="control.hasError('minlength')">密码不少于6个字符</ng-container>
+      <ng-container *ngIf="control.hasError('maxlength')">密码不超过15个字符</ng-container>
+    </ng-template>
+    <!-- 地址错误提示 -->
+    <ng-template #addressErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">地址不能为空</ng-container>
+      <ng-container *ngIf="control.hasError('maxlength')">地址不超过300个字符</ng-container>
+    </ng-template>
+  <!-- 电话号码错误提示 -->
+  <ng-template #phoneErrorTpl let-control>
+      <ng-container *ngIf="control.hasError('required')">电话号码不能为空</ng-container>
+      <ng-container *ngIf="control.hasError('errorPhone')">请填写正确的电话号码</ng-container>
+    </ng-template>

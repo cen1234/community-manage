@@ -78,6 +78,11 @@ public class CumController {
     public Cum findName(@RequestParam Integer comId) {
         return cumService.getById(comId);
     }
+    @GetMapping("/Name")
+    public Cum findCommunityName(@RequestParam Integer id) {
+        return cumService.getById(id);
+    }
+
 
 
 

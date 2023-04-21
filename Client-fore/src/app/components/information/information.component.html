@@ -1,0 +1,25 @@
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMask]="true"
+      [nzMaskStyle]="{'background':'linear-gradient(to bottom, #8e90ff,#fff)','opacity':'0.5','animation':'none'}"
+      class="drawer"
+      [nzMaskClosable]="false"
+      [nzVisible]="visible"
+      (nzOnClose)="close()"
+    >
+    <ng-container *nzDrawerContent>
+        <nz-divider class="line"></nz-divider>
+        <nz-descriptions [nzColumn]="1" nzTitle="个人资料" >
+            <nz-descriptions-item nzTitle="用户名" [nzSpan]="1">{{user.username}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="真实姓名" [nzSpan]="1">{{user.userRealName}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="年龄" [nzSpan]="1">{{user.age}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="性别" [nzSpan]="1">{{user.sex}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="电话" [nzSpan]="1">{{user.phone}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="地址" [nzSpan]="1">{{user.address}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="所属社区" [nzSpan]="2">
+               {{community}}
+            </nz-descriptions-item>
+        </nz-descriptions>
+    </ng-container>
+    
+    </nz-drawer>
