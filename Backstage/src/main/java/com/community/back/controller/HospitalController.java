@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.community.back.entity.Doctor;
 import com.community.back.entity.Health;
 import com.community.back.entity.Hospital;
+import com.community.back.entity.Question;
 import com.community.back.service.DoctorService;
 import com.community.back.service.HealthService;
 import com.community.back.service.HospitalService;
@@ -221,6 +222,14 @@ public class HospitalController {
         queryWrapper.like("com_id", comId);
         return healthService.page(page,queryWrapper);
     }
+//
+//    ------
+//    根据id获取获取健康信息
+//    ------
+    @PostMapping("/getHealthById/{id}")
+    public Health getHealthById(@PathVariable Integer id) {
+        return healthService.getById(id);
+    }
 
 
 
@@ -231,6 +240,8 @@ public class HospitalController {
     public boolean saveHealth(@RequestBody Health health) {
         return healthService.saveHealth(health);
     }
+
+
 
 
 

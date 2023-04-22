@@ -8,6 +8,7 @@ public class Question {
     private Integer comId;
     private String content;
     private String founder;
+    private String userImg;
     private String creatTime;
     private String isSolve;
 }

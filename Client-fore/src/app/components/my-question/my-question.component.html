@@ -1,0 +1,20 @@
+<div class="header">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" [routerLink]="['/user']"></span>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+    <div class="question">问题管理</div>
+    <nz-list nzItemLayout="horizontal" [nzLoading]="loading">
+        <nz-list-item *ngFor="let item of data" (click)="check(item.id)">
+          <nz-list-item-meta
+            [nzAvatar]="'api/file/' + item.userImg"
+            [nzDescription]="item.founder + '         ' + item.creatTime"
+          >
+            <nz-list-item-meta-title class="question-content">
+                {{ item.content}}
+            </nz-list-item-meta-title>
+          </nz-list-item-meta>
+        </nz-list-item>
+        <nz-list-empty *ngIf="data.length === 0"></nz-list-empty>
+      </nz-list>
+</div>

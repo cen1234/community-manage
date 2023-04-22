@@ -1,1 +1,28 @@
-<p>create works!</p>
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMask]="true"
+      [nzMaskStyle]="{'background':'linear-gradient(to bottom, #8e90ff,#fff)','opacity':'0.5','animation':'none'}"
+      class="drawer"
+      [nzMaskClosable]="false"
+      [nzVisible]="visible"
+      nzTitle="创建问题"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+    <form nz-form *nzDrawerContent [formGroup]="validateForm">
+        <nz-form-item class="input-box">
+            <nz-form-label [nzSpan]="7" nzRequired>具体问题</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="问题不能为空">
+              <nz-textarea-count [nzMaxCharacterCount]="3000">
+                <textarea rows="20" style="width:20rem" class="input-width" formControlName="content" nz-input placeholder="请输入具体问题"></textarea>
+              </nz-textarea-count>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+    <div style="float: right">
+        <button nz-button style="margin-right: 8px;" (click)="close()">取消</button>
+        <button nz-button nzType="primary" (click)="submit()">提交</button>
+    </div>
+    </ng-template>
+</nz-drawer>

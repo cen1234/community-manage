@@ -1,15 +1,12 @@
 :host {
   text-align: center;
 }
-
-nz-header,
 nz-content {
-    background: rgba(16, 142, 233, 1);
+    background-color: #fafafa;
     color: #fff;
     min-height: 120px;
     line-height: 120px;
 }
-
 nz-layout {
     margin-bottom: 48px;
 }
@@ -19,3 +16,37 @@ nz-layout:last-child {
     width: 100%;
     height: 100%;
 }
+.header {
+    position: relative;
+    width: 100%;
+    height: 1.5rem;
+    background-color: #fafafa;
+}
+.message {
+    position: absolute;
+    left: 2%;
+    top: 32%;
+    font-size: 1rem;
+}
+.demo-infinite-container {
+    height: 300px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+  }
+
+nz-list {
+    padding: 24px;
+  }
+.list-item {
+    position: relative;
+}
+.content {
+    display: flex;
+    margin: 0.6rem 0 0 1.4rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    word-break: break-all;
+    overflow: hidden;
+}
+ 

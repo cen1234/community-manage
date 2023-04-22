@@ -23,8 +23,8 @@ public class QuestionController {
     @GetMapping("/findAll")
     public List<Question> userfind(@RequestParam Integer comId, @RequestParam String founder) {
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("com_id",comId);
-        queryWrapper.like("founder",founder);
+        queryWrapper.eq("com_id",comId);
+        queryWrapper.eq("founder",founder);
         return questionService.list(queryWrapper);
     }
 
@@ -55,6 +55,14 @@ public class QuestionController {
         queryWrapper.like("founder",search);
         queryWrapper.like("is_solve","否");
         return questionService.page(page,queryWrapper);
+    }
+
+//    -----
+//    根据问题id获取具体数据
+//    -----
+    @PostMapping("/getQuestion/{id}")
+    public Question getById(@PathVariable Integer id) {
+        return questionService.getById(id);
     }
 
 //    ------

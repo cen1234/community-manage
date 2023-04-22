@@ -113,3 +113,33 @@ html {
   word-wrap: break-word;
   background-color: #fbfbfb;
 }
+.ant-tabs-content-holder {
+  position: relative;
+    bottom: 10px;
+    top: 1%;
+    height: 33.7rem;
+    width: 100%;
+    background-color: #fbfbfb;
+}
+.ant-tabs-top>.ant-tabs-nav {
+   margin-bottom: 0.6rem;
+}
+ .ant-list-item-meta-description {
+  color: rgba(0,0,0,.45);
+  font-size: 14px;
+  line-height: 1.5715;
+  position: absolute;
+  top: 0.2%;
+  font-size: 0.3rem;
+} 
+.ant-list-item-meta-content {
+  flex: 1 0;
+  width: 0;
+  color: rgba(0, 0, 0, 0.85)
+}
+.ant-list-item-meta-title {
+  margin-bottom: 4px;
+  color: rgba(0,0,0,.85);
+  font-size: 14px;
+  line-height: 1.5715;
+} 

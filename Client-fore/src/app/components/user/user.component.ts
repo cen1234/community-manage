@@ -59,6 +59,11 @@ export class UserComponent implements OnInit {
     this.router.navigate(['/editImg']);
   }
 
+  //问题管理
+  question():void {
+    this.router.navigate(['/question']);
+  }
+
 
 
 

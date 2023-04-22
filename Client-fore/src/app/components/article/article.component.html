@@ -1,0 +1,52 @@
+<div class="header">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" (click)="goback()"></span>
+    <span 
+       *ngIf="type == 3"
+       class="more"
+       nz-icon 
+       nzType="ellipsis" 
+       nzTheme="outline"
+       nz-dropdown
+       [nzDropdownMenu]="menu"></span>
+       <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item *ngIf="question.isSolve == '否'" (click)="solve(question.id)">解决</li>
+          <li nz-menu-item 
+          nz-popconfirm
+          nzPopconfirmTitle="确认删除此问题?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirm(question.id)"
+          (nzOnCancel)="cancel()"
+          >删除</li>
+        </ul>
+      </nz-dropdown-menu>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+    <div   *ngIf="type == 1">
+        <nz-avatar  class="user-img" nzIcon="user" nzSrc="{{question.userImg}}"></nz-avatar>
+        <span class="user-name">{{question.founder}}</span>
+        <span class="time">{{question.creatTime}}</span>
+        <div class="art-content">
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{question.content}}</div>
+            <br>
+            <div class="contact">联系电话：{{phone}}</div>
+      </div>    
+    </div>
+    <div *ngIf="type == 2">
+         <span class="health-title">{{health.name}}</span>
+         <span class="health-founder">创作者：{{health.founder}}</span>
+         <span class="health-time">{{health.creatTime}}</span>
+         <div class="health-content">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{health.content}}</div>
+    </div>
+    <div *ngIf="type == 3">
+          <nz-avatar  class="user-img" nzIcon="user" nzSrc="{{question.userImg}}"></nz-avatar>
+          <span class="user-name">{{question.founder}}</span>
+          <nz-tag *ngIf="question.isSolve == '是'" class="solve" nzColor="success">已解决</nz-tag>
+          <nz-tag *ngIf="question.isSolve == '否'" class="solve" nzColor="error">未解决</nz-tag>
+          <span class="time">{{question.creatTime}}</span>
+          <div class="art-content">
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{question.content}}</div>
+        </div>    
+    </div>
+</div>

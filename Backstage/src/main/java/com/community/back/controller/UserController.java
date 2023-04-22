@@ -280,6 +280,17 @@ public class UserController {
     }
 
 
+//    --------
+//    根据用户名获取用户信息
+//    -------
+    @GetMapping("/getContact")
+    public User getContact(@RequestParam String username) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        return userService.getOne(queryWrapper);
+    }
+
+
 
 
 
