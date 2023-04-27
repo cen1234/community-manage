@@ -25,6 +25,7 @@ interface childDate {
   back:string;
   phone:string;
   address:string;
+  time:string;
 }
 @Component({
   selector: 'app-materials',
@@ -56,6 +57,7 @@ export class MaterialsComponent implements OnInit {
   public validateForm: UntypedFormGroup;//社区表格
   public communityId:number = 1;//社区Id
   public communityName:string = '';//社区名
+  public allData:any = [];//所有物资信息
   editCache: { [key: string]: { edit: boolean; data: childDate } } = {};
   headers = new HttpHeaders({'Content-Type': 'application/json'});;//请求头
    //物质种类数量统计图
@@ -256,6 +258,7 @@ export class MaterialsComponent implements OnInit {
     this.http.get(url,{params:{
       comId:this.communityId
     }}).subscribe((res:any) => {
+      this.allData = res;
       this.statisticalSpecies(res);
       this.statisticalAvailable(res);
     })
@@ -426,6 +429,19 @@ handleOk(): void {
       this.UMisVisible = false;
     }
 
+    //删除单条借用记录
+    delete(id:number):void {
+      let url = 'api/userMaterials/delete/'+id;
+      this.http.post(url,{headers:this.headers}).subscribe(res => {
+         if (res === true) {
+            this.message.success('删除成功！', {
+              nzDuration: 500
+            });
+            this.onload();
+         }
+      })
+    }
+
     //开始编辑物资-借用人表格数据
     startEdit(id: number): void {
       this.editCache[id].edit = true;
@@ -447,10 +463,24 @@ handleOk(): void {
       let url = 'api/userMaterials';
       this.http.post(url,JSON.stringify(this.childListData[index]),{headers:this.headers}).subscribe((res:any) => {
          if (res) {
-            this.message.success('用户操作成功！', {
-              nzDuration: 500
-            });
-            this.editCache[id].edit = false;
+           //更新物资数量
+           let updata:any = {};
+           updata['id'] = this.childListData[index].materialsId;
+           for (let item of this.allData) {
+              if (item.id == this.childListData[index].materialsId) {
+                 updata['borrowedCount'] = item.borrowedCount - this.childListData[index].count;
+                 break;
+              }
+           }
+           let updateUrl = 'api/materials';
+           this.http.post(updateUrl,JSON.stringify(updata),{headers:this.headers}).subscribe((res:any) => {
+             if (res) {
+              this.message.success('用户操作成功！', {
+                nzDuration: 500
+              });
+              this.editCache[id].edit = false;
+             }
+           })
          }
       })
     }
@@ -474,7 +504,7 @@ handleOk(): void {
         }
         if (info.file.status === 'done') {
           this.message.success(`${info.file.name} 上传成功`);
-          // this.onload();
+          this.onload();
         } else if (info.file.status === 'error') {
           this.message.error(`${info.file.name} 上传失败`);
         }
@@ -482,7 +512,7 @@ handleOk(): void {
 
     //导出物资
     export() {
-      window.open('http://localhost:9000/materials/export');
+      window.open('http://localhost:9000/materials/export/'+this.communityId);
    }
 
    //当前页发生改变

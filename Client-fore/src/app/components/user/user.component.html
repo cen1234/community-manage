@@ -7,7 +7,7 @@
     <nz-content>
         <!-- 用户个人信息 -->
         <div class="user-info">
-            <div>
+            <div (click)="editImg()">
                 <nz-avatar *ngIf="!userImg" class="user-img" nzIcon="user"></nz-avatar>
                 <nz-avatar *ngIf="userImg" class="user-img" nzIcon="user" nzSrc="{{userImg}}"></nz-avatar>
             </div>
@@ -22,9 +22,9 @@
                     <span class="general-icon" nz-icon nzType="question-circle" nzTheme="outline"></span>
                     <span class="general-word">问题管理</span>
                 </a>
-                <a class="edit-img" (click)="editImg()">
-                    <span class="general-icon" nz-icon nzType="file-ppt" nzTheme="outline"></span>
-                    <span class="general-word">编辑头像</span>
+                <a class="edit-img" (click)="borrow()">
+                    <span class="general-icon" nz-icon nzType="appstore" nzTheme="outline"></span>
+                    <span class="general-word">物资借用</span>
                 </a>
                 <a class="certificate">
                     <span class="general-icon" nz-icon nzType="solution" nzTheme="outline"></span>

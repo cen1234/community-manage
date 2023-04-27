@@ -1,0 +1,86 @@
+<div class="header">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" [routerLink]="['/material']"></span>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+    <div *ngIf="flag">
+         <div  class="question">请优先归还完借用的物资才能重新借用！</div>
+         <nz-table 
+           class="table"
+           #basicTable 
+           nzBordered
+           [nzShowPagination] ='false'
+           [nzData]="data"
+            >
+            <thead>
+              <tr>
+                <th>物资</th>
+                <th>借用数量</th>
+                <th>开始时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of data">
+                <td>{{ data.materialsName }}</td>
+                <td>{{ data.count }}</td>
+                <td>{{ data.time }}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+    </div>
+    <div *ngIf="!flag">
+        <div class="question">物资基础信息</div>
+        <nz-descriptions class="description">
+            <nz-descriptions-item nzTitle="物资">{{mdata.name}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="剩余数量">{{mdata.count - mdata.borrowedCount}}</nz-descriptions-item>
+          </nz-descriptions>
+          <button nz-button nzType="primary" nzSize="small" class="borrow-btn" (click)="showModal()">租用</button>
+          <div class="my-borrow">我的借用信息</div>  
+          <nz-table 
+          class="table placement"
+          #basicTable 
+          nzBordered
+          [nzShowPagination] ='false'
+          [nzData]="data"
+           >
+           <thead>
+             <tr>
+               <th>物资</th>
+               <th>借用数量</th>
+               <th>开始时间</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr *ngFor="let data of data">
+               <td>{{ data.materialsName }}</td>
+               <td>{{ data.count }}</td>
+               <td>{{ data.time }}</td>
+             </tr>
+           </tbody>
+         </nz-table> 
+        </div>
+    <nz-modal
+      nzWidth="20rem"
+      [(nzVisible)]="isVisible"
+      nzTitle="租用"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+      [nzOkLoading]="isOkLoading"
+    >
+    <form *nzModalContent nz-form [formGroup]="validateForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>借用数量</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="借用数量不能为空">
+              <nz-input-number  
+                  class="input-box input-width" 
+                  nz-input 
+                  [nzMin]="0"
+                  [nzStep]="1"
+                  formControlName="count" 
+                  nzPlaceHolder="请输入借用数量"
+                  ></nz-input-number>
+              </nz-form-control>
+        </nz-form-item>
+  </form>
+    </nz-modal>
+</div>

@@ -8,8 +8,8 @@ CREATE TABLE
 
 CREATE TABLE `user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `role_id` INT(11) DEFAULT 1 COMMENT '角色身份id',
-  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `role_id` INT(11) DEFAULT 5 COMMENT '角色身份id',
+  `com_id` INT(11) DEFAULT 0 COMMENT '社区Id',
   `username` VARCHAR(30) NOT NULL COMMENT '用户名',
   `user_real_name` VARCHAR(30) NULL COMMENT '用户真实姓名',
   `password` VARCHAR(15) NOT NULL COMMENT '密码',
@@ -19,9 +19,7 @@ CREATE TABLE `user` (
   `address` VARCHAR(255) DEFAULT NULL COMMENT '地址',
   `user_img` VARCHAR(500) DEFAULT NULL COMMENT '用户头像',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  FOREIGN KEY(role_id) REFERENCES role(id),
-  FOREIGN KEY(com_id) REFERENCES cum(id)
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户信息'
 
 
@@ -68,28 +66,66 @@ CREATE TABLE
 
 CREATE TABLE `menu` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `menu_id` INT(11) NOT NULL COMMENT '菜单Id',
   `pid` INT(11) DEFAULT NULL COMMENT '父级Id',
-  `role_id` INT(11) NOT NULL COMMENT '角色身份id',
-  `name` VARCHAR(30) NOT NULL COMMENT '菜单名字',
-  `description` VARCHAR(255) NOT NULL COMMENT '功能描述',
+  `name` VARCHAR(30)  NULL COMMENT '菜单名字',
+  `description` VARCHAR(255)  NULL COMMENT '功能描述',
   `path` VARCHAR(30)  NULL COMMENT '路由',
   `icon` VARCHAR(30)  NULL COMMENT 'icon图标',
-  PRIMARY KEY (`id`),
-
-  FOREIGN KEY(role_id) REFERENCES role(id)
+  PRIMARY KEY (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='菜单信息'
 
 
 -- 插入菜单数据
-INSERT IGNORE INTO `menu` VALUES (1,1,NULL,1 , '账号与用户','111','','user');
-INSERT IGNORE INTO `menu` VALUES (2,2,1,1 , '账号管理','111','/user','');
-INSERT IGNORE INTO `menu` VALUES (3,3,1,1, '用户问题追踪','111','/userquestion','');
-INSERT IGNORE INTO `menu` VALUES (4,4,NULL ,1, '权限管理','11','/role','key');
-INSERT IGNORE INTO `menu` VALUES (5,5,NULL ,1, '社区管理','11','/community','home');
-INSERT IGNORE INTO `menu` VALUES (6,6,NULL ,2, '社区工作人员','11','','solution');
-INSERT IGNORE INTO `menu` VALUES (7,7,6,2, '工作人员信息管理','11','/staffinfo','');
+INSERT IGNORE INTO `menu` VALUES (1,NULL, '账号与用户','111','','user');
+INSERT IGNORE INTO `menu` VALUES (2,1, '账号管理','111','/user',NULL);
+INSERT IGNORE INTO `menu` VALUES (3,NULL, '权限管理','111','/role','key');
+INSERT IGNORE INTO `menu` VALUES (4,NULL, '社区管理','111','/community','home');
+INSERT IGNORE INTO `menu` VALUES (5,NULL, '社区工作人员','111','','solution');
+INSERT IGNORE INTO `menu` VALUES (6,5, '工作人员信息管理','111','/staffInfo','');
+INSERT IGNORE INTO `menu` VALUES (7,5, '工作人员工作管理','111','/work','');
+INSERT IGNORE INTO `menu` VALUES (8,NULL, '社区志愿者','111','','team');
+INSERT IGNORE INTO `menu` VALUES (9,8, '志愿者管理','111','/volunteerInfo','');
+INSERT IGNORE INTO `menu` VALUES (10,8, '志愿者审批管理','111','/apply','');
+INSERT IGNORE INTO `menu` VALUES (11,NULL, '社区医院','111','','plus');
+INSERT IGNORE INTO `menu` VALUES (12,11, '社区医院管理','111','/hospital','');
+INSERT IGNORE INTO `menu` VALUES (13,11, '健康小知识','111','/health','');
+INSERT IGNORE INTO `menu` VALUES (14,NULL, '社区物资管理','111','/materials','appstore');
+INSERT IGNORE INTO `menu` VALUES (15,NULL, '特殊人员信息管理','111','/inneedInfo','user-delete');
+INSERT IGNORE INTO `menu` VALUES (16,NULL, '问题追踪','111','/question','question');
 
+
+-----------------------------------------------------------------------------
+----------------------角色-菜单表
+-------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `rolemenu`;
+
+CREATE TABLE
+
+CREATE TABLE `rolemenu` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `role_id` INT(11) NOT NULL COMMENT '身份id',
+  `menu_id` VARCHAR(255) NULL COMMENT '菜单id',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='身份-菜单信息'
+
+
+-- 插入数据
+INSERT IGNORE INTO `rolemenu` VALUES (1,1,1);
+INSERT IGNORE INTO `rolemenu` VALUES (2,1,2);
+INSERT IGNORE INTO `rolemenu` VALUES (3,1,3);
+INSERT IGNORE INTO `rolemenu` VALUES (4,1,4);
+INSERT IGNORE INTO `rolemenu` VALUES (5,2,5);
+INSERT IGNORE INTO `rolemenu` VALUES (6,2,6);
+INSERT IGNORE INTO `rolemenu` VALUES (7,2,7);
+INSERT IGNORE INTO `rolemenu` VALUES (8,2,8);
+INSERT IGNORE INTO `rolemenu` VALUES (9,2,9);
+INSERT IGNORE INTO `rolemenu` VALUES (10,2,10);
+INSERT IGNORE INTO `rolemenu` VALUES (11,2,11);
+INSERT IGNORE INTO `rolemenu` VALUES (12,2,12);
+INSERT IGNORE INTO `rolemenu` VALUES (13,2,13);
+INSERT IGNORE INTO `rolemenu` VALUES (14,2,14);
+INSERT IGNORE INTO `rolemenu` VALUES (15,2,15);
+INSERT IGNORE INTO `rolemenu` VALUES (16,2,16);
 
 --------------------------------------------------------------------------------
 ----------------社区表------------------------------------------
@@ -211,8 +247,8 @@ CREATE TABLE `volunteer` (
 -- 插入菜单数据
 INSERT IGNORE INTO `volunteer` VALUES (1,1,'aaa',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','正式','2023-09-28 11:50:36','2023-09-29 11:50:36',NULL);
 INSERT IGNORE INTO `volunteer` VALUES (2,1,'aaa2',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','正式','2023-09-28 11:50:36','2023-09-29 11:50:36',NULL);
-INSERT IGNORE INTO `volunteer` VALUES (3,1,'aaa3',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','申请','2023-09-28 11:50:36',NULL,'hhh');
-INSERT IGNORE INTO `volunteer` VALUES (4,1,'aaa4',20,'女', '18709261268','11111','西柚小区1','空闲',10,2,'111','申请','2023-09-28 11:50:36',NULL,NULL);
+INSERT IGNORE INTO `volunteer` VALUES (3,1,'aaa3',20,'女', '18709261268','11111','西柚小区1','空闲',0,0,'111','申请','2023-09-28 11:50:36',NULL,'hhh');
+INSERT IGNORE INTO `volunteer` VALUES (4,1,'aaa4',20,'女', '18709261268','11111','西柚小区1','空闲',0,0,'111','申请','2023-09-28 11:50:36',NULL,NULL);
 
 
 -------------------------------------------------------------------------
@@ -449,3 +485,38 @@ INSERT IGNORE INTO `health` VALUES (2,1,'ggg2','11111','hhh', '2023-4-15 13:44:0
 INSERT IGNORE INTO `health` VALUES (3,1,'ggg3','11111','hhh', '2023-4-15 13:44:03');
 INSERT IGNORE INTO `health` VALUES (4,1,'ggg4','11111','hhh', '2023-4-15 13:44:03');
 INSERT IGNORE INTO `health` VALUES (5,2,'ggg5','11111','hhh', '2023-4-15 13:44:03');
+
+
+--------------------------------------------------------------------------------
+---------问题表--------
+--------------------------------------------------------------------------------
+DROP TABLE IF EXISTS `question`;
+
+CREATE TABLE
+
+CREATE TABLE `question` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `com_id` INT(11) DEFAULT 1 COMMENT '社区Id',
+  `content` VARCHAR(1000) NULL COMMENT '内容',
+  `founder` VARCHAR(30) DEFAULT NULL COMMENT '创建人',
+  `user_img` VARCHAR(500) DEFAULT NULL COMMENT '用户头像',
+  `creat_time` VARCHAR(30) DEFAULT NULL COMMENT '创建时间',
+  `is_solve` VARCHAR(5) DEFAULT NULL COMMENT '是否解决',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(com_id) REFERENCES cum(id)
+) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='问题信息'
+
+
+-- 插入菜单数据
+INSERT IGNORE INTO `question` VALUES (1,1,'zzz','hhh','a0348c9cd5b04517a8b62307e0116685.jpg', '2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (2,1,'zzz2','hhh', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (3,1,'zzz3','hhh', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','是');
+INSERT IGNORE INTO `question` VALUES (4,1,'zzz4','aaa','a0348c9cd5b04517a8b62307e0116685.jpg', '2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (5,2,'zzz5','hhh', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (6,1,'zzz6','aaa','a0348c9cd5b04517a8b62307e0116685.jpg', '2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (7,1,'zzz7','aaa', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (8,1,'zzz8','aaa', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (9,1,'zzz9','aaa', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (10,1,'zzz10','aaa','a0348c9cd5b04517a8b62307e0116685.jpg', '2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (11,1,'zzz11','aaa','a0348c9cd5b04517a8b62307e0116685.jpg', '2023-4-15 13:44:03','否');
+INSERT IGNORE INTO `question` VALUES (12,1,'zzz12','aaa', 'a0348c9cd5b04517a8b62307e0116685.jpg','2023-4-15 13:44:03','否');

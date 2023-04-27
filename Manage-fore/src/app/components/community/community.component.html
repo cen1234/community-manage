@@ -43,7 +43,7 @@
                   <button class="operate-btn" nz-button nzType="primary" nzDanger>批量删除</button>
                   </a>
                   <nz-upload
-                      nzAction="api/user/import"
+                      nzAction="api/community/import"
                       [nzShowUploadList]="false"
                       [nzHeaders]="{ authorization: 'authorization-text' }"
                       (nzChange)="handleChange($event)"

@@ -143,3 +143,7 @@ html {
   font-size: 14px;
   line-height: 1.5715;
 } 
+.ant-table-footer, .ant-table-thead>tr>th {
+  color: rgba(0,0,0,.85);
+  background: #e0e0e0;
+}

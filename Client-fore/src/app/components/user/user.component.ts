@@ -64,6 +64,11 @@ export class UserComponent implements OnInit {
     this.router.navigate(['/question']);
   }
 
+  //物资借用
+  borrow():void {
+    this.router.navigate(['/material']);
+  }
+
 
 
 

@@ -42,7 +42,18 @@ public class UsermaterialsController {
     @GetMapping("/findBorrowed")
     public List<Usermaterials> getBorrowed(@RequestParam Integer materialsId) {
         QueryWrapper<Usermaterials> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("materials_id",materialsId);
+        queryWrapper.eq("materials_id",materialsId);
+        return usermaterialsService.list(queryWrapper);
+    }
+//
+//    -------
+//    查找我的借用
+//    -------
+    @GetMapping("/myBorrowed")
+    public List<Usermaterials>  myBorrowed(@RequestParam String name) {
+        QueryWrapper<Usermaterials> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name",name);
+        queryWrapper.eq("back",'否');
         return usermaterialsService.list(queryWrapper);
     }
 
@@ -53,4 +64,12 @@ public class UsermaterialsController {
       public boolean save(@RequestBody Usermaterials usermaterials) {
           return usermaterialsService.saveCommunity(usermaterials);
       }
+
+//      -------
+//      删除
+//      -------
+    @PostMapping("/delete/{id}")
+    public boolean deleteById(@PathVariable Integer id) {
+        return usermaterialsService.removeById(id);
+    }
 }

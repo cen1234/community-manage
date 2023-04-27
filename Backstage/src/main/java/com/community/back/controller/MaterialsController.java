@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.community.back.entity.Materials;
+import com.community.back.entity.Usermaterials;
 import com.community.back.entity.Volunteer;
 import com.community.back.service.MaterialsService;
 import org.apache.poi.ss.usermodel.Font;
@@ -38,7 +39,7 @@ public class MaterialsController {
     @GetMapping("/findAll")
     public List<Materials> find( @RequestParam Integer comId) {
         QueryWrapper<Materials> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("com_id",comId);
+        queryWrapper.eq("com_id",comId);
         return materialsService.list();
     }
 
@@ -69,10 +70,16 @@ public class MaterialsController {
         return materialsService.page(page,queryWrapper);
     }
 
+    //根据物资id获取物资的信息
+    @GetMapping("/getInfo")
+    public Materials myBorrowed(@RequestParam Integer id) {
+        return materialsService.getById(id);
+    }
+
 
 
 //    ------
-//    新增|修改社区
+//    新增|修改
 //    ------
     @PostMapping
     public boolean save(@RequestBody Materials materials) {
@@ -106,9 +113,11 @@ public class MaterialsController {
 //    ------
 //    导出社区
 //    ------
-    @GetMapping("/export")
-    public void export(HttpServletResponse response) throws Exception{
+    @GetMapping("/export/{comId}")
+    public void export(HttpServletResponse response,@PathVariable Integer comId) throws Exception{
         //从数据库中查出所有数据
+        QueryWrapper<Materials> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("com_id",comId);
         List<Materials> list = materialsService.list();
 
         //在内存操作，写出到浏览器

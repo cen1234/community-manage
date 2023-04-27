@@ -44,6 +44,15 @@
             <button class="operate-btn" nz-button nzType="default">
               <span nz-icon nzType="vertical-align-top" nzTheme="outline"></span>批量导入</button>
         </nz-upload>
+        <nz-upload
+        nzAction="api/hospital/importDoctor"
+        [nzShowUploadList]="false"
+        [nzHeaders]="{ authorization: 'authorization-text' }"
+        (nzChange)="handleChange($event)"
+       >
+        <button class="operate-btn" nz-button nzType="default">
+          <span nz-icon nzType="vertical-align-top" nzTheme="outline"></span>导入医生</button>
+    </nz-upload>
         <button class="operate-btn" nz-button nzType="default" (click)="export()">
           <span nz-icon nzType="vertical-align-bottom" nzTheme="outline"></span>批量导出</button>
         <input class="search" type="text" nz-input [(ngModel)]="inputValue" placeholder="输入医院名进行搜索" (keypress)="onload()"/>
@@ -67,6 +76,7 @@
   >
     <thead>
       <tr>
+        <th></th>
         <th
           [(nzChecked)]="checked"
           [nzIndeterminate]="indeterminate"
@@ -75,47 +85,41 @@
         <th>医院名</th>
         <th>电话</th>
         <th>地址</th>
-        <th>备注</th>
         <th>行为</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of rowSelectionTable.data">
-        <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
-        <td>{{data.name}}</td>
-        <td>{{ data.phone }}</td>
-        <td>{{data.address}}</td>
-        <td>{{data.remarks}}</td>
-        <td>
-            <a>
-                <button class="operate-btn" nz-button nzType="default" (click)="edit(data)">编辑</button>
+      <ng-container *ngFor="let data of rowSelectionTable.data">
+         <tr>
+            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+            <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+            <td>{{data.name}}</td>
+            <td>{{ data.phone }}</td>
+            <td>{{data.address}}</td>
+            <td>
+              <a>
+                  <button class="operate-btn" nz-button nzType="default" (click)="edit(data)">编辑</button>
+              </a>
+              <nz-divider nzType="vertical"></nz-divider>   
+            <a
+                nz-popconfirm
+                nzPopconfirmTitle="您确认要删除此社区医院吗?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="Singleconfirm(data.id)"
+                (nzOnCancel)="cancel()"
+              >
+              <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
             </a>
-            <nz-divider nzType="vertical"></nz-divider>   
-          <a
-              nz-popconfirm
-              nzPopconfirmTitle="您确认要删除此社区医院吗?"
-              nzPopconfirmPlacement="bottom"
-              (nzOnConfirm)="Singleconfirm(data.id)"
-              (nzOnCancel)="cancel()"
-            >
-            <button nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
-          </a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a >
-            <button class="check-btn" nz-button nzSize="small" nzType="default" (click)="check(data.id)">查看医生</button>
-          </a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <nz-upload
-            nzAction="api/hospital/importDoctor"
-            [nzShowUploadList]="false"
-            [nzHeaders]="{ authorization: 'authorization-text' }"
-            (nzChange)="handleChange($event)"
-           >
-            <button class="operate-btn" nz-button nzType="default">
-              <span nz-icon nzType="vertical-align-top" nzTheme="outline"></span>导入医生</button>
-        </nz-upload>
-        </td>
-      </tr>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a >
+              <button class="check-btn" nz-button nzSize="small" nzType="default" (click)="check(data.id)">查看医生</button>
+            </a>
+          </td>
+         </tr>
+         <tr [nzExpand]="expandSet.has(data.id)">
+             <span>{{data.remarks}}</span>
+         </tr>
+      </ng-container>
     </tbody>
   </nz-table>
     <!-- 医生管理 -->

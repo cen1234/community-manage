@@ -73,7 +73,7 @@ export class HospitalComponent implements OnInit {
       belongCommunity: [''],
       phone:['',[Validators.required],[this.phoneAsyncValidator]],
       address:['',[Validators.required],[this.addressAsyncValidator]],
-      remarks:['',[Validators.max(300)]]
+      remarks:['']
     });
     this.validateFormDoctor = this.fb.group({
       id:[''],
@@ -83,7 +83,7 @@ export class HospitalComponent implements OnInit {
       sex: ['',[Validators.required]],
       phone:['',[Validators.required],[this.phoneAsyncValidator]],
       belongDepartment:[''],
-      remarks:['',[Validators.max(300)]]
+      remarks:['']
     });
   }
 
@@ -467,6 +467,15 @@ export class HospitalComponent implements OnInit {
   onAllCheckedDoctor(value: boolean): void {
     this.listOfCurrentPageDataDoctor.forEach(item => this.updateCheckedSetDoctor(item.id, value));
     this.refreshCheckedStatusDoctor();
+  }
+
+  //表格展开折叠
+  onExpandChange(id: number, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
+    }
   }
 
   //获取yyyy-MM-dd hh:mm:ss格式的时间字符串

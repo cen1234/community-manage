@@ -41,7 +41,7 @@
               <button class="operate-btn" nz-button nzType="primary" nzDanger>批量删除</button>
               </a>
               <nz-upload
-                  nzAction="api/user/import"
+                  nzAction="api/materials/import"
                   [nzShowUploadList]="false"
                   [nzHeaders]="{ authorization: 'authorization-text' }"
                   (nzChange)="handleChange($event)"
@@ -176,7 +176,7 @@
 </nz-modal>
 <!-- 物资-借用人信息弹窗 -->
 <nz-modal
-    nzWidth="1000px"
+    nzWidth="1200px"
     [(nzVisible)]="UMisVisible" 
     [nzTitle]="'物资借用'"
     (nzOnCancel)="UMhandleCancel()"
@@ -199,6 +199,7 @@
           <th>物资是否归还</th>
           <th>联系电话</th>
           <th>地址</th>
+          <th>开始时间</th>
           <th>行为</th>
         </tr>
       </thead>
@@ -211,8 +212,19 @@
               <td>{{data.back}}</td>
               <td>{{ data.phone }}</td>
               <td>{{data.address}}</td>
+              <td>{{data.time}}</td>
               <td>
                 <a><button nz-button nzSize="small" nzType="default" (click)="startEdit(data.id)">编辑</button></a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a
+                nz-popconfirm
+                nzPopconfirmTitle="您确认要删除所选记录吗?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="delete(data.id)"
+                (nzOnCancel)="cancel()"
+              >
+              <button class="operate-btn" nz-button nzSize="small" nzType="primary" nzDanger>删除</button>
+              </a>
               </td>
           </ng-container>
           <ng-template #editTemplate>
@@ -226,6 +238,7 @@
               <a (click)="saveEdit(data.id)" class="save" style="margin-right: 5px;">保存</a>
               <a nz-popconfirm nzPopconfirmTitle="确认取消?" (nzOnConfirm)="cancelEdit(data.id)">取消</a>
             </td>
+            
           </ng-template>
         </tr>
       </tbody>

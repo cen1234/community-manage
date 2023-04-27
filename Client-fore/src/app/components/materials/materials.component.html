@@ -1,0 +1,21 @@
+<div class="header">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" [routerLink]="['/user']"></span>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+    <div class="question">社区物资</div>
+    <nz-list nzGrid class="material-box">
+        <div nz-row [nzGutter]="16">
+          <div nz-col [nzSpan]="11" *ngFor="let item of data">
+            <nz-list-item *ngIf="item.count > item.borrowedCount">
+              <nz-card [nzTitle]="item.name">
+                  <span>
+                    可借用数量：{{item.count - item.borrowedCount}}
+                  </span>
+                    <a class="btn" nz-button nzType="link" (click)="check(item.id)">借用</a>
+                 </nz-card>
+            </nz-list-item>
+          </div>
+        </div>
+      </nz-list>
+</div>

@@ -58,6 +58,8 @@ import { EditInfoComponent } from './components/edit-info/edit-info.component';
 import { EditImgComponent } from './components/edit-img/edit-img.component';
 import { ArticleComponent } from './components/article/article.component';
 import { MyQuestionComponent } from './components/my-question/my-question.component';
+import { MaterialsComponent } from './components/materials/materials.component';
+import { BorrowComponent } from './components/borrow/borrow.component';
 
 
 
@@ -77,7 +79,9 @@ registerLocaleData(zh);
     EditInfoComponent,
     EditImgComponent,
     ArticleComponent,
-    MyQuestionComponent
+    MyQuestionComponent,
+    MaterialsComponent,
+    BorrowComponent
   ],
   imports: [
     BrowserModule,

@@ -9,9 +9,12 @@ import { EditInfoComponent } from './components/edit-info/edit-info.component';
 import { EditImgComponent } from './components/edit-img/edit-img.component';
 import { ArticleComponent } from './components/article/article.component';
 import { MyQuestionComponent } from './components/my-question/my-question.component';
+import { MaterialsComponent } from './components/materials/materials.component';
+import { BorrowComponent } from './components/borrow/borrow.component';
+
 const routes: Routes = [
   {
-    path:'',redirectTo:'home',pathMatch:'full'
+    path:'',redirectTo:'login',pathMatch:'full'
   },{
     path:'login',component:LoginComponent
   },{
@@ -30,6 +33,10 @@ const routes: Routes = [
     path:'article',component:ArticleComponent
   },{
     path:'question',component:MyQuestionComponent
+  },{
+    path:'material',component:MaterialsComponent
+  },{
+    path:'borrow',component:BorrowComponent
   }
 
   
