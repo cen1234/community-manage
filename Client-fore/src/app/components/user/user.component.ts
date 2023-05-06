@@ -69,6 +69,11 @@ export class UserComponent implements OnInit {
     this.router.navigate(['/material']);
   }
 
+  //申请志愿者
+  apply():void {
+    this.router.navigate(['/apply']);
+  }
+
 
 
 

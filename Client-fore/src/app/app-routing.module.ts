@@ -11,6 +11,7 @@ import { ArticleComponent } from './components/article/article.component';
 import { MyQuestionComponent } from './components/my-question/my-question.component';
 import { MaterialsComponent } from './components/materials/materials.component';
 import { BorrowComponent } from './components/borrow/borrow.component';
+import { ApplyComponent } from './components/apply/apply.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,8 @@ const routes: Routes = [
     path:'material',component:MaterialsComponent
   },{
     path:'borrow',component:BorrowComponent
+  },{
+    path:'apply',component:ApplyComponent
   }
 
   

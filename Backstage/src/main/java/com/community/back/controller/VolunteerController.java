@@ -89,9 +89,9 @@ public class VolunteerController {
         IPage<Volunteer> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Volunteer> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name",search);
-        queryWrapper.like("com_id",comId);
-        queryWrapper.like("formal",formal);
-        queryWrapper.like("approver",approver);
+        queryWrapper.eq("com_id",comId);
+        queryWrapper.eq("formal",formal);
+        queryWrapper.eq("approver",approver);
         return volunteerService.page(page,queryWrapper);
     }
 //
@@ -270,7 +270,7 @@ public class VolunteerController {
     @GetMapping("/getApprover")
     public List<Approver> findApprover(@RequestParam Integer applyId) {
         QueryWrapper<Approver> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("apply_id",applyId);
+        queryWrapper.eq("apply_id",applyId);
         return approverService.list(queryWrapper);
     }
 
@@ -280,5 +280,15 @@ public class VolunteerController {
     @PostMapping("/saveApprove")
     public  boolean save(@RequestBody Approver approver) {
         return approverService.save(approver);
+    }
+
+//    ------
+//    根据名字获取apply_id
+//    ------
+    @GetMapping("/getApplyId")
+    public Volunteer getApplyId(@RequestParam String name) {
+        QueryWrapper<Volunteer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name",name);
+        return volunteerService.getOne(queryWrapper);
     }
 }

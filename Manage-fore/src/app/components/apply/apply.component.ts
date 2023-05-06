@@ -196,10 +196,15 @@ export class ApplyComponent implements OnInit {
                       this.message.success('当前申请人已成为正式志愿者！', {
                         nzDuration: 500
                       });
-                      setTimeout(() => {
+                      let updateRole = 'api/user/updateRole';
+                      this.http.get(updateRole,{
+                        params:{
+                          userRealName:this.applyObj['name']
+                        }
+                      }).subscribe((res) => {
                         this.isVisible = false;
                         this.isOkLoading = false;
-                    }, 500);
+                      })
                    }
                 })
              } else if (this.isFinal === '否') {

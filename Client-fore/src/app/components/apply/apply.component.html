@@ -1,0 +1,53 @@
+<nz-drawer
+      *ngIf="!flag"
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMask]="true"
+      [nzMaskStyle]="{'background':'linear-gradient(to bottom, #8e90ff,#fff)','opacity':'0.5','animation':'none'}"
+      class="drawer"
+      [nzMaskClosable]="false"
+      [nzVisible]="visible"
+      nzTitle="申请志愿者"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >   
+        <form nz-form *nzDrawerContent [formGroup]="validateForm">
+            <nz-form-item class="input-box">
+                <nz-form-label [nzSpan]="7" nzRequired>擅长</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="技能不能为空">
+                  <nz-textarea-count [nzMaxCharacterCount]="1000">
+                    <textarea rows="20" style="width:20rem" class="input-width" formControlName="skill" nz-input placeholder="请输入擅长的技能"></textarea>
+                  </nz-textarea-count>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    <ng-template #footerTpl>
+    <div style="float: right">
+        <button nz-button style="margin-right: 8px;" (click)="close()">取消</button>
+        <button nz-button nzType="primary" (click)="submit()">提交</button>
+    </div>
+    </ng-template>
+</nz-drawer>
+
+<div class="header" *ngIf="flag">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" [routerLink]="['/user']"></span>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+    <div class="question">查看审批进度</div>
+    <nz-timeline class="progress">
+        <nz-timeline-item nzColor="green">
+            <span>已提交申请表</span> 
+        </nz-timeline-item>
+        <nz-timeline-item *ngFor="let item of approverData"  nzColor="green">
+            <span >{{item.name}}审批意见：{{item.advice}}</span> 
+            <span class="apply-time">{{item.approverTime}}</span>
+        </nz-timeline-item>
+        <nz-timeline-item nzColor="red" [nzDot]="dotTemplate">
+            <span >正在审核，请耐心等待！</span> 
+        </nz-timeline-item>
+      </nz-timeline>        
+</div>
+<ng-template #dotTemplate>
+    <span nz-icon nzType="clock-circle-o" style="font-size: 16px;"></span>
+  </ng-template>
+

@@ -33,7 +33,7 @@
         </div>
             <p class="special-title">特殊功能</p>
             <div class="special">
-                <a class="apply" *ngIf="userRole != '志愿者'">
+                <a class="apply" *ngIf="userRole != '志愿者'" (click)="apply()">
                     <span class="special-icon" nz-icon nzType="edit" nzTheme="outline"></span>
                     <span class="special-word">申请志愿者</span>
                 </a>

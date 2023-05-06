@@ -290,6 +290,28 @@ public class UserController {
         return userService.getOne(queryWrapper);
     }
 
+//    --------
+//    根据社区id获取所有社区管理员
+//    -------
+    @GetMapping("/getCommunity")
+    public List<User> getCommunity(@RequestParam Integer comId) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("com_id",comId);
+        queryWrapper.eq("role_id",2);
+        return userService.list(queryWrapper);
+    }
+
+//    ---------
+//    根据用户姓名修改用户roleId
+//    ---------
+    @GetMapping("/updateRole")
+    public boolean updateRole(@RequestParam String userRealName) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_real_name",userRealName);
+        User user = userService.getOne(queryWrapper);
+        user.setRoleId(4);
+        return userService.saveUser(user);
+    }
 
 
 
