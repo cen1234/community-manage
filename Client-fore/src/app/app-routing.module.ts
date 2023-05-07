@@ -12,6 +12,7 @@ import { MyQuestionComponent } from './components/my-question/my-question.compon
 import { MaterialsComponent } from './components/materials/materials.component';
 import { BorrowComponent } from './components/borrow/borrow.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { InNeedComponent } from './components/in-need/in-need.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,8 @@ const routes: Routes = [
     path:'borrow',component:BorrowComponent
   },{
     path:'apply',component:ApplyComponent
+  },{
+    path:'need',component:InNeedComponent
   }
 
   

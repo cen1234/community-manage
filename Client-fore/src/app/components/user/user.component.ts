@@ -74,6 +74,11 @@ export class UserComponent implements OnInit {
     this.router.navigate(['/apply']);
   }
 
+  //特殊人员认证
+  need():void {
+    this.router.navigate(['/need']);
+  }
+
 
 
 

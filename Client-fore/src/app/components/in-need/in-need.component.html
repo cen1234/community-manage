@@ -1,0 +1,39 @@
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMask]="true"
+      [nzMaskStyle]="{'background':'linear-gradient(to bottom, #8e90ff,#fff)','opacity':'0.5','animation':'none'}"
+      class="drawer"
+      [nzMaskClosable]="false"
+      [nzVisible]="visible"
+      nzTitle="特殊认证"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+    <form nz-form *nzDrawerContent [formGroup]="validateForm">
+        <nz-form-item >
+            <nz-form-label [nzSpan]="7" nzRequired>类型</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="类型不能为空">
+                <nz-radio-group formControlName="type">
+                    <label nz-radio nzValue="老">老</label>
+                    <label nz-radio nzValue="残">残</label>
+                    <label nz-radio nzValue="孕">孕</label>
+                    <label nz-radio nzValue="孤">孤</label>
+                  </nz-radio-group>
+                </nz-form-control>
+        </nz-form-item> 
+        <nz-form-item class="input-box">
+            <nz-form-label [nzSpan]="7">备注</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+              <nz-textarea-count [nzMaxCharacterCount]="300" nzErrorTip="最多不超过300字">
+                <textarea rows="15" style="width:20rem" class="input-width" formControlName="remarks" nz-input placeholder="请输入人员背景备注"></textarea>
+              </nz-textarea-count>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+    <div style="float: right">
+        <button nz-button style="margin-right: 8px;" (click)="close()">取消</button>
+        <button nz-button nzType="primary" (click)="submit()">提交</button>
+    </div>
+    </ng-template>
+</nz-drawer>

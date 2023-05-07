@@ -61,6 +61,7 @@ import { MyQuestionComponent } from './components/my-question/my-question.compon
 import { MaterialsComponent } from './components/materials/materials.component';
 import { BorrowComponent } from './components/borrow/borrow.component';
 import { ApplyComponent } from './components/apply/apply.component';
+import { InNeedComponent } from './components/in-need/in-need.component';
 
 
 
@@ -83,7 +84,8 @@ registerLocaleData(zh);
     MyQuestionComponent,
     MaterialsComponent,
     BorrowComponent,
-    ApplyComponent
+    ApplyComponent,
+    InNeedComponent
   ],
   imports: [
     BrowserModule,
