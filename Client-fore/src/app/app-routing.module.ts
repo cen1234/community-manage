@@ -13,7 +13,8 @@ import { MaterialsComponent } from './components/materials/materials.component';
 import { BorrowComponent } from './components/borrow/borrow.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { InNeedComponent } from './components/in-need/in-need.component';
-
+import { WorkComponent } from './components/work/work.component';
+import { ContentComponent } from './components/content/content.component';
 const routes: Routes = [
   {
     path:'',redirectTo:'login',pathMatch:'full'
@@ -43,6 +44,10 @@ const routes: Routes = [
     path:'apply',component:ApplyComponent
   },{
     path:'need',component:InNeedComponent
+  },{
+    path:'work',component:WorkComponent
+  },{
+    path:'content',component:ContentComponent
   }
 
   

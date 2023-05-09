@@ -177,5 +177,26 @@ public class StaffController {
 
     }
 
+//    ------
+//    根据姓名获取社区工作人员信息
+//    -----
+      @GetMapping("/getByName")
+      public Staff getByName(@RequestParam String name) {
+          QueryWrapper<Staff> queryWrapper = new QueryWrapper<>();
+          queryWrapper.eq("name",name);
+          return staffService.getOne(queryWrapper);
+      }
+
+//      -----------
+//      根据姓名修改空闲繁忙状态
+//      -----------
+       @GetMapping("/updateStatus")
+       public boolean updateStatus(@RequestParam String name,@RequestParam String status) {
+           QueryWrapper<Staff> queryWrapper = new QueryWrapper<>();
+           queryWrapper.eq("name",name);
+           Staff staff = staffService.getOne(queryWrapper);
+           staff.setAvailable(status);
+           return staffService.saveStaff(staff);
+       }
 
 }

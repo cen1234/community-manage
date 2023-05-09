@@ -3,6 +3,7 @@ package com.community.back.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.community.back.entity.Task;
 import com.community.back.entity.Work;
 import com.community.back.service.WorkService;
 import org.springframework.web.bind.annotation.*;
@@ -55,4 +56,11 @@ public class WorkController {
         return workService.saveWork(work);
     }
 
+    //    ------
+//    根据id获取工作详情
+//    ------
+    @PostMapping("/getInfo/{id}")
+    public Work getInfo(@PathVariable Integer id) {
+        return workService.getById(id);
+    }
 }

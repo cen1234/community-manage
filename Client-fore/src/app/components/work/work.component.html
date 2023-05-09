@@ -1,0 +1,44 @@
+<div class="header">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" [routerLink]="['/user']"></span>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+  <div class="box1 box">
+      <p class="title1">工作概览</p>
+      <div class="work-total">
+          <div class="score"><p>总积分：</p>{{workTotal['score']}}</div>
+          <div class="work-count"><p>总任务数：</p>{{workTotal['workCount']}}</div>
+      </div>
+  </div>
+  <div class="box2 box">
+      <p class="title2">修改状态</p>
+      <nz-switch 
+      class="switch" 
+      [(ngModel)]="switchValue" 
+      [nzControl]="true" 
+      (click)="clickSwitch()" 
+      [nzLoading]="loading" 
+      [nzCheckedChildren]="value" 
+      [nzUnCheckedChildren]="value">
+     </nz-switch>
+  </div>
+  <div class="box3 box">
+    <p class="title3">工作详情</p>
+    <div class="virtual">
+       <cdk-virtual-scroll-viewport style="width: 100%; height: 69%;margin-top: 2rem;" itemSize="73" class="demo-infinite-container">
+           <nz-list>
+             <nz-list-item class="list-item" *cdkVirtualFor="let item of ds" (click)="check(item.id)">
+               <nz-list-item-meta
+                 *ngIf="item" 
+                 [nzDescription]="item.founder  + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+item.creatTime"
+               >
+                 <nz-list-item-meta-title class="content1">
+                     {{ item.name}}
+                 </nz-list-item-meta-title>
+               </nz-list-item-meta>
+             </nz-list-item>
+           </nz-list>
+         </cdk-virtual-scroll-viewport>
+    </div>
+  </div>
+</div>

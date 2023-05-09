@@ -1,0 +1,22 @@
+<div class="header">
+    <span class="goback" nz-icon nzType="left" nzTheme="outline" (click)="back()"></span>
+</div>
+<nz-divider style="margin: 0;"></nz-divider>
+<div class="content">
+    <nz-descriptions nzTitle="工作详情" class="descriptions">
+        <nz-descriptions-item nzTitle="任务标题">{{data.name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务派发人">{{data.founder}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务发布时间">{{data.creatTime}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务是否完成" *ngIf="data.finishTime != null">
+            <nz-tag nzColor="success">已完成</nz-tag>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务完成时间" *ngIf="data.finishTime != null">{{data.finishTime}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务是否完成" *ngIf="data.finishTime == null">
+            <nz-tag  nzColor="error">未完成</nz-tag>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务分值">{{data.score}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务得分" *ngIf="data.finishTime != null">{{data.getscore}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务评价" *ngIf="data.finishTime != null">{{data.comment}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="任务内容">{{data.content}}</nz-descriptions-item>
+      </nz-descriptions>
+</div>

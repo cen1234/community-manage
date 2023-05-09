@@ -56,7 +56,7 @@ public class TaskController {
                 break;
             }
         }
-        queryWrapper.like("com_id",comId);
+        queryWrapper.eq("com_id",comId);
         return taskService.page(page,queryWrapper);
     }
 
@@ -81,5 +81,13 @@ public class TaskController {
     @PostMapping("/deleteSelect/{idlist}")
     public  boolean deleteByIds(@PathVariable Collection idlist) {
         return taskService.removeByIds(idlist);
+    }
+
+//    ------
+//    根据id获取工作详情
+//    ------
+    @PostMapping("/getInfo/{id}")
+    public Task getInfo(@PathVariable Integer id) {
+        return taskService.getById(id);
     }
 }

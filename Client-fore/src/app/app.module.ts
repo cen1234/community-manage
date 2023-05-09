@@ -45,6 +45,7 @@ import { NzRateModule } from 'ng-zorro-antd/rate';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzListModule } from 'ng-zorro-antd/list';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 //公共组件
 
 //子组件
@@ -62,6 +63,8 @@ import { MaterialsComponent } from './components/materials/materials.component';
 import { BorrowComponent } from './components/borrow/borrow.component';
 import { ApplyComponent } from './components/apply/apply.component';
 import { InNeedComponent } from './components/in-need/in-need.component';
+import { WorkComponent } from './components/work/work.component';
+import { ContentComponent } from './components/content/content.component';
 
 
 
@@ -85,7 +88,9 @@ registerLocaleData(zh);
     MaterialsComponent,
     BorrowComponent,
     ApplyComponent,
-    InNeedComponent
+    InNeedComponent,
+    WorkComponent,
+    ContentComponent
   ],
   imports: [
     BrowserModule,
@@ -127,6 +132,7 @@ registerLocaleData(zh);
     NzDrawerModule,
     NzListModule,
     ScrollingModule,
+    NzSwitchModule,
     //引入部分
     NgxEchartsModule.forRoot({ //引入部分
       echarts: () => import('echarts') //引入部分

@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.community.back.entity.Approver;
+import com.community.back.entity.Staff;
 import com.community.back.entity.Volunteer;
 import com.community.back.service.ApproverService;
 import com.community.back.service.VolunteerService;
@@ -291,4 +292,17 @@ public class VolunteerController {
         queryWrapper.eq("name",name);
         return volunteerService.getOne(queryWrapper);
     }
+
+//      -----------
+//      根据姓名修改空闲繁忙状态
+//      -----------
+    @GetMapping("/updateStatus")
+    public boolean updateStatus(@RequestParam String name,@RequestParam String status) {
+        QueryWrapper<Volunteer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name",name);
+        Volunteer volunteer = volunteerService.getOne(queryWrapper);
+        volunteer.setAvailable(status);
+        return volunteerService.saveVolunteer(volunteer);
+    }
+
 }

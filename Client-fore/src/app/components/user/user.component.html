@@ -33,15 +33,15 @@
         </div>
             <p class="special-title">特殊功能</p>
             <div class="special">
-                <a class="apply" *ngIf="userRole != '志愿者'" (click)="apply()">
+                <a class="apply" *ngIf="user.roleId == 5" (click)="apply()">
                     <span class="special-icon" nz-icon nzType="edit" nzTheme="outline"></span>
                     <span class="special-word">申请志愿者</span>
                 </a>
-                <a class="volunteer-work" *ngIf="userRole == '志愿者'">
+                <a class="volunteer-work" *ngIf="user.roleId == 4" (click)="work(1)">
                     <span class="special-icon" nz-icon nzType="file" nzTheme="outline"></span>
                     <span class="special-word">志愿者工作</span>
                 </a>
-                <a class="staff-work" *ngIf="userRole == '社区工作人员'">
+                <a class="staff-work" *ngIf="user.roleId == 3" (click)="work(2)">
                     <span class="special-icon" nz-icon nzType="file-word" nzTheme="outline"></span>
                     <span class="special-word">社区工作</span>
                 </a>

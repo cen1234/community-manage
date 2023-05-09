@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute,Params } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { map, Observable, Observer, toArray } from 'rxjs';
@@ -20,7 +20,7 @@ export class UserComponent implements OnInit {
   public user:any;//存储用户信息
 
 
-  constructor(private router: Router,private message: NzMessageService,private fb: UntypedFormBuilder,private http:HttpClient) { }
+  constructor(private activateInfo:ActivatedRoute,private router: Router,private message: NzMessageService,private fb: UntypedFormBuilder,private http:HttpClient) { }
 
   ngOnInit(): void {
     //从浏览器缓存取出用户信息
@@ -28,10 +28,10 @@ export class UserComponent implements OnInit {
     this.user = JSON.parse(this.user);
     this.userImg = 'api/file/' + this.user.userImg;
     this.userName = this.user.username;
-    if (this.user.roleId == 3) {
-      this.userRole = '社区工作人员'
-    } else if (this.user.roleId == 4) {
+    if (this.user.roleId == 4) {
       this.userRole = '志愿者';
+    } else if (this.user.roleId == 3) {
+      this.userRole = '社区工作人员';
     }
   }
 
@@ -77,6 +77,15 @@ export class UserComponent implements OnInit {
   //特殊人员认证
   need():void {
     this.router.navigate(['/need']);
+  }
+ 
+  //工作管理
+  work(type:number):void {
+    this.router.navigate(['/work'],{
+      queryParams:{
+        type:type
+      }
+    })
   }
 
 
