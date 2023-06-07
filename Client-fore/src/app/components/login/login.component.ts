@@ -11,8 +11,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class LoginComponent {
    public phone:string = '';//输入的电话号码
-   public inputcode:any;//输入的验证码
-   public code:number = 0;//获取的验证码
+   public inputcode:string = '';//输入的验证码
+  
    
    constructor(private router: Router,private http:HttpClient,private message: NzMessageService) {
   
@@ -29,21 +29,18 @@ export class LoginComponent {
           phone:this.phone
         }
       }).subscribe((res:any) => {
-          if (res) {
-             this.code = res;
-             console.log(this.code)
-          }
       })
     }
    }
 
    //登录
    login():void {
-       if (this.inputcode == this.code) {
+       if (this.inputcode != ''&& this.phone != '') {
           let url = 'api/user/clientLogin';
           this.http.get(url,{
             params:{
-              phone:this.phone
+              phone:this.phone,
+              inputCode:this.inputcode
             }
           }).subscribe((res:any) => {
              if (res.code === '200') {

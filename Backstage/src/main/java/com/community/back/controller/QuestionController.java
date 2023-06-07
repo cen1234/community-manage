@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.community.back.entity.Question;
 import com.community.back.service.QuestionService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -15,6 +16,10 @@ public class QuestionController {
 
     @Resource
     private QuestionService questionService;
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
 
 
 //    -----
@@ -62,7 +67,17 @@ public class QuestionController {
 //    -----
     @PostMapping("/getQuestion/{id}")
     public Question getById(@PathVariable Integer id) {
-        return questionService.getById(id);
+        Question question = null;
+        String key = "question_" + id;
+        //根据key先从redis中获取缓存数据
+        question = (Question) redisTemplate.opsForValue().get(key);
+        //如果存在，直接返回，无需查询数据库
+        if (question != null){
+            return question;
+        }
+        question = questionService.getById(id);
+        redisTemplate.opsForValue().set(key,question);
+        return question;
     }
 
 //    ------
@@ -79,6 +94,8 @@ public class QuestionController {
 //      ------
     @PostMapping("/delete/{id}")
     public boolean deleteById(@PathVariable Integer id) {
+        String key = "question_" + id;
+        redisTemplate.delete(key);
         return questionService.removeById(id);
     }
 

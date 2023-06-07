@@ -34,33 +34,29 @@ export class PasswordComponent implements OnInit {
           phone:this.phone
         }
       }).subscribe((res:any) => {
-          if (res) {
-             this.code = res;
-             console.log(this.code)
-          }
       })
     }
   }
 
   //提交
   getPwd(): void {
-    console.log(this.inputcode)
-    console.log(this.code)
-     if (this.inputcode == this.code) {
        let url = 'api/user/getPassword';
        this.http.get(url,{
          params:{
-          phone:this.phone
+          phone:this.phone,
+          inputCode:this.inputcode
          }
        }).subscribe((res:any) => {
-          if(res) {
+          if(res!= '校验码错误') {
             this.message.success('密码为：'+res, {
               nzDuration: 10000
             });
-            this.code = 0;
+          } else {
+            this.message.success('校验码错误', {
+              nzDuration: 10000
+            });
           }
        })
-     }
 }
   
 

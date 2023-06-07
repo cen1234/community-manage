@@ -2,8 +2,10 @@ package com.community.back.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Question {
+public class Question implements Serializable {
     private Integer id;
     private Integer comId;
     private String content;

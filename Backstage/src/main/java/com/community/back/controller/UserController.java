@@ -18,6 +18,10 @@ import com.community.back.utils.TokenUtils;
 import com.community.back.utils.ValidateCodeUtils;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.SheetUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +43,11 @@ public class UserController {
     @Resource
     private SMSUtils smsUtils;
 
-    private Integer code = 0;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+
+
 
 
 //      ------
@@ -62,18 +70,21 @@ public class UserController {
 //    客户端登录
 //    ------
     @GetMapping("/clientLogin")
-    public Result ClientLogin(@RequestParam String phone) {
-        if (StrUtil.isBlank(phone)) {
+    public Result ClientLogin(@RequestParam String phone,@RequestParam String inputCode) {
+        if (StrUtil.isBlank(phone) || StrUtil.isBlank(inputCode)) {
             return Result.error(Constants.CODE_400,"参数不足!");
         }
-        //查询电话是否存在，存在则为登录，返回用户信息;
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("phone",phone);
-        User oneData;
-        oneData = userService.getOne(queryWrapper);
-        if (oneData != null) {
-            return Result.success(oneData);
-        }
+        //从redis中获取验证码，与输入的进行匹配
+        String code = stringRedisTemplate.opsForValue().get("code");
+        if (code.equals(inputCode)) {
+            //查询电话是否存在，存在则为登录，返回用户信息;
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("phone",phone);
+            User oneData;
+            oneData = userService.getOne(queryWrapper);
+            if (oneData != null) {
+                return Result.success(oneData);
+            }
             //电话不存在则为注册
             oneData = new User();
             oneData.setUsername(ValidateCodeUtils.generateValidateCode(6).toString());
@@ -82,6 +93,9 @@ public class UserController {
             oneData.setRoleId(5);
             userService.save(oneData);
             return Result.success(oneData);
+        } else {
+            return Result.error(Constants.CODE_402,"验证码错误!");
+        }
     }
 
 //       -----
@@ -254,21 +268,28 @@ public class UserController {
 //    发送验证码
 //    ---------
     @GetMapping("/sendSmg")
-    public Integer sendSmg(@RequestParam String phone) throws Exception {
+    public void sendSmg(@RequestParam String phone) throws Exception {
         //获取随机验证码
-        code = ValidateCodeUtils.generateValidateCode(6);
+        Integer code = ValidateCodeUtils.generateValidateCode(6);
         //发送短信
         smsUtils.sendMessage("阿里云短信测试", "SMS_154950909", phone, code.toString());
-        return code;
+        //向redis中存入code
+        stringRedisTemplate.opsForValue().set("code",code.toString());
     }
 
 //    --------
 //    验证码正确返回密码信息
 //    --------
      @GetMapping("/getPassword")
-    public String getPwd(@RequestParam String phone) {
-        String pwd = userService.getPwd(phone);
-        return pwd;
+    public String getPwd(@RequestParam String phone,@RequestParam String inputCode) {
+        //从redis中取出验证码
+        String code = stringRedisTemplate.opsForValue().get("code");
+        if (code.equals(inputCode)) {
+            String pwd = userService.getPwd(phone);
+            return pwd;
+        } else {
+            return "校验码错误";
+        }
      }
 
 //     ----
